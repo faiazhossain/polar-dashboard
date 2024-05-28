@@ -1,12 +1,12 @@
 "use client";
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { BsPersonFill } from "react-icons/bs";
 import { z } from "zod";
-import TextInput from "./LoginComponents/TextInput";
+import TextInput from "./TextInput";
 import { RiProfileLine } from "react-icons/ri";
-import ErrorMessage from "./LoginComponents/ErrorMessage";
-import PasswordInput from "./LoginComponents/PasswordInput";
+import ErrorMessage from "./ErrorMessage";
+import PasswordInput from "./PasswordInput";
 
 // Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
 const passwordValidation = new RegExp(
@@ -34,6 +34,14 @@ const LoginForm: React.FC = () => {
     email: "",
     password: "",
   });
+  const [emailSuggestions, setEmailSuggestions] = useState<string[]>([]);
+  useEffect(() => {
+    // Retrieve email suggestions from local storage
+    const savedEmails = localStorage.getItem("emailSuggestions");
+    if (savedEmails) {
+      setEmailSuggestions(JSON.parse(savedEmails));
+    }
+  }, []);
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -58,7 +66,7 @@ const LoginForm: React.FC = () => {
 
     if (result.success) {
       // Check for test email and password
-      if (email === "test@example.com" && password === "Test@1234") {
+      if (email === "test@gmail.com" && password === "Test@1234") {
         // Set the test token in cookies
         document.cookie = "token=test-token; path=/"; // Simple client-side cookie setting
 

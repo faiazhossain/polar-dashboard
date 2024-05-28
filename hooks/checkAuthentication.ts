@@ -33,8 +33,9 @@ async function checkAuthentication(token: string | undefined) {
   const testToken = "test-token"; // Define a test token
 
   if (token === testToken) {
+    console.log("🚀 ~ checkAuthentication ~ token:", token);
     // Return a mock session for the test account
-    return { user: "test@example.com" };
+    return { user: "test@gmail.com" };
   } else {
     return false;
   }

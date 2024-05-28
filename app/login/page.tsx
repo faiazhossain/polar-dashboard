@@ -1,7 +1,7 @@
-import LoginForm from "@/components/LoginForm";
 import Image from "next/image";
 import React from "react";
 import polarIcon from "@/public/Polar_Icon.svg";
+import LoginForm from "@/components/LoginComponents/LoginForm";
 
 const LoginPage = () => {
   return (

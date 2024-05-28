@@ -8,6 +8,8 @@ interface TextInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   icon: React.ReactElement<IconType>;
   placeholder: string;
+  autoComplete?: string; // Optional prop
+  list?: string; // Optional prop
 }
 const TextInput: FC<TextInputProps> = ({
   label,
@@ -16,6 +18,8 @@ const TextInput: FC<TextInputProps> = ({
   onChange,
   icon,
   placeholder,
+  autoComplete,
+  list,
 }) => (
   <div className="py-2 bg-white rounded-lg">
     <label className="px-1 text-sm text-gray-600 ml-2">{label}</label>
@@ -27,6 +31,8 @@ const TextInput: FC<TextInputProps> = ({
         value={value}
         onChange={onChange}
         className="text-md block px-3 rounded-lg w-full bg-white placeholder-gray-300 focus:outline-none focus:placeholder-gray-200"
+        autoComplete={autoComplete} // Pass the prop to the input element
+        list={list} // Pass the prop to the input element
       />
     </div>
   </div>
