@@ -1,12 +1,12 @@
+// Dashboard.tsx
 "use client";
-
 import React from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar/Navbar";
-
+import Navbar from "@/components/Dashboard/Navbar/Navbar";
+import LeftCard from "@/components/Dashboard/LeftCard/LeftCard";
+import MapComponent from "@/components/Dashboard/MapComponent/MapComponent";
 const Dashboard = () => {
   const router = useRouter();
-
   const handleLogout = async () => {
     // Clear the session token (remove cookie)
     document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
@@ -16,15 +16,12 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
+    <div className="bg-[#f1f1f1] h-screen">
       <Navbar />
-      <h1>Dashboard</h1>
-      <button
-        onClick={handleLogout}
-        className="bg-red-500 text-white p-2 rounded"
-      >
-        Logout
-      </button>
+      <div className="flex flex-col px-1 md:px-4 md:flex-row mt-[16px] gap-6">
+        <LeftCard />
+        <MapComponent />
+      </div>
     </div>
   );
 };
