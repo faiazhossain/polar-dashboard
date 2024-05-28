@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import checkAuthentication from "./hooks/checkAuthentication";
 
 // Specify protected and public routes
-const protectedRoutes = ["/dashboard", "/", "/user"];
+// const protectedRoutes = ["/dashboard", "/", "/user"];
+const protectedRoutes = ["/dashboard"];
 const publicRoutes = ["/login", "/signup"];
 
 export default async function middleware(req: NextRequest) {
@@ -19,6 +20,11 @@ export default async function middleware(req: NextRequest) {
   // Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
+  }
+
+  // Redirect to /dashboard if the user is authenticated and hits the root path
+  if (path === "/" && session) {
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
   }
 
   // Redirect to /dashboard if the user is authenticated
