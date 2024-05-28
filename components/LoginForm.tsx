@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { BsPersonFill } from "react-icons/bs";
 import { z } from "zod";
 import TextInput from "./LoginComponents/TextInput";
@@ -25,6 +26,7 @@ const loginSchema = z.object({
 });
 
 const LoginForm: React.FC = () => {
+  const router = useRouter(); // Initialize the useRouter hook
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,15 +53,21 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     // Validate the form data using Zod
     const result = loginSchema.safeParse({ email, password });
 
     if (result.success) {
-      console.log("Email:", email);
-      console.log("Password:", password);
-      // Reset errors
-      setErrors({ email: "", password: "" });
+      // Check for test email and password
+      if (email === "test@example.com" && password === "Test@1234") {
+        // Set the test token in cookies
+        document.cookie = "token=test-token; path=/"; // Simple client-side cookie setting
+
+        // Redirect to the dashboard
+        router.push("/dashboard");
+      } else {
+        // Handle incorrect test credentials
+        setErrors({ email: "", password: "Incorrect test email or password" });
+      }
     } else {
       // Handle validation errors
       const newErrors = { email: "", password: "" };
@@ -75,9 +83,9 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="container rounded-xl h-[475px] w-[475px] py-6 max-w-lg font-sans bg-[#EC1B231A] @apply shadow-[0px_4px_24px_-1px_#75757540] shadow-[-6px_8px_13px_0px_#62575726] relative">
+    <div className="container rounded-xl h-[475px] w-[475px] py-6 max-w-lg font-sans bg-[#EC1B231A] shadow-[0px_4px_24px_-1px_#75757540] shadow-[-6px_8px_13px_0px_#62575726] relative">
       <div className="absolute w-[148px] h-[148px] top-[-10px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#EC1B23] rounded-full flex justify-center items-center border-4 border-[#D3EAF5]">
-        <BsPersonFill className="text-[60px] text-[#D3EAF5]"></BsPersonFill>
+        <BsPersonFill className="text-[60px] text-[#D3EAF5]" />
       </div>
       <div className="max-w-sm mx-auto mt-24">
         <form className="mt-8" onSubmit={handleSubmit}>
