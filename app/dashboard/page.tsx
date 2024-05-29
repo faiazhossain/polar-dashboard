@@ -17,11 +17,11 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="bg-[#f1f1f1] h-screen">
+    <div className="bg-[#f1f1f1] h-full">
       <Navbar />
       <div className="flex flex-col px-1 md:px-4 md:flex-row mt-[16px] gap-6">
         <LeftCard />
-        <div className="flex flex-col grow gap-4 h-[86vh]">
+        <div className="flex flex-col grow gap-4 h-full">
           <MapComponent />
           <Statistics />
         </div>

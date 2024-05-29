@@ -98,7 +98,7 @@ const LeftCard = () => {
   };
 
   return (
-    <div className="bg-white w-full md:w-1/3 p-4 rounded-[20px] shadow-md">
+    <div className="bg-white w-full flex flex-col justify-between md:w-1/3 p-4 rounded-[20px] shadow-md">
       {dropdownData.map((dropdown, index) => (
         <Dropdown
           key={index}
