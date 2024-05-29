@@ -1,7 +1,7 @@
 import React, { FC, ChangeEvent } from "react";
 import { IconType } from "react-icons";
 
-interface TextInputProps {
+interface EmailInputProps {
   label: string;
   type: string;
   value: string;
@@ -11,7 +11,7 @@ interface TextInputProps {
   autoComplete?: string; // Optional prop
   list?: string; // Optional prop
 }
-const TextInput: FC<TextInputProps> = ({
+const EmailInput: FC<EmailInputProps> = ({
   label,
   type,
   value,
@@ -38,4 +38,4 @@ const TextInput: FC<TextInputProps> = ({
   </div>
 );
 
-export default TextInput;
+export default EmailInput;

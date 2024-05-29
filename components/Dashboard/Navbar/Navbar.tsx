@@ -26,17 +26,19 @@ const Navbar = () => {
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center w-16 h-14">
+      <div className="flex items-center gap-2">
         {/* Profile Picture */}
         <span className="text-[#EC1B23] text-sm">John Doe</span>
-        <Image
-          src={Profile}
-          alt="Logo"
-          className="rounded-full"
-          width={50}
-          height={50}
-          layout="responsive"
-        />
+        <div className="w-12 h-12">
+          <Image
+            src={Profile}
+            alt="Logo"
+            className="rounded-full"
+            width={50}
+            height={50}
+            layout="responsive"
+          />
+        </div>
         {/* User Name */}
       </div>
     </nav>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/components/Dashboard/Navbar/Navbar";
 import LeftCard from "@/components/Dashboard/LeftCard/LeftCard";
 import MapComponent from "@/components/Dashboard/MapComponent/MapComponent";
+import Statistics from "@/components/Dashboard/Statistics/Statistics";
 const Dashboard = () => {
   const router = useRouter();
   const handleLogout = async () => {
@@ -20,7 +21,10 @@ const Dashboard = () => {
       <Navbar />
       <div className="flex flex-col px-1 md:px-4 md:flex-row mt-[16px] gap-6">
         <LeftCard />
-        <MapComponent />
+        <div className="flex flex-col grow gap-4 h-[86vh]">
+          <MapComponent />
+          <Statistics />
+        </div>
       </div>
     </div>
   );
