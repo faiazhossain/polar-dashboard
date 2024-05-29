@@ -1,6 +1,6 @@
 import Image, { StaticImageData } from "next/image";
 import React from "react";
-import total_outlet from "@/public/statistics/outlet.svg";
+import total_outlet from "@/public/statistics/ice-cream.svg";
 import total_polar_outlet from "@/public/statistics/outlet.svg";
 import poi from "@/public/statistics/poi.svg";
 import suggestion from "@/public/statistics/light.svg";
@@ -33,7 +33,7 @@ const StatisticCard: React.FC<StatisticCardProps> = ({
         </p>
         <p
           className={`text-${
-            isHighlighted ? "md" : "2xl"
+            isHighlighted ? "md" : "lg"
           } font-bold text-[#EC1B23] dark:text-gray-400`}
         >
           {value}
@@ -59,7 +59,7 @@ const Statistics: React.FC = () => {
       <div className="absolute rounded-t-[20px] w-[220px] h-[50px] flex justify-center items-center bg-[#EC1B23]">
         <p className="text-white font-bold">Statistics</p>
       </div>
-      <div className="grid grid-cols-1 pt-12 md:grid-cols-3 gap-4 p-6 mt-4">
+      <div className="grid grid-cols-1 pt-12 md:grid-cols-3 gap-4 px-2 md:px-6 mt-4">
         <StatisticCard title="Total Outlet" value="1547" icon={total_outlet} />
         <StatisticCard
           title="Total Polar Outlet"

@@ -22,7 +22,12 @@ function MapComponent() {
           latitude: 23.76663,
           zoom: 13,
         }}
-        style={{ width: "100%", height: "100%", borderRadius: 20 }}
+        style={{
+          width: "100%",
+          height: "100%",
+          minHeight: "384px",
+          borderRadius: 20,
+        }}
         mapStyle="https://map.barikoi.com/styles/osm-liberty/style.json?key=NDE2NzpVNzkyTE5UMUoy"
         attributionControl={false}
       >
