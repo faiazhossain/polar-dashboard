@@ -98,7 +98,7 @@ const LeftCard = () => {
   };
 
   return (
-    <div className="bg-white w-full flex flex-col justify-around md:w-1/4 px-4 py-8 rounded-[20px] shadow-md">
+    <div className="bg-white w-full flex flex-col md:w-1/2 lg:w-1/3 px-4 py-8 rounded-[20px] shadow-md">
       {dropdownData.map((dropdown, index) => (
         <Dropdown
           key={index}
@@ -109,7 +109,7 @@ const LeftCard = () => {
         />
       ))}
       <button
-        className="bg-[#EC1B23] text-white px-4 w-full py-2 rounded-md hover:bg-[#dC1B23] transition-colors"
+        className="bg-[#EC1B23] text-white px-4 w-full py-2 rounded-[8px] hover:bg-[#dC1B23] transition-colors"
         onClick={handleLoadState}
       >
         Load State

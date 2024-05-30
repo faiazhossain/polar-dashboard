@@ -11,7 +11,7 @@ import {
 
 function MapComponent() {
   return (
-    <div className="rounded-[20px] relative h-full min-h-96 w-full mr-1 @apply shadow-[0px_4px_4px_0px_#00000040]">
+    <div className="rounded-[20px] relative h-full md:min-h-[54vh] w-full mr-1 @apply shadow-[0px_4px_4px_0px_#00000040]">
       <nav className="bg-white flex justify-end p-2 @apply shadow-[0px_2px_2px_0px_#00000066] z-40 absolute top-0 left-0 right-0 rounded-t-[20px]">
         <Switch />
         <span className="ml-2">Switch Polar Outlet</span>
@@ -25,7 +25,7 @@ function MapComponent() {
         style={{
           width: "100%",
           height: "100%",
-          minHeight: "384px",
+          minHeight: "54vh",
           borderRadius: 20,
         }}
         mapStyle="https://map.barikoi.com/styles/osm-liberty/style.json?key=NDE2NzpVNzkyTE5UMUoy"

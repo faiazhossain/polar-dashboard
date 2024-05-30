@@ -5,6 +5,7 @@ import total_polar_outlet from "@/public/statistics/outlet.svg";
 import poi from "@/public/statistics/poi.svg";
 import suggestion from "@/public/statistics/light.svg";
 import highlight from "@/public/statistics/light.svg";
+import export_png from "@/public/statistics/export.png";
 
 // Define the props for StatisticCard
 interface StatisticCardProps {
@@ -23,9 +24,9 @@ const StatisticCard: React.FC<StatisticCardProps> = ({
 }) => {
   return (
     <div
-      className={`flex items-center justify-between px-8 border border-gray-200 rounded-lg shadow flex-row ${
+      className={`flex items-center justify-between px-4 border border-gray-200 rounded-lg shadow flex-row ${
         isHighlighted ? "col-span-1 md:col-span-2" : ""
-      }`}
+      } @apply shadow-[0px_4px_4px_0px_#00000040]`}
     >
       <div className="flex flex-col justify-between p-1 leading-normal">
         <p className="mb-2 text-sm tracking-tight text-gray-900 dark:text-white">
@@ -55,7 +56,7 @@ const StatisticCard: React.FC<StatisticCardProps> = ({
 // Define the Statistics component
 const Statistics: React.FC = () => {
   return (
-    <div className="bg-white rounded-[20px] relative">
+    <div className="bg-white rounded-[20px] h-full md:min-h-[40vh] relative @apply shadow-[rgba(60,64,67,0.3)_0px_1px_2px_0px,rgba(60,64,67,0.15)_0px_2px_6px_2px] pb-4">
       <div className="absolute rounded-t-[20px] w-[220px] h-[50px] flex justify-center items-center bg-[#EC1B23]">
         <p className="text-white font-bold">Statistics</p>
       </div>
@@ -78,6 +79,15 @@ const Statistics: React.FC = () => {
           icon={highlight}
           isHighlighted
         />
+        <button className="bg-[#EC1B23] text-white px-2 w-full md:w-1/2 py-2 rounded-[8px] hover:bg-[#dC1B23] transition-colors flex justify-center items-center gap-4">
+          <p>EXPORT</p>
+          <Image
+            src={export_png}
+            width={18}
+            height={16}
+            alt="export logo"
+          ></Image>
+        </button>
       </div>
     </div>
   );
