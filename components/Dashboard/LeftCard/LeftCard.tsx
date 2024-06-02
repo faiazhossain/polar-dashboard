@@ -40,7 +40,7 @@ const LeftCard = () => {
   const [selectedGender, setSelectedGender] = useState("Male");
   const [selectedPriceRange, setSelectedPriceRange] =
     useState("Less than $100");
-  const [selectedTimeFilter, setSelectedTimeFilter] = useState("Last 24 Hours");
+  const [selectedTimeFilter, setSelectedTimeFilter] = useState("Day");
 
   const dropdownData = [
     {
@@ -80,7 +80,7 @@ const LeftCard = () => {
     },
     {
       label: "Time Based Filtration",
-      options: ["Last 24 Hours", "Last 7 Days", "Last 30 Days"],
+      options: ["Day", "Night"],
       value: selectedTimeFilter,
       onChange: setSelectedTimeFilter,
     },

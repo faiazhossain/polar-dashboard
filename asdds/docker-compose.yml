@@ -1,8 +1,0 @@
-version: "3.7"
-services:
-  polar_dashboard:
-    image: faiazhossain10/polar-dashboard:main
-    container_name: polar-dashboard
-    restart: unless-stopped
-    ports:
-      - "8088:3000"
