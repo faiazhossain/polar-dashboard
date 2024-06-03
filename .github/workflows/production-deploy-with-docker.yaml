@@ -45,11 +45,18 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd /var/www/html/polar-dashboard
-            ls -l
+
+            ls -l docker-compose.yml
+
+            export TAG=main
+
             docker-compose down
+
             docker image prune -af
-            TAG=main docker-compose pull
-            TAG=main docker-compose up -d
+
+            docker-compose pull
+
+            docker-compose up -d
 
       # - name: Test Success
       #   uses: rjstone/discord-webhook-notify@v1
