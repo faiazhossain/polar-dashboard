@@ -50,13 +50,13 @@ jobs:
 
             export TAG=main
 
-            docker-compose down
+            docker compose down
 
             docker image prune -af
 
-            docker-compose pull
+            docker compose pull
 
-            docker-compose up -d
+            docker compose up -d
 
       # - name: Test Success
       #   uses: rjstone/discord-webhook-notify@v1
