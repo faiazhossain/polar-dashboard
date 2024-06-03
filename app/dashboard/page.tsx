@@ -6,6 +6,7 @@ import Navbar from "@/components/Dashboard/Navbar/Navbar";
 import LeftCard from "@/components/Dashboard/LeftCard/LeftCard";
 import MapComponent from "@/components/Dashboard/MapComponent/MapComponent";
 import Statistics from "@/components/Dashboard/Statistics/Statistics";
+import { MapProvider } from "react-map-gl";
 
 const Dashboard: React.FC = () => {
   const router = useRouter();
@@ -20,14 +21,16 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="h-full md:min-h-[98vh] pb-8 relative">
-      <Navbar onLogout={handleLogout} />
-      <div className="flex flex-col px-1 md:px-4 md:flex-row mt-24 gap-6">
-        <LeftCard />
-        <div className="flex flex-col grow gap-4">
-          <MapComponent />
-          <Statistics />
+      <MapProvider>
+        <Navbar onLogout={handleLogout} />
+        <div className="flex flex-col px-1 md:px-4 md:flex-row mt-24 gap-6">
+          <LeftCard />
+          <div className="flex flex-col grow gap-4">
+            <MapComponent />
+            <Statistics />
+          </div>
         </div>
-      </div>
+      </MapProvider>
     </div>
   );
 };

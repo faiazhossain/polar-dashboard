@@ -1,5 +1,5 @@
 import * as React from "react";
-import Map from "react-map-gl/maplibre";
+import Map, { MapProvider, MapRef } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -8,8 +8,11 @@ import {
   GeolocateControl,
   NavigationControl,
 } from "react-map-gl";
+import useSwitchDayNight from "./SwitchDayNight";
 
 function MapComponent() {
+  const mapRef = React.useRef<MapRef>(null);
+  useSwitchDayNight();
   return (
     <div className="rounded-[20px] relative h-full md:min-h-[54vh] w-full mr-1 @apply shadow-[0px_4px_4px_0px_#00000040]">
       <nav className="bg-white flex justify-end p-2 @apply shadow-[0px_2px_2px_0px_#00000066] z-40 absolute top-0 left-0 right-0 rounded-t-[20px]">
@@ -17,6 +20,8 @@ function MapComponent() {
         <span className="ml-2">Switch Polar Outlet</span>
       </nav>
       <Map
+        ref={mapRef}
+        id="myMapA"
         initialViewState={{
           longitude: 90.37839,
           latitude: 23.76663,
@@ -28,7 +33,7 @@ function MapComponent() {
           minHeight: "54vh",
           borderRadius: 20,
         }}
-        mapStyle="https://map.barikoi.com/styles/osm-liberty/style.json?key=NDE2NzpVNzkyTE5UMUoy"
+        mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green/style.json"
         attributionControl={false}
       >
         <AttributionControl customAttribution="Map designed by barikoi" />

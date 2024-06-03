@@ -1,5 +1,7 @@
 // components/LeftCard.js
 "use client";
+import { timeFrame } from "@/lib/store/features/timeSlice/timeSlice";
+import { useAppDispatch } from "@/lib/store/hooks";
 import { useState } from "react";
 
 interface DropdownProps {
@@ -34,6 +36,8 @@ const Dropdown: React.FC<DropdownProps> = ({
 );
 
 const LeftCard = () => {
+  const dispatch = useAppDispatch();
+
   const [selectedRegion, setSelectedRegion] = useState("North");
   const [selectedAffluence, setSelectedAffluence] = useState("High");
   const [selectedAgeGroup, setSelectedAgeGroup] = useState("18-25");
@@ -85,8 +89,8 @@ const LeftCard = () => {
       onChange: setSelectedTimeFilter,
     },
   ];
-
   const handleLoadState = () => {
+    dispatch(timeFrame(selectedTimeFilter));
     console.log({
       selectedRegion,
       selectedAffluence,
