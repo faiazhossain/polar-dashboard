@@ -9,29 +9,32 @@ const useSwitchDayNight = () => {
   console.log("🚀 ~ useSwitchDayNight ~ TimeFrame:", TimeFrame);
 
   useEffect(() => {
-    if (TimeFrame === "Day") {
-      myMapA
-        ?.getMap()
-        .setLayoutProperty("polar-zone-day", "visibility", "visible");
-      myMapA
-        ?.getMap()
-        .setLayoutProperty("polar-zone-night", "visibility", "none");
-    } else if (TimeFrame === "Night") {
-      myMapA
-        ?.getMap()
-        .setLayoutProperty("polar-zone-night", "visibility", "visible");
-      myMapA
-        ?.getMap()
-        .setLayoutProperty("polar-zone-day", "visibility", "none");
-    } else {
-      myMapA
-        ?.getMap()
-        .setLayoutProperty("polar-zone-day", "visibility", "visible");
-      myMapA
-        ?.getMap()
-        .setLayoutProperty("polar-zone-night", "visibility", "visible");
+    const map = myMapA?.getMap();
+    const updateMapStyle = () => {
+      if (TimeFrame === "Day") {
+        map?.setLayoutProperty("polar-zone-day", "visibility", "visible");
+        map?.setLayoutProperty("polar-zone-night", "visibility", "none");
+      } else if (TimeFrame === "Night") {
+        map?.setLayoutProperty("polar-zone-night", "visibility", "visible");
+        map?.setLayoutProperty("polar-zone-day", "visibility", "none");
+      } else {
+        map?.setLayoutProperty("polar-zone-day", "visibility", "none");
+        map?.setLayoutProperty("polar-zone-night", "visibility", "none");
+      }
+    };
+
+    if (map) {
+      if (map.isStyleLoaded()) {
+        updateMapStyle();
+      } else {
+        map.on("styledata", updateMapStyle);
+      }
     }
-  }, [TimeFrame, myMapA]); // Dependency array ensures this runs when TimeFrame or mainMap changes
+
+    return () => {
+      map?.off("styledata", updateMapStyle);
+    };
+  }, [TimeFrame, myMapA]);
 };
 
 export default useSwitchDayNight;
