@@ -1,39 +1,8 @@
-// components/LeftCard.js
 "use client";
 import { timeFrame, zoneFrame } from "@/lib/store/features/timeSlice/timeSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { useState } from "react";
-
-interface DropdownProps {
-  label: string;
-  options: string[];
-  value: string;
-  onChange: (value: string) => void;
-}
-
-const Dropdown: React.FC<DropdownProps> = ({
-  label,
-  options,
-  value,
-  onChange,
-}) => (
-  <div className="mb-4 relative">
-    <label className="text-sm text-[#808080] mb-1 block absolute top-[-11px] left-6 bg-white">
-      {label}
-    </label>
-    <select
-      className="w-full bg-white border border-gray-300 p-4 rounded-xl text-[#000008]"
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    >
-      {options.map((option) => (
-        <option className="rounded-2xl" key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  </div>
-);
+import Dropdown from "./Dropdown";
 
 const LeftCard = () => {
   const dispatch = useAppDispatch();
@@ -45,7 +14,7 @@ const LeftCard = () => {
   const [selectedPriceRange, setSelectedPriceRange] =
     useState("Less than $100");
   const [selectedTimeFilter, setSelectedTimeFilter] = useState("Day");
-  const [selectedZoneLevel, setSelectedZoneLevel] = useState("LOW");
+  const [selectedZoneLevel, setSelectedZoneLevel] = useState("Low");
 
   const dropdownData = [
     {
@@ -96,6 +65,7 @@ const LeftCard = () => {
       onChange: setSelectedZoneLevel,
     },
   ];
+
   const handleLoadState = () => {
     dispatch(timeFrame(selectedTimeFilter));
     dispatch(zoneFrame(selectedZoneLevel.toUpperCase()));
