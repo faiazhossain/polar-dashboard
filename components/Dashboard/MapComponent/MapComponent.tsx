@@ -9,6 +9,7 @@ import {
   NavigationControl,
 } from "react-map-gl";
 import useSwitchDayNight from "./SwitchDayNight";
+import PopUpOnHover from "./PopUpOnHover";
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
@@ -40,6 +41,7 @@ function MapComponent() {
         <NavigationControl position="bottom-right" />
         <GeolocateControl position="bottom-right" />
         <FullscreenControl position="bottom-right" />
+        <PopUpOnHover />
       </Map>
     </div>
   );
