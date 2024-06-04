@@ -6,20 +6,57 @@ import { useMap } from "react-map-gl";
 const useSwitchDayNight = () => {
   const { myMapA } = useMap();
   const TimeFrame = useAppSelector((state) => state.time.timeState);
+  const ZoneLevel = useAppSelector((state) => state.time.zoneState);
+  console.log("🚀 ~ useSwitchDayNight ~ ZoneLevel:", ZoneLevel);
   console.log("🚀 ~ useSwitchDayNight ~ TimeFrame:", TimeFrame);
 
   useEffect(() => {
     const map = myMapA?.getMap();
     const updateMapStyle = () => {
-      if (TimeFrame === "Day") {
-        map?.setLayoutProperty("polar-zone-day", "visibility", "visible");
-        map?.setLayoutProperty("polar-zone-night", "visibility", "none");
-      } else if (TimeFrame === "Night") {
-        map?.setLayoutProperty("polar-zone-night", "visibility", "visible");
-        map?.setLayoutProperty("polar-zone-day", "visibility", "none");
-      } else {
-        map?.setLayoutProperty("polar-zone-day", "visibility", "none");
-        map?.setLayoutProperty("polar-zone-night", "visibility", "none");
+      if (map) {
+        // // Clear existing filters
+        // map.setFilter("polar-zone-day", null);
+        // map.setFilter("polar-zone-night", null);
+        const adjustedZoneLevel =
+          ZoneLevel === "ULTRA-HIGH" ? "ULTRA_HIGH" : ZoneLevel;
+        if (TimeFrame === "Day") {
+          if (ZoneLevel != "ALL-ZONE") {
+            map.setFilter("polar-zone-day", [
+              "all",
+              ["==", "$type", "Polygon"],
+              ["==", "ZONE_DAY", adjustedZoneLevel],
+            ]);
+            map.setLayoutProperty("polar-zone-day", "visibility", "visible");
+            map.setLayoutProperty("polar-zone-night", "visibility", "none");
+          } else {
+            map.setFilter("polar-zone-day", [
+              "all",
+              ["==", "$type", "Polygon"],
+            ]);
+            map.setLayoutProperty("polar-zone-day", "visibility", "visible");
+            map.setLayoutProperty("polar-zone-night", "visibility", "none");
+          }
+        } else if (TimeFrame === "Night") {
+          if (ZoneLevel != "ALL-ZONE") {
+            map.setFilter("polar-zone-night", [
+              "all",
+              ["==", "$type", "Polygon"],
+              ["==", "ZONE_NIGHT", adjustedZoneLevel],
+            ]);
+            map.setLayoutProperty("polar-zone-day", "visibility", "none");
+            map.setLayoutProperty("polar-zone-night", "visibility", "visible");
+          } else {
+            map.setFilter("polar-zone-night", [
+              "all",
+              ["==", "$type", "Polygon"],
+            ]);
+            map.setLayoutProperty("polar-zone-day", "visibility", "none");
+            map.setLayoutProperty("polar-zone-night", "visibility", "visible");
+          }
+        } else {
+          map.setLayoutProperty("polar-zone-day", "visibility", "none");
+          map.setLayoutProperty("polar-zone-night", "visibility", "none");
+        }
       }
     };
 
@@ -34,7 +71,7 @@ const useSwitchDayNight = () => {
     return () => {
       map?.off("styledata", updateMapStyle);
     };
-  }, [TimeFrame, myMapA]);
+  }, [TimeFrame, ZoneLevel, myMapA]);
 };
 
 export default useSwitchDayNight;

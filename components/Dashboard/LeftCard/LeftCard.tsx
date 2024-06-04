@@ -1,6 +1,6 @@
 // components/LeftCard.js
 "use client";
-import { timeFrame } from "@/lib/store/features/timeSlice/timeSlice";
+import { timeFrame, zoneFrame } from "@/lib/store/features/timeSlice/timeSlice";
 import { useAppDispatch } from "@/lib/store/hooks";
 import { useState } from "react";
 
@@ -45,6 +45,7 @@ const LeftCard = () => {
   const [selectedPriceRange, setSelectedPriceRange] =
     useState("Less than $100");
   const [selectedTimeFilter, setSelectedTimeFilter] = useState("Day");
+  const [selectedZoneLevel, setSelectedZoneLevel] = useState("LOW");
 
   const dropdownData = [
     {
@@ -88,9 +89,16 @@ const LeftCard = () => {
       value: selectedTimeFilter,
       onChange: setSelectedTimeFilter,
     },
+    {
+      label: "Select Zone Level",
+      options: ["Low", "Mid", "High", "Ultra-high", "All-Zone"],
+      value: selectedZoneLevel,
+      onChange: setSelectedZoneLevel,
+    },
   ];
   const handleLoadState = () => {
     dispatch(timeFrame(selectedTimeFilter));
+    dispatch(zoneFrame(selectedZoneLevel.toUpperCase()));
     console.log({
       selectedRegion,
       selectedAffluence,
@@ -98,6 +106,7 @@ const LeftCard = () => {
       selectedGender,
       selectedPriceRange,
       selectedTimeFilter,
+      selectedZoneLevel,
     });
   };
 

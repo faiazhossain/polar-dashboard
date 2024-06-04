@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface TimeState {
   timeState: string;
+  zoneState: string;
 }
 
 const initialState: TimeState = {
   timeState: "",
+  zoneState: "",
 };
 
 export const timeSlice = createSlice({
@@ -16,9 +17,12 @@ export const timeSlice = createSlice({
     timeFrame: (state, action) => {
       state.timeState = action.payload;
     },
+    zoneFrame: (state, action) => {
+      state.zoneState = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { timeFrame } = timeSlice.actions;
+export const { timeFrame, zoneFrame } = timeSlice.actions;
 export default timeSlice.reducer;
