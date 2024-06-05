@@ -1,84 +1,89 @@
-"use client";
-import { timeFrame, zoneFrame } from "@/lib/store/features/timeSlice/timeSlice";
-import { useAppDispatch } from "@/lib/store/hooks";
-import { useState } from "react";
+// LeftCard.tsx
+import React from "react";
+import {
+  timeFrame,
+  zoneFrame,
+  setSelectedRegion,
+  setSelectedAffluence,
+  setSelectedAgeGroup,
+  setSelectedGender,
+  setSelectedPriceRange,
+  setSelectedAgeGroupPercentage,
+} from "@/lib/store/features/timeSlice/leftPanelSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import Dropdown from "./Dropdown";
+import Slider from "./Slider";
 
 const LeftCard = () => {
   const dispatch = useAppDispatch();
+  const {
+    timeState,
+    zoneState,
+    selectedRegion,
+    selectedAffluence,
+    selectedAgeGroup,
+    selectedGender,
+    selectedPriceRange,
+  } = useAppSelector((state) => state.leftPanel);
 
-  const [selectedRegion, setSelectedRegion] = useState("North");
-  const [selectedAffluence, setSelectedAffluence] = useState("High");
-  const [selectedAgeGroup, setSelectedAgeGroup] = useState("18-25");
-  const [selectedGender, setSelectedGender] = useState("Male");
-  const [selectedPriceRange, setSelectedPriceRange] =
-    useState("Less than $100");
-  const [selectedTimeFilter, setSelectedTimeFilter] = useState("Day");
-  const [selectedZoneLevel, setSelectedZoneLevel] = useState("Low");
+  const handleDropdownChange = (action: any) => (event: any) => {
+    const value = event;
+    dispatch(action(value));
+  };
+
+  const handleSliderChange = (value: number) => {
+    dispatch(setSelectedAgeGroupPercentage(value));
+  };
 
   const dropdownData = [
+    {
+      label: "Time Based Filtration",
+      options: ["Day", "Night"],
+      value: timeState,
+      onChange: handleDropdownChange(timeFrame),
+    },
     {
       label: "Select Region",
       options: ["North", "South", "East", "West"],
       value: selectedRegion,
-      onChange: setSelectedRegion,
+      onChange: handleDropdownChange(setSelectedRegion),
     },
     {
       label: "Affluence",
       options: ["High", "Medium", "Low"],
       value: selectedAffluence,
-      onChange: setSelectedAffluence,
-    },
-    {
-      label: "Age Group",
-      options: ["18-25", "26-35", "36-45", "45+"],
-      value: selectedAgeGroup,
-      onChange: setSelectedAgeGroup,
+      onChange: handleDropdownChange(setSelectedAffluence),
     },
     {
       label: "Select Gender",
       options: ["Male", "Female", "Other"],
       value: selectedGender,
-      onChange: setSelectedGender,
+      onChange: handleDropdownChange(setSelectedGender),
     },
+    // {
+    //   label: "Sale Phone Price Range",
+    //   options: [
+    //     "Less than $100",
+    //     "$100 - $500",
+    //     "$500 - $1000",
+    //     "More than $1000",
+    //   ],
+    //   value: selectedPriceRange,
+    //   onChange: handleDropdownChange(setSelectedPriceRange),
+    // },
+    // {
+    //   label: "Select Zone Level",
+    //   options: ["Low", "Mid", "High", "Ultra-high", "All-Zone"],
+    //   value: zoneState,
+    //   onChange: handleDropdownChange(zoneFrame),
+    // },
     {
-      label: "Sale Phone Price Range",
-      options: [
-        "Less than $100",
-        "$100 - $500",
-        "$500 - $1000",
-        "More than $1000",
-      ],
-      value: selectedPriceRange,
-      onChange: setSelectedPriceRange,
-    },
-    {
-      label: "Time Based Filtration",
-      options: ["Day", "Night"],
-      value: selectedTimeFilter,
-      onChange: setSelectedTimeFilter,
-    },
-    {
-      label: "Select Zone Level",
-      options: ["Low", "Mid", "High", "Ultra-high", "All-Zone"],
-      value: selectedZoneLevel,
-      onChange: setSelectedZoneLevel,
+      label: "Age Group",
+      options: ["18-24", "25-34", "35-49", "50+"],
+      value: selectedAgeGroup,
+      onChange: handleDropdownChange(setSelectedAgeGroup),
     },
   ];
-
-  const handleLoadState = () => {
-    dispatch(timeFrame(selectedTimeFilter));
-    dispatch(zoneFrame(selectedZoneLevel.toUpperCase()));
-    console.log({
-      selectedRegion,
-      selectedAffluence,
-      selectedAgeGroup,
-      selectedGender,
-      selectedPriceRange,
-      selectedTimeFilter,
-      selectedZoneLevel,
-    });
-  };
 
   return (
     <div className="bg-white w-full flex flex-col md:w-1/2 lg:w-1/3 px-4 py-8 rounded-[20px] shadow-md">
@@ -91,12 +96,19 @@ const LeftCard = () => {
           onChange={dropdown.onChange}
         />
       ))}
-      <button
+      {selectedAgeGroup && (
+        <Slider
+          label={`Percentage of ${selectedAgeGroup} group`} // Default value, you can set it accordingly
+          onChange={handleSliderChange}
+        />
+      )}
+      {/* Uncomment the button below if you want to manually trigger the load state action */}
+      {/* <button
         className="bg-[#EC1B23] text-white px-4 w-full py-2 rounded-[8px] hover:bg-[#dC1B23] transition-colors"
         onClick={handleLoadState}
       >
         Load State
-      </button>
+      </button> */}
     </div>
   );
 };

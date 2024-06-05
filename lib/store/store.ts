@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import timeSlice from "./features/timeSlice/timeSlice";
+import timeSlice from "./features/timeSlice/leftPanelSlice";
+import leftPanelSlice from "./features/timeSlice/leftPanelSlice";
 
 export const creteStore = () => {
   return configureStore({
     reducer: {
-      time: timeSlice,
+      leftPanel: leftPanelSlice,
     },
   });
 };

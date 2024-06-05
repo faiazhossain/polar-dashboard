@@ -5,59 +5,49 @@ import { useMap } from "react-map-gl";
 
 const useSwitchDayNight = () => {
   const { myMapA } = useMap();
-  const TimeFrame = useAppSelector((state) => state.time.timeState);
-  const ZoneLevel = useAppSelector((state) => state.time.zoneState);
-  console.log("🚀 ~ useSwitchDayNight ~ ZoneLevel:", ZoneLevel);
-  console.log("🚀 ~ useSwitchDayNight ~ TimeFrame:", TimeFrame);
+  const TimeFrame = useAppSelector((state) => state.leftPanel.timeState);
+  const ageGroup = useAppSelector((state) => state.leftPanel.selectedAgeGroup);
+  const percentage = useAppSelector(
+    (state) => state.leftPanel.selectedAgeGroupPercentage
+  );
 
   useEffect(() => {
     const map = myMapA?.getMap();
     const updateMapStyle = () => {
       if (map) {
-        const adjustedZoneLevel =
-          ZoneLevel === "ULTRA-HIGH" ? "ULTRA_HIGH" : ZoneLevel;
         if (TimeFrame === "Day") {
-          if (ZoneLevel != "ALL-ZONE") {
-            // map.setFilter("polar-zone-day", [
-            //   "all",
-            //   ["==", "$type", "Polygon"],
-            //   ["==", "ZONE_DAY", adjustedZoneLevel],
-            // ]);
-            map.setLayoutProperty("Ada_day_zone", "visibility", "visible");
-            map.setLayoutProperty(
-              "Ada_day_zone_symbol",
-              "visibility",
-              "visible"
-            );
-            map.setLayoutProperty("polar-zone-night", "visibility", "none");
-          } else {
-            map.setFilter("polar-zone-day", [
+          if (ageGroup === "18-24") {
+            map.setFilter("Ada_day_zone", [
               "all",
-              ["==", "$type", "Polygon"],
+              ["==", ["geometry-type"], "Polygon"],
+              [
+                "all",
+                [
+                  "any",
+                  ["!", ["has", "rank"]],
+                  [
+                    "all",
+                    [">=", ["get", "rank"], 1],
+                    ["<=", ["get", "rank"], 312],
+                  ],
+                ],
+                [
+                  "any",
+                  ["!", ["has", "18-24"]],
+                  [
+                    "all",
+                    [">=", ["get", "18-24"], 0],
+                    ["<=", ["get", "18-24"], percentage / 100],
+                  ],
+                ],
+              ],
             ]);
-            map.setLayoutProperty("polar-zone-day", "visibility", "visible");
-            map.setLayoutProperty("polar-zone-night", "visibility", "none");
           }
-        } else if (TimeFrame === "Night") {
-          if (ZoneLevel != "ALL-ZONE") {
-            map.setFilter("polar-zone-night", [
-              "all",
-              ["==", "$type", "Polygon"],
-              ["==", "ZONE_NIGHT", adjustedZoneLevel],
-            ]);
-            map.setLayoutProperty("polar-zone-day", "visibility", "none");
-            map.setLayoutProperty("polar-zone-night", "visibility", "visible");
-          } else {
-            map.setFilter("polar-zone-night", [
-              "all",
-              ["==", "$type", "Polygon"],
-            ]);
-            map.setLayoutProperty("polar-zone-day", "visibility", "none");
-            map.setLayoutProperty("polar-zone-night", "visibility", "visible");
-          }
+          map.setLayoutProperty("Ada_day_zone", "visibility", "visible");
+          map.setLayoutProperty("Ada_day_zone_symbol", "visibility", "visible");
         } else {
-          map.setLayoutProperty("polar-zone-day", "visibility", "none");
-          map.setLayoutProperty("polar-zone-night", "visibility", "none");
+          map.setLayoutProperty("Ada_day_zone", "visibility", "none");
+          map.setLayoutProperty("Ada_day_zone_symbol", "visibility", "none");
         }
       }
     };
@@ -73,7 +63,7 @@ const useSwitchDayNight = () => {
     return () => {
       map?.off("styledata", updateMapStyle);
     };
-  }, [TimeFrame, ZoneLevel, myMapA]);
+  }, [TimeFrame, myMapA, ageGroup, percentage]);
 };
 
 export default useSwitchDayNight;

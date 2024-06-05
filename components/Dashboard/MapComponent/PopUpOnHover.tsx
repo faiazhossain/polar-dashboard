@@ -95,7 +95,7 @@ const PopUpOnHover: React.FC = () => {
               <li className="font-bold">50:</li>
               <li>{formatPercentage(popUpData["50"])}</li>
             </ul>
-            <h1 className="font-bold my-2 text-md">Location Details</h1>
+            <h1 className="font-bold my-2 text-md">Region Details</h1>
             <ul className="grid grid-cols-2 text-sm">
               <li className="font-bold">Day Count:</li>
               <li>{popUpData.DayCount}</li>
@@ -119,14 +119,20 @@ const PopUpOnHover: React.FC = () => {
                   <li>{popUpData.details}</li>
                 </>
               )} */}
+              {/* <li className="font-bold">High:</li>
+              <li>{formatPercentage(popUpData.High)}</li>
+              <li className="font-bold">Mid:</li>
+              <li>{formatPercentage(popUpData.Mid)}</li>
+              <li className="font-bold">Ultra_High:</li>
+              <li>{formatPercentage(popUpData.Ultra_High)}</li>
               <li className="font-bold">Low:</li>
-              <li>{formatPercentage(popUpData.low)}</li>
+              <li>{formatPercentage(popUpData.low)}</li> */}
               <li className="font-bold">Rank:</li>
               <li>{popUpData.rank}</li>
             </ul>
             {formatDetails(popUpData.details) && (
               <div className="flex flex-wrap justify-start w-40 mt-4">
-                <h1 className="font-bold mb-2 w-full">Details:</h1>
+                <h1 className="font-bold mb-2 w-full">Building Details:</h1>
                 <h1
                   className="font-bold"
                   title={formatDetails(popUpData.details)}
