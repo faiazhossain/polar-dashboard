@@ -1,5 +1,4 @@
-// LeftCard.tsx
-import React from "react";
+import React, { useState } from "react";
 import {
   timeFrame,
   zoneFrame,
@@ -24,12 +23,17 @@ const LeftCard = () => {
     selectedAgeGroup,
     selectedGender,
     selectedPriceRange,
+    selectedAgeGroupPercentage,
   } = useAppSelector((state) => state.leftPanel);
 
-  const handleDropdownChange = (action: any) => (event: any) => {
-    const value = event;
-    dispatch(action(value));
-  };
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+  const handleDropdownChange =
+    (action: any, dropdownLabel: string) => (event: any) => {
+      const value = event;
+      dispatch(action(value));
+      setActiveDropdown(dropdownLabel);
+    };
 
   const handleSliderChange = (value: number) => {
     dispatch(setSelectedAgeGroupPercentage(value));
@@ -40,26 +44,27 @@ const LeftCard = () => {
       label: "Time Based Filtration",
       options: ["Day", "Night"],
       value: timeState,
-      onChange: handleDropdownChange(timeFrame),
+      onChange: handleDropdownChange(timeFrame, "Time Based Filtration"),
     },
     {
       label: "Select Region",
       options: ["North", "South", "East", "West"],
       value: selectedRegion,
-      onChange: handleDropdownChange(setSelectedRegion),
+      onChange: handleDropdownChange(setSelectedRegion, "Select Region"),
     },
     {
       label: "Affluence",
       options: ["High", "Medium", "Low"],
       value: selectedAffluence,
-      onChange: handleDropdownChange(setSelectedAffluence),
+      onChange: handleDropdownChange(setSelectedAffluence, "Affluence"),
     },
     {
       label: "Select Gender",
       options: ["Male", "Female", "Other"],
       value: selectedGender,
-      onChange: handleDropdownChange(setSelectedGender),
+      onChange: handleDropdownChange(setSelectedGender, "Select Gender"),
     },
+    // Uncomment if needed
     // {
     //   label: "Sale Phone Price Range",
     //   options: [
@@ -69,19 +74,20 @@ const LeftCard = () => {
     //     "More than $1000",
     //   ],
     //   value: selectedPriceRange,
-    //   onChange: handleDropdownChange(setSelectedPriceRange),
+    //   onChange: handleDropdownChange(setSelectedPriceRange, "Sale Phone Price Range"),
     // },
+    // Uncomment if needed
     // {
     //   label: "Select Zone Level",
     //   options: ["Low", "Mid", "High", "Ultra-high", "All-Zone"],
     //   value: zoneState,
-    //   onChange: handleDropdownChange(zoneFrame),
+    //   onChange: handleDropdownChange(zoneFrame, "Select Zone Level"),
     // },
     {
       label: "Age Group",
       options: ["18-24", "25-34", "35-49", "50+"],
       value: selectedAgeGroup,
-      onChange: handleDropdownChange(setSelectedAgeGroup),
+      onChange: handleDropdownChange(setSelectedAgeGroup, "Age Group"),
     },
   ];
 
@@ -96,19 +102,12 @@ const LeftCard = () => {
           onChange={dropdown.onChange}
         />
       ))}
-      {selectedAgeGroup && (
+      {activeDropdown === "Age Group" && selectedAgeGroup && (
         <Slider
-          label={`Percentage of ${selectedAgeGroup} group`} // Default value, you can set it accordingly
+          label={`Percentage of ${selectedAgeGroup} group is ${selectedAgeGroupPercentage}%`}
           onChange={handleSliderChange}
         />
       )}
-      {/* Uncomment the button below if you want to manually trigger the load state action */}
-      {/* <button
-        className="bg-[#EC1B23] text-white px-4 w-full py-2 rounded-[8px] hover:bg-[#dC1B23] transition-colors"
-        onClick={handleLoadState}
-      >
-        Load State
-      </button> */}
     </div>
   );
 };

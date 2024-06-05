@@ -59,7 +59,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
           onClick={handleProfileClick}
         >
           {/* Profile Picture */}
-          <span className="text-[#EC1B23] text-sm">John Doe</span>
+          <span className="text-[#EC1B23] text-sm">Admin</span>
           <div
             className={`w-12 h-12 ${
               dropdownVisible ? "border-2 rounded-full border-red-500" : ""

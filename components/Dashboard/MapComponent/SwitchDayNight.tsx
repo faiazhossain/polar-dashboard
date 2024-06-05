@@ -16,7 +16,9 @@ const useSwitchDayNight = () => {
     const updateMapStyle = () => {
       if (map) {
         if (TimeFrame === "Day") {
-          if (ageGroup === "18-24") {
+          const ageGroups = ["18-24", "25-34", "35-49", "50+"];
+
+          if (ageGroups.includes(ageGroup)) {
             map.setFilter("Ada_day_zone", [
               "all",
               ["==", ["geometry-type"], "Polygon"],
@@ -33,16 +35,17 @@ const useSwitchDayNight = () => {
                 ],
                 [
                   "any",
-                  ["!", ["has", "18-24"]],
+                  ["!", ["has", ageGroup]],
                   [
                     "all",
-                    [">=", ["get", "18-24"], 0],
-                    ["<=", ["get", "18-24"], percentage / 100],
+                    [">=", ["get", ageGroup], 0],
+                    ["<=", ["get", ageGroup], percentage / 100],
                   ],
                 ],
               ],
             ]);
           }
+
           map.setLayoutProperty("Ada_day_zone", "visibility", "visible");
           map.setLayoutProperty("Ada_day_zone_symbol", "visibility", "visible");
         } else {
