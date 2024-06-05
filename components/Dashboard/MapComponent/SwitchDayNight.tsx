@@ -14,19 +14,21 @@ const useSwitchDayNight = () => {
     const map = myMapA?.getMap();
     const updateMapStyle = () => {
       if (map) {
-        // // Clear existing filters
-        // map.setFilter("polar-zone-day", null);
-        // map.setFilter("polar-zone-night", null);
         const adjustedZoneLevel =
           ZoneLevel === "ULTRA-HIGH" ? "ULTRA_HIGH" : ZoneLevel;
         if (TimeFrame === "Day") {
           if (ZoneLevel != "ALL-ZONE") {
-            map.setFilter("polar-zone-day", [
-              "all",
-              ["==", "$type", "Polygon"],
-              ["==", "ZONE_DAY", adjustedZoneLevel],
-            ]);
-            map.setLayoutProperty("polar-zone-day", "visibility", "visible");
+            // map.setFilter("polar-zone-day", [
+            //   "all",
+            //   ["==", "$type", "Polygon"],
+            //   ["==", "ZONE_DAY", adjustedZoneLevel],
+            // ]);
+            map.setLayoutProperty("Ada_day_zone", "visibility", "visible");
+            map.setLayoutProperty(
+              "Ada_day_zone_symbol",
+              "visibility",
+              "visible"
+            );
             map.setLayoutProperty("polar-zone-night", "visibility", "none");
           } else {
             map.setFilter("polar-zone-day", [
