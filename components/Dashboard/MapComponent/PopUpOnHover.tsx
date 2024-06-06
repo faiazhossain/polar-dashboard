@@ -24,10 +24,13 @@ interface PopUpData {
   rank: number;
 }
 
-const PopUpOnHover: React.FC = () => {
+interface PopUpOnHoverProps {
+  mode: "Day" | "Night";
+}
+
+const PopUpOnHover: React.FC<PopUpOnHoverProps> = ({ mode }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [popUpData, setPopUpData] = useState<Partial<PopUpData>>({});
-  console.log("🚀 ~ popUpData:", popUpData);
 
   const { current: map } = useMap();
 
@@ -44,13 +47,18 @@ const PopUpOnHover: React.FC = () => {
         lng: coordinates.lng,
       });
     };
-
-    map.on("click", "Ada_day_zone", handleMapClick);
+    {
+      mode === "Day"
+        ? map.on("click", "ada_day_zone", handleMapClick)
+        : map.on("click", "ada_night_zone", handleMapClick);
+    }
 
     return () => {
-      map.off("click", "Ada_day_zone", handleMapClick);
+      mode === "Day"
+        ? map.off("click", "ada_day_zone", handleMapClick)
+        : map.off("click", "ada_night_zone", handleMapClick);
     };
-  }, [map]);
+  }, [map, mode]);
 
   // Function to format numbers as percentages
   const formatPercentage = (value?: number) => {
@@ -84,7 +92,7 @@ const PopUpOnHover: React.FC = () => {
           maxWidth="400px"
         >
           <div className="w-full">
-            <h1 className="font-bold mb-2 text-md ">Age Group</h1>
+            <h1 className="font-bold mb-2 text-md">Age Group</h1>
             <ul className="grid grid-cols-2 text-sm">
               <li className="font-bold">18-24:</li>
               <li>{formatPercentage(popUpData["18-24"])}</li>
@@ -103,30 +111,6 @@ const PopUpOnHover: React.FC = () => {
               <li>{formatPercentage(popUpData.F)}</li>
               <li className="font-bold">Male:</li>
               <li>{formatPercentage(popUpData.M)}</li>
-              {/* <li className="font-bold">High:</li>
-              <li>{formatPercentage(popUpData.High)}</li>
-              <li className="font-bold">Mid:</li>
-              <li>{formatPercentage(popUpData.Mid)}</li>
-              <li className="font-bold">Ultra_High:</li>
-              <li>{formatPercentage(popUpData.Ultra_High)}</li> */}
-              {/* <li className="font-bold">ZONE:</li>
-              <li>{popUpData.ZONE}</li> */}
-              {/* <li className="font-bold">Building:</li> */}
-              {/* <li>{popUpData.building}</li>
-              {popUpData.details && (
-                <>
-                  <li className="font-bold">Details:</li>
-                  <li>{popUpData.details}</li>
-                </>
-              )} */}
-              {/* <li className="font-bold">High:</li>
-              <li>{formatPercentage(popUpData.High)}</li>
-              <li className="font-bold">Mid:</li>
-              <li>{formatPercentage(popUpData.Mid)}</li>
-              <li className="font-bold">Ultra_High:</li>
-              <li>{formatPercentage(popUpData.Ultra_High)}</li>
-              <li className="font-bold">Low:</li>
-              <li>{formatPercentage(popUpData.low)}</li> */}
               <li className="font-bold">Rank:</li>
               <li>{popUpData.rank}</li>
             </ul>

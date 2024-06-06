@@ -1,26 +1,35 @@
-// Slider.tsx
 import React from "react";
 
 interface SliderProps {
   label: string;
+  value: number;
   onChange: (value: number) => void;
+  disabled?: boolean;
 }
 
-const Slider: React.FC<SliderProps> = ({ label, onChange }) => {
+const Slider: React.FC<SliderProps> = ({
+  label,
+  value,
+  onChange,
+  disabled = false,
+}) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = parseInt(event.target.value);
-    onChange(newValue);
+    onChange(Number(event.target.value));
   };
 
   return (
     <div className="mb-4">
-      <label className="text-sm text-[#808080] mb-1 block">{label}:</label>
+      <label className="block text-sm text-gray-600 mb-2">{label}</label>
       <input
         type="range"
-        min={0}
-        max={100}
+        min="0"
+        max="100"
+        value={value}
         onChange={handleChange}
-        className="w-full"
+        disabled={disabled}
+        className={`w-full h-1 rounded-full ${
+          disabled ? "cursor-not-allowed" : ""
+        }`}
       />
     </div>
   );

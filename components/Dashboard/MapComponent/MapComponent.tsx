@@ -10,9 +10,11 @@ import {
 } from "react-map-gl";
 import useSwitchDayNight from "./SwitchDayNight";
 import PopUpOnHover from "./PopUpOnHover";
+import { useAppSelector } from "@/lib/store/hooks";
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
+  const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
   useSwitchDayNight();
   return (
     <div className="rounded-[20px] relative h-full md:min-h-[68vh] w-full mr-1 @apply shadow-[0px_4px_4px_0px_#00000040]">
@@ -41,7 +43,7 @@ function MapComponent() {
         <NavigationControl position="bottom-right" />
         <GeolocateControl position="bottom-right" />
         <FullscreenControl position="bottom-right" />
-        <PopUpOnHover />
+        <PopUpOnHover mode={TimeFrame} />
       </Map>
     </div>
   );

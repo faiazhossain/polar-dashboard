@@ -7,6 +7,7 @@ export interface LeftPanelState {
   selectedAffluence: string;
   selectedAgeGroup: string;
   selectedAgeGroupPercentage: number;
+  genderPercentage: number;
   selectedGender: string;
   selectedPriceRange: string;
 }
@@ -17,7 +18,8 @@ const initialState: LeftPanelState = {
   selectedRegion: "",
   selectedAffluence: "",
   selectedAgeGroup: "",
-  selectedAgeGroupPercentage: 0,
+  selectedAgeGroupPercentage: 50,
+  genderPercentage: 50,
   selectedGender: "",
   selectedPriceRange: "",
 };
@@ -50,6 +52,9 @@ export const leftPanelSlice = createSlice({
     setSelectedPriceRange: (state, action) => {
       state.selectedPriceRange = action.payload;
     },
+    setGenderPercentage: (state, action) => {
+      state.genderPercentage = action.payload;
+    },
   },
 });
 
@@ -63,5 +68,6 @@ export const {
   setSelectedGender,
   setSelectedPriceRange,
   setSelectedAgeGroupPercentage,
+  setGenderPercentage,
 } = leftPanelSlice.actions;
 export default leftPanelSlice.reducer;

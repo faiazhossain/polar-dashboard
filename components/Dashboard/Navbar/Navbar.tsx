@@ -32,7 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
   // }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white px-6 py-2 flex justify-between items-center shadow-[0px_0px_10px_5px_#00000026]">
+    <nav className="top-0 left-0 right-0 z-50 bg-white px-6 py-2 flex justify-between items-center shadow-[0px_0px_10px_5px_#00000026]">
       {/* Left Section */}
       <div className="flex items-center space-x-4 w-16 h-14">
         {/* Logo */}

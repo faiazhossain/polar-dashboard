@@ -5,52 +5,82 @@ import { useMap } from "react-map-gl";
 
 const useSwitchDayNight = () => {
   const { myMapA } = useMap();
-  const TimeFrame = useAppSelector((state) => state.leftPanel.timeState);
-  const ageGroup = useAppSelector((state) => state.leftPanel.selectedAgeGroup);
-  const percentage = useAppSelector(
-    (state) => state.leftPanel.selectedAgeGroupPercentage
+  const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
+  
+  const ageGroup = useAppSelector(
+    (state: any) => state.leftPanel.selectedAgeGroup
   );
+  const genderGroup = useAppSelector(
+    (state: any) => state.leftPanel.selectedGender
+  );
+  const percentageAge = useAppSelector(
+    (state: any) => state.leftPanel.selectedAgeGroupPercentage
+  );
+  const percentageGender = useAppSelector(
+    (state: any) => state.leftPanel.genderPercentage
+  );
+
+  // Helper function to transform gender
+  const transformGender = (gender: string) => {
+    if (gender === "Male") return "M";
+    if (gender === "Female") return "F";
+    return gender;
+  };
 
   useEffect(() => {
     const map = myMapA?.getMap();
+
     const updateMapStyle = () => {
       if (map) {
-        if (TimeFrame === "Day") {
-          const ageGroups = ["18-24", "25-34", "35-49", "50+"];
+        const filters: any[] = ["all", ["==", ["geometry-type"], "Polygon"]];
 
-          if (ageGroups.includes(ageGroup)) {
-            map.setFilter("Ada_day_zone", [
+        if (ageGroup) {
+          filters.push([
+            "any",
+            ["!", ["has", ageGroup]],
+            [
               "all",
-              ["==", ["geometry-type"], "Polygon"],
-              [
-                "all",
-                [
-                  "any",
-                  ["!", ["has", "rank"]],
-                  [
-                    "all",
-                    [">=", ["get", "rank"], 1],
-                    ["<=", ["get", "rank"], 312],
-                  ],
-                ],
-                [
-                  "any",
-                  ["!", ["has", ageGroup]],
-                  [
-                    "all",
-                    [">=", ["get", ageGroup], 0],
-                    ["<=", ["get", ageGroup], percentage / 100],
-                  ],
-                ],
-              ],
-            ]);
-          }
+              [">=", ["get", ageGroup], 0],
+              ["<=", ["get", ageGroup], percentageAge / 100],
+            ],
+          ]);
+        }
 
-          map.setLayoutProperty("Ada_day_zone", "visibility", "visible");
-          map.setLayoutProperty("Ada_day_zone_symbol", "visibility", "visible");
+        const transformedGender = transformGender(genderGroup);
+
+        if (transformedGender) {
+          filters.push([
+            "any",
+            ["!", ["has", transformedGender]],
+            [
+              "all",
+              [">=", ["get", transformedGender], 0],
+              ["<=", ["get", transformedGender], percentageGender / 100],
+            ],
+          ]);
+        }
+
+        if (TimeFrame === "Day") {
+          map.setFilter("ada_day_zone", filters);
+          map.setLayoutProperty("ada_day_zone", "visibility", "visible");
+          map.setLayoutProperty("ada_day_zone_symbol", "visibility", "visible");
+          map.setLayoutProperty("ada_night_zone", "visibility", "none");
+          map.setLayoutProperty("ada_night_zone_symbol", "visibility", "none");
+        } else if (TimeFrame === "Night") {
+          map.setFilter("ada_night_zone", filters);
+          map.setLayoutProperty("ada_night_zone", "visibility", "visible");
+          map.setLayoutProperty(
+            "ada_night_zone_symbol",
+            "visibility",
+            "visible"
+          );
+          map.setLayoutProperty("ada_day_zone", "visibility", "none");
+          map.setLayoutProperty("ada_day_zone_symbol", "visibility", "none");
         } else {
-          map.setLayoutProperty("Ada_day_zone", "visibility", "none");
-          map.setLayoutProperty("Ada_day_zone_symbol", "visibility", "none");
+          map.setLayoutProperty("ada_day_zone", "visibility", "none");
+          map.setLayoutProperty("ada_day_zone_symbol", "visibility", "none");
+          map.setLayoutProperty("ada_night_zone", "visibility", "none");
+          map.setLayoutProperty("ada_night_zone_symbol", "visibility", "none");
         }
       }
     };
@@ -66,7 +96,14 @@ const useSwitchDayNight = () => {
     return () => {
       map?.off("styledata", updateMapStyle);
     };
-  }, [TimeFrame, myMapA, ageGroup, percentage]);
+  }, [
+    TimeFrame,
+    myMapA,
+    ageGroup,
+    percentageAge,
+    genderGroup,
+    percentageGender,
+  ]);
 };
 
 export default useSwitchDayNight;

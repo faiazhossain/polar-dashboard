@@ -23,7 +23,7 @@ const Dashboard: React.FC = () => {
     <div className="h-full md:min-h-[98vh] pb-8 relative">
       <MapProvider>
         <Navbar onLogout={handleLogout} />
-        <div className="flex flex-col px-1 md:px-4 md:flex-row mt-24 gap-6">
+        <div className="flex flex-col px-1 md:px-4 md:flex-row mt-8 gap-6">
           <LeftCard />
           <div className="flex flex-col grow gap-4">
             <MapComponent />
