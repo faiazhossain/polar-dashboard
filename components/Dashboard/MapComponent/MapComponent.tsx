@@ -8,14 +8,15 @@ import {
   GeolocateControl,
   NavigationControl,
 } from "react-map-gl";
-import useSwitchDayNight from "./SwitchDayNight";
-import PopUpOnHover from "./PopUpOnHover";
+
+import PopUpOnHover from "./PopUpOnClick";
 import { useAppSelector } from "@/lib/store/hooks";
+import useFilterLayers from "./FilterLayers";
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
   const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
-  useSwitchDayNight();
+  useFilterLayers();
   return (
     <div className="rounded-[20px] relative h-full md:min-h-[68vh] w-full mr-1 @apply shadow-[0px_4px_4px_0px_#00000040]">
       <nav className="bg-white flex justify-end p-2 @apply shadow-[0px_2px_2px_0px_#00000066] z-40 absolute top-0 left-0 right-0 rounded-t-[20px]">

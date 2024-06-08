@@ -19,7 +19,9 @@ const Slider: React.FC<SliderProps> = ({
 
   return (
     <div className="mb-4">
-      <label className="block text-sm text-gray-600 mb-2">{label}</label>
+      <label className="block text-sm text-gray-600 mb-2 text-center">
+        {label}
+      </label>
       <input
         type="range"
         min="0"

@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import timeSlice from "./features/timeSlice/leftPanelSlice";
-import leftPanelSlice from "./features/timeSlice/leftPanelSlice";
+import timeSlice from "./features/leftPanelSlice/leftPanelDataSlice";
+import leftPanelSlice from "./features/leftPanelSlice/leftPanelDataSlice";
+import leftPanelPercentageSlice from "./features/leftPanelSlice/leftPanelPercentageSlice";
 
 export const creteStore = () => {
   return configureStore({
     reducer: {
       leftPanel: leftPanelSlice,
+      leftPanelPercentage: leftPanelPercentageSlice,
     },
   });
 };

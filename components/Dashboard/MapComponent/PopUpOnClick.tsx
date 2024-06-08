@@ -31,6 +31,7 @@ interface PopUpOnHoverProps {
 const PopUpOnHover: React.FC<PopUpOnHoverProps> = ({ mode }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [popUpData, setPopUpData] = useState<Partial<PopUpData>>({});
+  console.log("🚀 ~ popUpData:", popUpData);
 
   const { current: map } = useMap();
 

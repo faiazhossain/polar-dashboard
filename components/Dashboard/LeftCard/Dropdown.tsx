@@ -28,6 +28,10 @@ const CustomDropdown: React.FC<DropdownProps> = ({
     onChange(optionValue);
     setIsOpen(false);
   };
+  const handleOpenPanel = (e: any) => {
+    console.log("🚀 ~ handleOpenPanel ~ e:", e.target);
+    !disabled && setIsOpen(!isOpen);
+  };
 
   return (
     <div className={`mb-4 relative `}>
@@ -44,7 +48,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({
             ? "bg-gray-200 cursor-not-allowed text-[#c7c7c7]"
             : "bg-white text-[#000008]"
         }`}
-        onClick={() => !disabled && setIsOpen(!isOpen)}
+        onClick={(e) => handleOpenPanel(e)}
       >
         <div className="flex items-center justify-between">
           <span className="ml-2 texts-md text-[#434343]">
@@ -71,18 +75,17 @@ const CustomDropdown: React.FC<DropdownProps> = ({
           {options.map((option) => (
             <div
               key={option.value}
-              className={`px-4 py-2 mr-6 relative cursor-pointer hover:bg-[#ef3d49] hover:text-white ${
+              className={`px-4 py-2 relative cursor-pointer hover:bg-[#ef3d49] hover:text-white ${
                 value === option.value ? "text-black font-bold" : ""
               }`}
               onClick={() => handleOptionClick(option.value)}
             >
               {value === option.value && (
-                <TiTick className="absolute left-0 top-3 mr-2" /> // Render tick icon if option is selected
+                <TiTick className="absolute left-0 top-3 mr-2" />
               )}
               {option.value}
               {option.percentage !== undefined &&
                 ` (${option.percentage}%)`}{" "}
-              {/* Include percentage */}
             </div>
           ))}
         </div>
