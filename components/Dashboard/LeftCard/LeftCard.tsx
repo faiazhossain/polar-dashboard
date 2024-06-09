@@ -11,16 +11,28 @@ import {
   setGenderPercentage,
   setAffluencePercentage,
 } from "@/lib/store/features/leftPanelSlice/leftPanelPercentageSlice";
-
+import { FaInfoCircle } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import Slider from "./Slider";
-import CustomDropdown from "./Dropdown";
-import { useMap } from "react-map-gl";
-
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 const LeftCard = () => {
   const dispatch = useAppDispatch();
-  const { myMapA } = useMap();
   const {
     timeState,
     selectedRegion,
@@ -46,8 +58,7 @@ const LeftCard = () => {
       sliderAction?: any,
       setSliderValue?: any
     ) =>
-    (event: any) => {
-      const value = event;
+    (value: any) => {
       dispatch(action(value));
       setActiveDropdown(dropdownLabel);
       if (sliderAction && setSliderValue) {
@@ -79,48 +90,20 @@ const LeftCard = () => {
   const dropdownData = [
     {
       label: "Time Based Filtration",
-      options: [{ value: "Day" }, { value: "Night" }],
+      options: ["Day", "Night"],
       value: timeState,
       onChange: handleDropdownChange(timeFrame, "Time Based Filtration"),
     },
     {
-      label: "Select Region",
-      options: [
-        { value: "North" },
-        { value: "South" },
-        { value: "East" },
-        { value: "West" },
-      ],
+      label: "Region",
+      options: ["Northern", "Southern", "Central", "Eastern"],
       value: selectedRegion,
       onChange: handleDropdownChange(setSelectedRegion, "Select Region"),
       disabled: !timeState,
     },
     {
       label: "Affluence",
-      options: [
-        {
-          value: "Ultra High",
-          percentage:
-            selectedAffluence === "Ultra High"
-              ? affluencePercentage
-              : undefined,
-        },
-        {
-          value: "High",
-          percentage:
-            selectedAffluence === "High" ? affluencePercentage : undefined,
-        },
-        {
-          value: "Medium",
-          percentage:
-            selectedAffluence === "Medium" ? affluencePercentage : undefined,
-        },
-        {
-          value: "Low",
-          percentage:
-            selectedAffluence === "Low" ? affluencePercentage : undefined,
-        },
-      ],
+      options: ["Ultra High", "High", "Medium", "Low"],
       value: selectedAffluence,
       onChange: handleDropdownChange(
         setSelectedAffluence,
@@ -132,17 +115,7 @@ const LeftCard = () => {
     },
     {
       label: "Select Gender",
-      options: [
-        {
-          value: "Male",
-          percentage: selectedGender === "Male" ? genderPercentage : undefined,
-        },
-        {
-          value: "Female",
-          percentage:
-            selectedGender === "Female" ? genderPercentage : undefined,
-        },
-      ],
+      options: ["Male", "Female"],
       value: selectedGender,
       onChange: handleDropdownChange(
         setSelectedGender,
@@ -154,34 +127,7 @@ const LeftCard = () => {
     },
     {
       label: "Age Group",
-      options: [
-        {
-          value: "18-24",
-          percentage:
-            selectedAgeGroup === "18-24"
-              ? selectedAgeGroupPercentage
-              : undefined,
-        },
-        {
-          value: "25-34",
-          percentage:
-            selectedAgeGroup === "25-34"
-              ? selectedAgeGroupPercentage
-              : undefined,
-        },
-        {
-          value: "35-49",
-          percentage:
-            selectedAgeGroup === "35-49"
-              ? selectedAgeGroupPercentage
-              : undefined,
-        },
-        {
-          value: "50+",
-          percentage:
-            selectedAgeGroup === "50+" ? selectedAgeGroupPercentage : undefined,
-        },
-      ],
+      options: ["18-24", "25-34", "35-49", "50+"],
       value: selectedAgeGroup,
       onChange: handleDropdownChange(
         setSelectedAgeGroup,
@@ -196,14 +142,57 @@ const LeftCard = () => {
   return (
     <div className="bg-white w-full flex flex-col md:w-1/2 lg:w-1/3 px-4 py-8 rounded-[20px] shadow-md">
       {dropdownData.map((dropdown, index) => (
-        <CustomDropdown
-          key={index}
-          label={dropdown.label}
-          options={dropdown.options}
-          value={dropdown.value}
-          onChange={dropdown.onChange}
-          disabled={dropdown.disabled}
-        />
+        <div key={index} className="mb-4">
+          <label className="text-sm mb-1 font-extralight flex items-center">
+            <div>{dropdown.label}</div>
+            {dropdown.label === "Time Based Filtration" && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button>
+                      <FaInfoCircle className="text-md" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-sm"> Day: 8:00 AM to 7:59 PM </p>
+                    <p className="text-sm"> Night: 8:00 PM to 7:59 AM </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+          </label>
+          <Select
+            value={dropdown.value}
+            onValueChange={dropdown.onChange}
+            disabled={dropdown.disabled}
+          >
+            <SelectTrigger className="w-full border border-gray-300 p-3 rounded-xl bg-white text-[#000008]">
+              <SelectValue placeholder={`Select ${dropdown.label}`} />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+              <SelectGroup>
+                <SelectLabel>{dropdown.label}</SelectLabel>
+                {dropdown.options.map((option) => (
+                  <SelectItem
+                    key={option}
+                    value={option}
+                    className="selectItem"
+                  >
+                    {option}
+                    {dropdown.value === option &&
+                    dropdown.label !== "Time Based Filtration" &&
+                    dropdown.label !== "Region"
+                      ? ` (${getPercentageForDropdown(
+                          dropdown.label,
+                          option
+                        )}%)`
+                      : ""}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
       ))}
       {activeDropdown === "Age Group" && selectedAgeGroup && (
         <Slider

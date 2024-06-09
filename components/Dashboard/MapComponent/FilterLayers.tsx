@@ -9,6 +9,7 @@ type State = {
     selectedAgeGroup: string;
     selectedGender: string;
     selectedAffluence: string;
+    selectedRegion: string;
   };
   leftPanelPercentage: {
     selectedAgeGroupPercentage: number;
@@ -22,6 +23,9 @@ const useFilterLayers = () => {
   const timeFrame = useAppSelector((state: State) => state.leftPanel.timeState);
   const ageGroup = useAppSelector(
     (state: State) => state.leftPanel.selectedAgeGroup
+  );
+  const region = useAppSelector(
+    (state: State) => state.leftPanel.selectedRegion
   );
   const genderGroup = useAppSelector(
     (state: State) => state.leftPanel.selectedGender
@@ -83,6 +87,14 @@ const useFilterLayers = () => {
         ],
       ]);
     }
+    // Assuming region is defined elsewhere in your code
+    if (region) {
+      filters.push([
+        "all",
+        ["==", ["geometry-type"], "Polygon"],
+        ["==", ["get", "region"], region],
+      ]);
+    }
 
     const transformedAffluence = transformAffluence(affluenceGroup);
     if (transformedAffluence) {
@@ -110,20 +122,28 @@ const useFilterLayers = () => {
 
       if (timeFrame === "Day") {
         map.setFilter("ada_day_zone", filters);
+        map.setFilter("ada-day-bounds", filters);
         map.setLayoutProperty("ada_day_zone", "visibility", "visible");
+        map.setLayoutProperty("ada-day-bounds", "visibility", "visible");
         map.setLayoutProperty("ada_day_zone_symbol", "visibility", "visible");
         map.setLayoutProperty("ada_night_zone", "visibility", "none");
+        map.setLayoutProperty("ada-night-bounds", "visibility", "none");
         map.setLayoutProperty("ada_night_zone_symbol", "visibility", "none");
       } else if (timeFrame === "Night") {
         map.setFilter("ada_night_zone", filters);
+        map.setFilter("ada-night-bounds", filters);
         map.setLayoutProperty("ada_night_zone", "visibility", "visible");
+        map.setLayoutProperty("ada-night-bounds", "visibility", "visible");
         map.setLayoutProperty("ada_night_zone_symbol", "visibility", "visible");
         map.setLayoutProperty("ada_day_zone", "visibility", "none");
+        map.setLayoutProperty("ada-day-bounds", "visibility", "none");
         map.setLayoutProperty("ada_day_zone_symbol", "visibility", "none");
       } else {
         map.setLayoutProperty("ada_day_zone", "visibility", "none");
+        map.setLayoutProperty("ada-night-bounds", "visibility", "none");
         map.setLayoutProperty("ada_day_zone_symbol", "visibility", "none");
         map.setLayoutProperty("ada_night_zone", "visibility", "none");
+        map.setLayoutProperty("ada-day-bounds", "visibility", "none");
         map.setLayoutProperty("ada_night_zone_symbol", "visibility", "none");
       }
     };
@@ -145,6 +165,7 @@ const useFilterLayers = () => {
     genderGroup,
     percentageGender,
     percentAffluence,
+    region,
   ]);
 };
 

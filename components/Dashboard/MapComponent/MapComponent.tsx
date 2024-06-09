@@ -6,16 +6,19 @@ import {
   AttributionControl,
   FullscreenControl,
   GeolocateControl,
+  Marker,
   NavigationControl,
 } from "react-map-gl";
 
-import PopUpOnHover from "./PopUpOnClick";
 import { useAppSelector } from "@/lib/store/hooks";
 import useFilterLayers from "./FilterLayers";
+import StatisticsOnHover from "./StatisticsOnClick";
+import PopUpOnClick from "./PopUpOnClick";
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
   const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
+  const { statistics } = useAppSelector((state) => state.statistics);
   useFilterLayers();
   return (
     <div className="rounded-[20px] relative h-full md:min-h-[68vh] w-full mr-1 @apply shadow-[0px_4px_4px_0px_#00000040]">
@@ -36,6 +39,7 @@ function MapComponent() {
           height: "100%",
           minHeight: "68vh",
           borderRadius: 20,
+          position: "relative",
         }}
         mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green/style.json"
         attributionControl={false}
@@ -44,7 +48,15 @@ function MapComponent() {
         <NavigationControl position="bottom-right" />
         <GeolocateControl position="bottom-right" />
         <FullscreenControl position="bottom-right" />
-        <PopUpOnHover mode={TimeFrame} />
+        <PopUpOnClick mode={TimeFrame} />
+        <StatisticsOnHover mode={TimeFrame} />
+        {statistics && (
+          <Marker
+            longitude={statistics?.lng}
+            color="red"
+            latitude={statistics?.lat}
+          />
+        )}
       </Map>
     </div>
   );

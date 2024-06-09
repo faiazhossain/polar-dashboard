@@ -15,3 +15,11 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #ec1b23;
 }
+
+.selectItem {
+  background-color: white !important;
+}
+
+.selectItem:hover {
+  background: #ec1b23 !important;
+}

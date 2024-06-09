@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Popup, useMap } from "react-map-gl";
-
+import { IoIosCloseCircleOutline } from "react-icons/io";
 // Define the interface for the popup data
 interface PopUpData {
   "18-24": number;
@@ -24,14 +24,14 @@ interface PopUpData {
   rank: number;
 }
 
-interface PopUpOnHoverProps {
+interface PopUpOnClickProps {
   mode: "Day" | "Night";
 }
 
-const PopUpOnHover: React.FC<PopUpOnHoverProps> = ({ mode }) => {
+const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [popUpData, setPopUpData] = useState<Partial<PopUpData>>({});
-  console.log("🚀 ~ popUpData:", popUpData);
+  // console.log("🚀 ~ popUpData:", popUpData);
 
   const { current: map } = useMap();
 
@@ -83,16 +83,20 @@ const PopUpOnHover: React.FC<PopUpOnHoverProps> = ({ mode }) => {
   return (
     <div>
       {showPopup && (
-        <Popup
-          longitude={popUpData.lng ?? 0}
-          latitude={popUpData.lat ?? 0}
-          anchor="bottom"
-          closeOnClick={false}
-          onClose={() => setShowPopup(false)}
-          className="rounded-xl"
-          maxWidth="400px"
+        <div
+          // longitude={popUpData.lng ?? 0}
+          // latitude={popUpData.lat ?? 0}
+          // anchor="bottom"
+          // closeOnClick={false}
+
+          // maxWidth="400px"
+          className="bg-white p-2 absolute rounded-xl bottom-1 left-1"
         >
-          <div className="w-full">
+          <div className="w-full relative">
+            <IoIosCloseCircleOutline
+              onClick={() => setShowPopup(false)}
+              className="absolute right-0 top-0 text-xl hover:text-red-600"
+            />
             <h1 className="font-bold mb-2 text-md">Age Group</h1>
             <ul className="grid grid-cols-2 text-sm">
               <li className="font-bold">18-24:</li>
@@ -127,10 +131,10 @@ const PopUpOnHover: React.FC<PopUpOnHoverProps> = ({ mode }) => {
               </div>
             )}
           </div>
-        </Popup>
+        </div>
       )}
     </div>
   );
 };
 
-export default PopUpOnHover;
+export default PopUpOnClick;
