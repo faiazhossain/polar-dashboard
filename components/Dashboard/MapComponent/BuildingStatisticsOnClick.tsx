@@ -1,3 +1,4 @@
+import { setBuildingStatistics } from "@/lib/store/features/statistics/buildingStatisticsSlice";
 import { setStatistics } from "@/lib/store/features/statistics/zoneStatisticsSlice";
 import React, { useEffect } from "react";
 import { useMap } from "react-map-gl";
@@ -7,7 +8,9 @@ interface StatisticsOnHoverProps {
   mode: "Day" | "Night";
 }
 
-const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
+const BuildingStatisticsOnClick: React.FC<StatisticsOnHoverProps> = ({
+  mode,
+}) => {
   const { current: map } = useMap();
   const dispatch = useDispatch();
 
@@ -32,9 +35,9 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
     if (!map) return;
 
     const handleMapMouseClick = (e: any) => {
-      const features = map.queryRenderedFeatures(e.point, {
-        layers: [mode === "Day" ? "ada-day-bounds" : "ada-night-bounds"],
-      });
+      const layers = [mode === "Day" ? "ada_day_zone" : "ada_night_zone"];
+
+      const features = map.queryRenderedFeatures(e.point, { layers });
 
       if (features.length) {
         const coordinates = e.lngLat;
@@ -42,25 +45,13 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
 
         if (properties) {
           dispatch(
-            setStatistics({
-              "18-24": properties["18-24"] || 0,
-              "25-34": properties["25-34"] || 0,
-              "35-49": properties["35-49"] || 0,
-              "50": properties["50"] || 0,
-              DayCount: properties.DayCount || 0,
-              NightCount: properties.NightCount || 0, // Add NightCount property
-              F: properties.F || 0,
-              High: properties.High || 0,
-              M: properties.M || 0,
-              Mid: properties.Mid || 0,
-              Ultra_High: properties.Ultra_High || 0,
+            setBuildingStatistics({
               details: formatDetails(properties.details),
-              geohash: properties.geohash || "",
               lat: coordinates.lat,
               lng: coordinates.lng,
-              low: properties.low || 0,
               poi_count: properties.poi_count || 0,
               region: properties.region || "",
+              rank: properties.rank || 0,
             })
           );
         }
@@ -77,4 +68,4 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
   return null;
 };
 
-export default StatisticsOnHover;
+export default BuildingStatisticsOnClick;

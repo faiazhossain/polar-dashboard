@@ -2,7 +2,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import timeSlice from "./features/leftPanelSlice/leftPanelDataSlice";
 import leftPanelSlice from "./features/leftPanelSlice/leftPanelDataSlice";
 import leftPanelPercentageSlice from "./features/leftPanelSlice/leftPanelPercentageSlice";
-import statisticsOnClick from "./features/statistics/statisticsSlice";
+import statisticsOnClick from "./features/statistics/zoneStatisticsSlice";
+import MapSlice from "./features/MapSlice/mapSlice";
+import buildingStatisticsSlice from "./features/statistics/buildingStatisticsSlice";
 
 export const creteStore = () => {
   return configureStore({
@@ -10,6 +12,8 @@ export const creteStore = () => {
       leftPanel: leftPanelSlice,
       leftPanelPercentage: leftPanelPercentageSlice,
       statistics: statisticsOnClick,
+      buildingstatistics: buildingStatisticsSlice,
+      mapdata: MapSlice,
     },
   });
 };
