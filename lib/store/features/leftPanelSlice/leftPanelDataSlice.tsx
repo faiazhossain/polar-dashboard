@@ -11,7 +11,7 @@ export interface LeftPanelState {
 }
 
 const initialState: LeftPanelState = {
-  timeState: "",
+  timeState: "Day",
   zoneState: "",
   selectedRegion: "",
   selectedAffluence: "",

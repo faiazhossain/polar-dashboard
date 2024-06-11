@@ -62,9 +62,9 @@ function MapComponent() {
         ref={mapRef}
         id="myMapA"
         initialViewState={{
-          longitude: 90.37839,
-          latitude: 23.76663,
-          zoom: 13,
+          longitude: 90.403387,
+          latitude: 23.71253,
+          zoom: 16.5,
         }}
         style={{
           width: "100%",
