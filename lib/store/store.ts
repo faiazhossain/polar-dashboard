@@ -5,6 +5,7 @@ import leftPanelPercentageSlice from "./features/leftPanelSlice/leftPanelPercent
 import statisticsOnClick from "./features/statistics/zoneStatisticsSlice";
 import MapSlice from "./features/MapSlice/mapSlice";
 import buildingStatisticsSlice from "./features/statistics/buildingStatisticsSlice";
+import clickedEntitySlice from "./features/statistics/clickedEntitySlice";
 
 export const creteStore = () => {
   return configureStore({
@@ -14,6 +15,7 @@ export const creteStore = () => {
       statistics: statisticsOnClick,
       buildingstatistics: buildingStatisticsSlice,
       mapdata: MapSlice,
+      clickedEntitySlice: clickedEntitySlice,
     },
   });
 };

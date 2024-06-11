@@ -64,7 +64,7 @@ const StatisticCard: React.FC<StatisticCardProps> = ({
 // Define the Statistics component
 const Statistics: React.FC = () => {
   const { statistics } = useAppSelector((state) => state.statistics);
-  console.log("🚀 ~ statistics:", statistics);
+  // console.log("🚀 ~ statistics:", statistics);
 
   return (
     <div className="bg-white rounded-[20px] h-full md:min-h-[40vh] relative @apply shadow-[rgba(60,64,67,0.3)_0px_1px_2px_0px,rgba(60,64,67,0.15)_0px_2px_6px_2px] pb-4">

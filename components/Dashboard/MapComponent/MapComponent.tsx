@@ -2,6 +2,7 @@ import * as React from "react";
 import Map, { MapRef } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Switch } from "@/components/ui/switch";
+import BarikoiLogo from "@/app/image/barikoi-logo-black.svg";
 import {
   AttributionControl,
   FullscreenControl,
@@ -11,22 +12,44 @@ import {
 } from "react-map-gl";
 
 import { useAppSelector } from "@/lib/store/hooks";
-import useFilterLayers from "./FilterLayers";
-import StatisticsOnHover from "./StatisticsOnClick";
-import PopUpOnClick from "./PopUpOnClick";
+import useFilterLayers from "./ui/FilterLayers";
+import StatisticsOnHover from "./ui/StatisticsOnClick";
+import PopUpOnClick from "./ui/PopUpOnClick";
 import ToggleButton from "./ui/ToggleButton";
-import BuildingStatisticsOnClick from "./BuildingStatisticsOnClick";
+import BuildingStatisticsOnClick from "./ui/BuildingStatisticsOnClick";
+import Image from "next/image";
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
   const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
   const { statistics } = useAppSelector((state) => state.statistics);
+  const statisticsBuilding = useAppSelector(
+    (state) => state.buildingstatistics.buildingStatistics
+  );
+  const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
   useFilterLayers();
 
-  const layersConfig = {
-    dayLayers: ["ada-day-bounds", "ada_day_zone"],
-    nightLayers: ["ada-night-bounds", "ada_night_zone"],
-  };
+  React.useEffect(() => {
+    if (statistics && selection === "Zone" && mapRef.current) {
+      mapRef.current.flyTo({
+        center: [statistics.lng, statistics.lat],
+        essential: true,
+      });
+    }
+  }, [statistics, selection]);
+
+  React.useEffect(() => {
+    if (
+      statisticsBuilding.details &&
+      selection === "Building" &&
+      mapRef.current
+    ) {
+      mapRef.current.flyTo({
+        center: [statisticsBuilding.lng, statisticsBuilding.lat],
+        essential: true,
+      });
+    }
+  }, [statisticsBuilding, selection]);
 
   return (
     <div className="rounded-[20px] relative h-full md:min-h-[68vh] w-full mr-1 @apply shadow-[0px_4px_4px_0px_#00000040]">
@@ -52,19 +75,36 @@ function MapComponent() {
         mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green/style.json"
         attributionControl={false}
       >
+        <div className="absolute bottom-3 right-16 w-16">
+          <Image
+            src={BarikoiLogo}
+            alt="Logo"
+            width={20}
+            height={24}
+            layout="responsive"
+          />
+        </div>
         {TimeFrame && <ToggleButton />}
-        <AttributionControl customAttribution="Map designed by barikoi" />
+        {/* <AttributionControl /> */}
         <NavigationControl position="bottom-right" />
         <GeolocateControl position="bottom-right" />
         <FullscreenControl position="bottom-right" />
         <PopUpOnClick mode={TimeFrame} />
         <StatisticsOnHover mode={TimeFrame} />
         <BuildingStatisticsOnClick mode={TimeFrame} />
-        {statistics && (
+
+        {statistics && selection === "Zone" && (
           <Marker
             longitude={statistics?.lng}
             color="red"
             latitude={statistics?.lat}
+          />
+        )}
+        {statisticsBuilding.details && selection === "Building" && (
+          <Marker
+            longitude={statisticsBuilding?.lng}
+            color="blue"
+            latitude={statisticsBuilding?.lat}
           />
         )}
       </Map>
