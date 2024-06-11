@@ -16,7 +16,6 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   const showPopup = useAppSelector(
     (state) => state.clickedEntitySlice.clickedEntity
   );
-  console.log("🚀 ~ showPopup:", showPopup);
   const statisticsBuilding = useAppSelector(
     (state) => state.buildingstatistics.buildingStatistics
   );
@@ -31,7 +30,7 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
     };
 
     return (
-      <div className="bg-white p-2 absolute rounded-xl bottom-1 left-1">
+      <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1">
         <div className="w-full relative">
           <IoIosCloseCircleOutline
             onClick={() => dispatch(clearClickedEntity())}
@@ -59,7 +58,7 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   };
 
   const renderZoneDetails = () => (
-    <div className="bg-white p-2 absolute rounded-xl bottom-1 left-1">
+    <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1">
       <div className="w-full relative">
         <IoIosCloseCircleOutline
           onClick={() => dispatch(clearClickedEntity())}

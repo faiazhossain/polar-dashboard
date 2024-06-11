@@ -3,7 +3,6 @@ import {
   clearClickedEntity,
   setClickedEntity,
 } from "@/lib/store/features/statistics/clickedEntitySlice";
-import { setStatistics } from "@/lib/store/features/statistics/zoneStatisticsSlice";
 import { useAppSelector } from "@/lib/store/hooks";
 import React, { useEffect } from "react";
 import { useMap } from "react-map-gl";

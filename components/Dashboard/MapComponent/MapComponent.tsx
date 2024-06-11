@@ -18,6 +18,7 @@ import PopUpOnClick from "./ui/PopUpOnClick";
 import ToggleButton from "./ui/ToggleButton";
 import BuildingStatisticsOnClick from "./ui/BuildingStatisticsOnClick";
 import Image from "next/image";
+import Link from "next/link";
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
@@ -75,7 +76,11 @@ function MapComponent() {
         mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green/style.json"
         attributionControl={false}
       >
-        <div className="absolute bottom-3 right-16 w-16">
+        <Link
+          href="https://barikoi.com/"
+          className="absolute bottom-2 left-3 w-16"
+          target="_blank"
+        >
           <Image
             src={BarikoiLogo}
             alt="Logo"
@@ -83,7 +88,7 @@ function MapComponent() {
             height={24}
             layout="responsive"
           />
-        </div>
+        </Link>
         {TimeFrame && <ToggleButton />}
         {/* <AttributionControl /> */}
         <NavigationControl position="bottom-right" />

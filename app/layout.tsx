@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <StoreProvider>
-        <body className={`${lato.className}`}>{children}</body>
+        <body className={`${lato.className} mx-auto`}>{children}</body>
       </StoreProvider>
     </html>
   );

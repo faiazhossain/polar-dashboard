@@ -140,7 +140,7 @@ const LeftCard = () => {
   ];
 
   return (
-    <div className="bg-white w-full flex flex-col md:w-1/2 lg:w-1/3 px-4 py-8 rounded-[20px] shadow-md">
+    <div className="bg-white h-full flex flex-col px-4 py-8 rounded-[20px] shadow-md">
       {dropdownData.map((dropdown, index) => (
         <div key={index} className="mb-4">
           <label className="text-sm mb-1 font-extralight flex items-center">

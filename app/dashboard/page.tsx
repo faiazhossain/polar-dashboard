@@ -20,12 +20,14 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="h-full md:min-h-[98vh] pb-8 relative">
+    <div className="h-full md:min-h-[80vh] pb-8 relative">
       <MapProvider>
         <Navbar onLogout={handleLogout} />
-        <div className="flex flex-col px-1 md:px-4 md:flex-row mt-8 gap-6">
-          <LeftCard />
-          <div className="flex flex-col grow gap-4">
+        <div className="flex flex-col px-1 mx-auto max-w-[1382px] md:flex-row mt-8 gap-6">
+          <div className="w-full md:w-1/2 lg:w-1/3">
+            <LeftCard />
+          </div>
+          <div className="flex flex-col grow gap-4 w-full md:w-1/2 lg:w-2/3">
             <MapComponent />
             <Statistics />
           </div>
