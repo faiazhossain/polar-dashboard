@@ -121,28 +121,28 @@ const useFilterLayers = () => {
       const filters = getFilters();
 
       if (timeFrame === "Day") {
-        map.setFilter("ada_day_zone", filters);
+        map.setFilter("ada_day_buildings", filters);
         map.setFilter("ada-day-bounds", filters);
-        map.setLayoutProperty("ada_day_zone", "visibility", "visible");
+        map.setLayoutProperty("ada_day_buildings", "visibility", "visible");
         map.setLayoutProperty("ada-day-bounds", "visibility", "visible");
         map.setLayoutProperty("ada_day_zone_symbol", "visibility", "visible");
-        map.setLayoutProperty("ada_night_zone", "visibility", "none");
+        map.setLayoutProperty("ada_night_buildings", "visibility", "none");
         map.setLayoutProperty("ada-night-bounds", "visibility", "none");
         map.setLayoutProperty("ada_night_zone_symbol", "visibility", "none");
       } else if (timeFrame === "Night") {
-        map.setFilter("ada_night_zone", filters);
+        map.setFilter("ada_night_buildings", filters);
         map.setFilter("ada-night-bounds", filters);
-        map.setLayoutProperty("ada_night_zone", "visibility", "visible");
+        map.setLayoutProperty("ada_night_buildings", "visibility", "visible");
         map.setLayoutProperty("ada-night-bounds", "visibility", "visible");
         map.setLayoutProperty("ada_night_zone_symbol", "visibility", "visible");
-        map.setLayoutProperty("ada_day_zone", "visibility", "none");
+        map.setLayoutProperty("ada_day_buildings", "visibility", "none");
         map.setLayoutProperty("ada-day-bounds", "visibility", "none");
         map.setLayoutProperty("ada_day_zone_symbol", "visibility", "none");
       } else {
-        map.setLayoutProperty("ada_day_zone", "visibility", "none");
+        map.setLayoutProperty("ada_day_buildings", "visibility", "none");
         map.setLayoutProperty("ada-night-bounds", "visibility", "none");
         map.setLayoutProperty("ada_day_zone_symbol", "visibility", "none");
-        map.setLayoutProperty("ada_night_zone", "visibility", "none");
+        map.setLayoutProperty("ada_night_buildings", "visibility", "none");
         map.setLayoutProperty("ada-day-bounds", "visibility", "none");
         map.setLayoutProperty("ada_night_zone_symbol", "visibility", "none");
       }

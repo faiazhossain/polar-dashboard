@@ -447,8 +447,8 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   }, [map, mode, selection]);
 
   const getLayer = (mode: string, selection: string) => {
-    if (mode === "Day" && selection === "Building") return "ada_day_zone";
-    if (mode === "Night" && selection === "Building") return "ada_night_zone";
+    if (mode === "Day" && selection === "Building") return "ada_day_buildings";
+    if (mode === "Night" && selection === "Building") return "ada_night_buildings";
     if (mode === "Day" && selection === "Zone") return "ada-day-bounds";
     if (mode === "Night" && selection === "Zone") return "ada-night-bounds";
     return "";

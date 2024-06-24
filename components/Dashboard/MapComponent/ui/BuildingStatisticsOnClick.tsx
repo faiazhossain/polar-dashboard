@@ -39,7 +39,9 @@ const BuildingStatisticsOnClick: React.FC<StatisticsOnHoverProps> = ({
     if (!map) return;
 
     const handleMapMouseClick = (e: any) => {
-      const layers = [mode === "Day" ? "ada_day_zone" : "ada_night_zone"];
+      const layers = [
+        mode === "Day" ? "ada_day_buildings" : "ada_night_buildings",
+      ];
 
       const features = map.queryRenderedFeatures(e.point, { layers });
       // console.log("🚀 ~ handleMapMouseClick ~ features:", features);
