@@ -125,16 +125,28 @@ const useFilterLayers = () => {
         map.setFilter("ada-day-bounds", filters);
         map.setLayoutProperty("ada_day_buildings", "visibility", "visible");
         map.setLayoutProperty("ada-day-bounds", "visibility", "visible");
-        map.setLayoutProperty("ada_day_buildings_symbol", "visibility", "visible");
+        map.setLayoutProperty(
+          "ada_day_buildings_symbol",
+          "visibility",
+          "visible"
+        );
         map.setLayoutProperty("ada_night_buildings", "visibility", "none");
         map.setLayoutProperty("ada-night-bounds", "visibility", "none");
-        map.setLayoutProperty("ada_night_buildings_symbol", "visibility", "none");
+        map.setLayoutProperty(
+          "ada_night_buildings_symbol",
+          "visibility",
+          "none"
+        );
       } else if (timeFrame === "Night") {
         map.setFilter("ada_night_buildings", filters);
         map.setFilter("ada-night-bounds", filters);
         map.setLayoutProperty("ada_night_buildings", "visibility", "visible");
         map.setLayoutProperty("ada-night-bounds", "visibility", "visible");
-        map.setLayoutProperty("ada_night_buildings_symbol", "visibility", "visible");
+        map.setLayoutProperty(
+          "ada_night_buildings_symbol",
+          "visibility",
+          "visible"
+        );
         map.setLayoutProperty("ada_day_buildings", "visibility", "none");
         map.setLayoutProperty("ada-day-bounds", "visibility", "none");
         map.setLayoutProperty("ada_day_buildings_symbol", "visibility", "none");
@@ -144,7 +156,11 @@ const useFilterLayers = () => {
         map.setLayoutProperty("ada_day_buildings_symbol", "visibility", "none");
         map.setLayoutProperty("ada_night_buildings", "visibility", "none");
         map.setLayoutProperty("ada-day-bounds", "visibility", "none");
-        map.setLayoutProperty("ada_night_buildings_symbol", "visibility", "none");
+        map.setLayoutProperty(
+          "ada_night_buildings_symbol",
+          "visibility",
+          "none"
+        );
       }
     };
 
