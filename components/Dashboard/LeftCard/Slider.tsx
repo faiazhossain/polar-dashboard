@@ -1,20 +1,21 @@
-import React from "react";
+import React from 'react';
+import { Slider } from 'antd';
 
-interface SliderProps {
+interface CustomSliderProps {
   label: string;
   value: number;
   onChange: (value: number) => void;
   disabled?: boolean;
 }
 
-const Slider: React.FC<SliderProps> = ({
+const CustomSlider: React.FC<CustomSliderProps> = ({
   label,
   value,
   onChange,
   disabled = false,
 }) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(Number(event.target.value));
+  const handleChange = (value: number) => {
+    onChange(value);
   };
 
   return (
@@ -22,19 +23,15 @@ const Slider: React.FC<SliderProps> = ({
       <label className="block text-sm text-gray-600 mb-2 text-center">
         {label}
       </label>
-      <input
-        type="range"
-        min="0"
-        max="100"
+      <Slider
+        min={0}
+        max={100}
         value={value}
         onChange={handleChange}
         disabled={disabled}
-        className={`w-full h-1 rounded-full ${
-          disabled ? "cursor-not-allowed" : ""
-        }`}
       />
     </div>
   );
 };
 
-export default Slider;
+export default CustomSlider;

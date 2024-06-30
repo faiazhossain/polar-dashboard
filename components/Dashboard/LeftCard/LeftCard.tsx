@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
   timeFrame,
   setSelectedRegion,
@@ -12,26 +13,19 @@ import {
   setAffluencePercentage,
 } from "@/lib/store/features/leftPanelSlice/leftPanelPercentageSlice";
 import { FaInfoCircle } from "react-icons/fa";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-import Slider from "./Slider";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select } from "antd";
 import { Button } from "@/components/ui/button";
-const LeftCard = () => {
+import { TreeSelect } from "antd";
+import CustomSlider from "./Slider";
+import RegionSelect from "./RegionSelect";
+
+const LeftCard: React.FC = () => {
   const dispatch = useAppDispatch();
   const {
     timeState,
@@ -40,15 +34,12 @@ const LeftCard = () => {
     selectedAgeGroup,
     selectedGender,
   } = useAppSelector((state) => state.leftPanel);
-
   const { selectedAgeGroupPercentage, genderPercentage, affluencePercentage } =
     useAppSelector((state) => state.leftPanelPercentage);
 
-  // Individual state for each slider
   const [ageGroupSliderValue, setAgeGroupSliderValue] = useState(0);
   const [genderSliderValue, setGenderSliderValue] = useState(0);
   const [affluenceSliderValue, setAffluenceSliderValue] = useState(0);
-
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const handleDropdownChange =
@@ -96,9 +87,8 @@ const LeftCard = () => {
     },
     {
       label: "Region",
-      options: ["Northern", "Southern", "Central", "Eastern"],
       value: selectedRegion,
-      onChange: handleDropdownChange(setSelectedRegion, "Select Region"),
+      component: <RegionSelect />,
       disabled: !timeState,
     },
     {
@@ -161,42 +151,31 @@ const LeftCard = () => {
               </TooltipProvider>
             )}
           </label>
-          <Select
-            value={dropdown.value}
-            onValueChange={dropdown.onChange}
-            disabled={dropdown.disabled}
-          >
-            <SelectTrigger className="w-full border border-gray-300 p-3 rounded-xl bg-white text-[#000008]">
-              <SelectValue placeholder={`Select ${dropdown.label}`} />
-            </SelectTrigger>
-            <SelectContent className="bg-white">
-              <SelectGroup>
-                <SelectLabel>{dropdown.label}</SelectLabel>
-                {dropdown.options.map((option) => (
-                  <SelectItem
-                    key={option}
-                    value={option}
-                    className="selectItem"
-                  >
-                    {option}
-                    {dropdown.value === option &&
+          {dropdown.label === "Region" ? (
+            dropdown.component // Render the RegionSelect component here
+          ) : (
+            <Select
+              defaultValue={dropdown.value}
+              onChange={dropdown.onChange}
+              style={{ width: "100%" }}
+              disabled={dropdown.disabled}
+            >
+              {dropdown.options?.map((option) => (
+                <Select.Option key={option} value={option}>
+                  {option}
+                  {dropdown.value === option &&
                     dropdown.label !== "Time Based Filtration" &&
-                    dropdown.label !== "Region"
-                      ? ` (${getPercentageForDropdown(
-                          dropdown.label,
-                          option
-                        )}%)`
-                      : ""}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+                    dropdown.label !== "Region" &&
+                    ` (${getPercentageForDropdown(dropdown.label, option)}%)`}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
         </div>
       ))}
       {activeDropdown === "Age Group" && selectedAgeGroup && (
-        <Slider
-          label={`Percentage of ${selectedAgeGroup} group is ${selectedAgeGroupPercentage} %`}
+        <CustomSlider
+          label={`Percentage of ${selectedAgeGroup} group is ${selectedAgeGroupPercentage}%`}
           value={ageGroupSliderValue}
           onChange={handleSliderChange(
             setAgeGroupSliderValue,
@@ -206,8 +185,8 @@ const LeftCard = () => {
         />
       )}
       {activeDropdown === "Select Gender" && selectedGender && (
-        <Slider
-          label={`Percentage of ${selectedGender} is ${genderPercentage} %`}
+        <CustomSlider
+          label={`Percentage of ${selectedGender} is ${genderPercentage}%`}
           value={genderSliderValue}
           onChange={handleSliderChange(
             setGenderSliderValue,
@@ -217,8 +196,8 @@ const LeftCard = () => {
         />
       )}
       {activeDropdown === "Affluence" && selectedAffluence && (
-        <Slider
-          label={`Percentage of ${selectedAffluence} is ${affluencePercentage} %`}
+        <CustomSlider
+          label={`Percentage of ${selectedAffluence} is ${affluencePercentage}%`}
           value={affluenceSliderValue}
           onChange={handleSliderChange(
             setAffluenceSliderValue,

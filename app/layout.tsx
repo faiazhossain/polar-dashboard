@@ -4,7 +4,7 @@ import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import { MapProvider } from "react-map-gl";
 // import TanstackProvider from "@/providers/TanstackProvider";
-
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 const inter = Inter({ subsets: ["latin"] });
 const lato = Lato({
   weight: ["400", "700"],
@@ -27,7 +27,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <StoreProvider>
-        <body className={`${lato.className} mx-auto`}>{children}</body>
+        <body className={`${lato.className} mx-auto`}>
+          <AntdRegistry>{children}</AntdRegistry>
+        </body>
       </StoreProvider>
     </html>
   );
