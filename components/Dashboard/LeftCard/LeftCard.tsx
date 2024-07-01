@@ -159,7 +159,7 @@ const LeftCard: React.FC = () => {
             dropdown.component
           ) : (
             <Select
-              value={dropdown.value.length > 0 ? dropdown.value : null}
+              value={dropdown?.value !== "" ? dropdown.value : null}
               onChange={dropdown.onChange}
               style={{ width: "100%" }}
               disabled={dropdown.disabled}
