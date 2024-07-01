@@ -87,12 +87,14 @@ const LeftCard: React.FC = () => {
     },
     {
       label: "Region",
+      placeHolder: "Select Region",
       value: selectedRegion,
       component: <RegionSelect />,
       disabled: !timeState,
     },
     {
       label: "Affluence",
+      placeHolder: "Select Affluence",
       options: ["Ultra High", "High", "Medium", "Low"],
       value: selectedAffluence,
       onChange: handleDropdownChange(
@@ -105,6 +107,7 @@ const LeftCard: React.FC = () => {
     },
     {
       label: "Select Gender",
+      placeHolder: "Select Gender",
       options: ["Male", "Female"],
       value: selectedGender,
       onChange: handleDropdownChange(
@@ -117,6 +120,7 @@ const LeftCard: React.FC = () => {
     },
     {
       label: "Age Group",
+      placeHolder: "Select Age Group",
       options: ["18-24", "25-34", "35-49", "50+"],
       value: selectedAgeGroup,
       onChange: handleDropdownChange(
@@ -152,13 +156,14 @@ const LeftCard: React.FC = () => {
             )}
           </label>
           {dropdown.label === "Region" ? (
-            dropdown.component // Render the RegionSelect component here
+            dropdown.component
           ) : (
             <Select
-              defaultValue={dropdown.value}
+              value={dropdown.value.length > 0 ? dropdown.value : null}
               onChange={dropdown.onChange}
               style={{ width: "100%" }}
               disabled={dropdown.disabled}
+              placeholder={dropdown.placeHolder}
             >
               {dropdown.options?.map((option) => (
                 <Select.Option key={option} value={option}>

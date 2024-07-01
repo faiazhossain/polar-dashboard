@@ -846,9 +846,9 @@ const RegionSelect: React.FC = () => {
     <TreeSelect
       treeDataSimpleMode
       style={{ width: "100%" }}
-      value={selectedRegion}
+      value={selectedRegion.length > 0 ? selectedRegion : undefined}
       dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
-      placeholder="Please select"
+      placeholder="Select Region"
       onChange={handleRegionChange}
       loadData={onLoadData}
       treeData={treeData}

@@ -12,12 +12,12 @@ export interface LeftPanelState {
 
 const initialState: LeftPanelState = {
   timeState: "Day",
-  zoneState: "Select Zone",
-  selectedRegion: "Select Region",
-  selectedAffluence: "Select Affluance",
-  selectedAgeGroup: "Select Age",
-  selectedGender: "Select Gender",
-  selectedPriceRange: "Select Price Range",
+  zoneState: "",
+  selectedRegion: "",
+  selectedAffluence: "",
+  selectedAgeGroup: "",
+  selectedGender: "",
+  selectedPriceRange: "",
 };
 
 export const leftPanelSlice = createSlice({

@@ -21,13 +21,13 @@ type State = {
 const useFilterLayers = () => {
   const { myMapA } = useMap();
   const timeFrame = useAppSelector((state: State) => state.leftPanel.timeState);
+  console.log("🚀 ~ useFilterLayers ~ timeFrame:", timeFrame);
   const ageGroup = useAppSelector(
     (state: State) => state.leftPanel.selectedAgeGroup
   );
   const region = useAppSelector(
     (state: State) => state.leftPanel.selectedRegion
   );
-  console.log("🚀 ~ useFilterLayers ~ region:", region);
   const genderGroup = useAppSelector(
     (state: State) => state.leftPanel.selectedGender
   );
@@ -121,41 +121,41 @@ const useFilterLayers = () => {
       const filters = getFilters();
 
       if (timeFrame === "Day") {
-        map.setFilter("ada_day_buildings", filters);
-        map.setFilter("ada-day-bounds", filters);
-        map.setLayoutProperty("ada_day_buildings", "visibility", "visible");
-        map.setLayoutProperty("ada-day-bounds", "visibility", "visible");
+        map.setFilter("ada-day-buildings", filters);
+        map.setFilter("ada day bounds", filters);
+        map.setLayoutProperty("ada-day-buildings", "visibility", "visible");
+        map.setLayoutProperty("ada day bounds", "visibility", "visible");
         map.setLayoutProperty(
           "ada_day_buildings_symbol",
           "visibility",
           "visible"
         );
-        map.setLayoutProperty("ada_night_buildings", "visibility", "none");
-        map.setLayoutProperty("ada-night-bounds", "visibility", "none");
+        map.setLayoutProperty("ada-night-buildings", "visibility", "none");
+        map.setLayoutProperty("ada night bounds", "visibility", "none");
         map.setLayoutProperty(
           "ada_night_buildings_symbol",
           "visibility",
           "none"
         );
       } else if (timeFrame === "Night") {
-        map.setFilter("ada_night_buildings", filters);
-        map.setFilter("ada-night-bounds", filters);
-        map.setLayoutProperty("ada_night_buildings", "visibility", "visible");
-        map.setLayoutProperty("ada-night-bounds", "visibility", "visible");
+        map.setFilter("ada-night-buildings", filters);
+        map.setFilter("ada night bounds", filters);
+        map.setLayoutProperty("ada-night-buildings", "visibility", "visible");
+        map.setLayoutProperty("ada night bounds", "visibility", "visible");
         map.setLayoutProperty(
           "ada_night_buildings_symbol",
           "visibility",
           "visible"
         );
-        map.setLayoutProperty("ada_day_buildings", "visibility", "none");
-        map.setLayoutProperty("ada-day-bounds", "visibility", "none");
+        map.setLayoutProperty("ada-day-buildings", "visibility", "none");
+        map.setLayoutProperty("ada day bounds", "visibility", "none");
         map.setLayoutProperty("ada_day_buildings_symbol", "visibility", "none");
       } else {
-        map.setLayoutProperty("ada_day_buildings", "visibility", "none");
-        map.setLayoutProperty("ada-night-bounds", "visibility", "none");
+        map.setLayoutProperty("ada-day-buildings", "visibility", "none");
+        map.setLayoutProperty("ada night bounds", "visibility", "none");
         map.setLayoutProperty("ada_day_buildings_symbol", "visibility", "none");
-        map.setLayoutProperty("ada_night_buildings", "visibility", "none");
-        map.setLayoutProperty("ada-day-bounds", "visibility", "none");
+        map.setLayoutProperty("ada-night-buildings", "visibility", "none");
+        map.setLayoutProperty("ada day bounds", "visibility", "none");
         map.setLayoutProperty(
           "ada_night_buildings_symbol",
           "visibility",

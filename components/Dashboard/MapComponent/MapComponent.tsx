@@ -31,7 +31,7 @@ function MapComponent() {
   useFilterLayers();
 
   React.useEffect(() => {
-    if (statistics.lng!=0 && selection === "Zone" && mapRef.current) {
+    if (statistics.lng != 0 && selection === "Zone" && mapRef.current) {
       mapRef.current.flyTo({
         center: [statistics.lng, statistics.lat],
         essential: true,
