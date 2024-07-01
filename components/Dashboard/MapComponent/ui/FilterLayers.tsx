@@ -1,3 +1,4 @@
+//@ts-nocheck
 "use client";
 import { useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react";
@@ -21,13 +22,13 @@ type State = {
 const useFilterLayers = () => {
   const { myMapA } = useMap();
   const timeFrame = useAppSelector((state: State) => state.leftPanel.timeState);
-  console.log("🚀 ~ useFilterLayers ~ timeFrame:", timeFrame);
   const ageGroup = useAppSelector(
     (state: State) => state.leftPanel.selectedAgeGroup
   );
   const region = useAppSelector(
     (state: State) => state.leftPanel.selectedRegion
   );
+  console.log("🚀 ~ useFilterLayers ~ region:", region);
   const genderGroup = useAppSelector(
     (state: State) => state.leftPanel.selectedGender
   );
@@ -88,11 +89,25 @@ const useFilterLayers = () => {
         ],
       ]);
     }
-    if (region) {
+    if (region.pId === "Division") {
       filters.push([
         "all",
         ["==", ["geometry-type"], "Polygon"],
-        ["==", ["get", "region"], region],
+        ["==", ["get", "division"], region?.title],
+      ]);
+    }
+    if (region.pId === "Dhaka") {
+      filters.push([
+        "all",
+        ["==", ["geometry-type"], "Polygon"],
+        ["==", ["get", "region"], `${region?.title} City Corporation`],
+      ]);
+    }
+    if (region.pId === "Dhaka North" || region.pId === "Dhaka South") {
+      filters.push([
+        "all",
+        ["==", ["geometry-type"], "Polygon"],
+        ["==", ["get", "area"], `${region?.title}`],
       ]);
     }
 
@@ -111,6 +126,8 @@ const useFilterLayers = () => {
 
     return filters;
   };
+
+  
 
   useEffect(() => {
     const map = myMapA?.getMap();

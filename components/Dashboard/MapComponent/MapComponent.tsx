@@ -27,6 +27,7 @@ function MapComponent() {
   const statisticsBuilding = useAppSelector(
     (state) => state.buildingstatistics.buildingStatistics
   );
+  const bbox = useAppSelector((state) => state.leftPanel.boundingBox);
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
   useFilterLayers();
 
@@ -51,6 +52,20 @@ function MapComponent() {
       });
     }
   }, [statisticsBuilding, selection]);
+
+  React.useEffect(() => {
+    if (bbox) {
+      mapRef?.current?.fitBounds(
+        [
+          //@ts-ignore
+          [bbox?.minLng, bbox?.minLat],
+          //@ts-ignore
+          [bbox?.maxLng, bbox?.maxLat],
+        ],
+        { padding: 40, duration: 1000 }
+      );
+    }
+  }, [bbox]);
 
   return (
     <div className="rounded-[20px] relative h-full md:min-h-[68vh] w-full mr-1 @apply shadow-[0px_4px_4px_0px_#00000040]">

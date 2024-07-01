@@ -1,23 +1,40 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface Region {
+  pId: string | undefined;
+  title: string | undefined;
+}
+interface bbox {
+  minLng: number | undefined;
+  minLat: number | undefined;
+  maxLng: number | undefined;
+  maxLat: number | undefined;
+}
 export interface LeftPanelState {
   timeState: string;
   zoneState: string;
-  selectedRegion: string;
+  selectedRegion: Region;
   selectedAffluence: string;
   selectedAgeGroup: string;
   selectedGender: string;
   selectedPriceRange: string;
+  boundingBox: bbox;
 }
 
 const initialState: LeftPanelState = {
   timeState: "Day",
   zoneState: "",
-  selectedRegion: "",
+  selectedRegion: { pId: undefined, title: undefined },
   selectedAffluence: "",
   selectedAgeGroup: "",
   selectedGender: "",
   selectedPriceRange: "",
+  boundingBox: {
+    minLng: undefined,
+    minLat: undefined,
+    maxLng: undefined,
+    maxLat: undefined,
+  },
 };
 
 export const leftPanelSlice = createSlice({
@@ -45,6 +62,9 @@ export const leftPanelSlice = createSlice({
     setSelectedPriceRange: (state, action) => {
       state.selectedPriceRange = action.payload;
     },
+    setBoundingBox: (state, action) => {
+      state.boundingBox = action.payload;
+    },
   },
 });
 
@@ -57,5 +77,6 @@ export const {
   setSelectedAgeGroup,
   setSelectedGender,
   setSelectedPriceRange,
+  setBoundingBox,
 } = leftPanelSlice.actions;
 export default leftPanelSlice.reducer;

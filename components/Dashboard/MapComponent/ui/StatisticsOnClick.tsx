@@ -38,7 +38,7 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
 
     const handleMapMouseClick = (e: any) => {
       const features = map.queryRenderedFeatures(e.point, {
-        layers: [mode === "Day" ? "ada-day-bounds" : "ada-night-bounds"],
+        layers: [mode === "Day" ? "ada day bounds" : "ada night bounds"],
       });
 
       if (features.length) {
