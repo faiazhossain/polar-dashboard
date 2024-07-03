@@ -40,7 +40,7 @@ const BuildingStatisticsOnClick: React.FC<StatisticsOnHoverProps> = ({
 
     const handleMapMouseClick = (e: any) => {
       const layers = [
-        mode === "Day" ? "ada day bounds" : "ada-night-buildings",
+        mode === "Day" ? "ada-day-buildings" : "ada-night-buildings",
       ];
 
       const features = map.queryRenderedFeatures(e.point, { layers });
