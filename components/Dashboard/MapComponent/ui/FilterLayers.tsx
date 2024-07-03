@@ -127,8 +127,6 @@ const useFilterLayers = () => {
     return filters;
   };
 
-  
-
   useEffect(() => {
     const map = myMapA?.getMap();
 
@@ -140,6 +138,7 @@ const useFilterLayers = () => {
       if (timeFrame === "Day") {
         map.setFilter("ada-day-buildings", filters);
         map.setFilter("ada day bounds", filters);
+        map.setFilter("ada_day_buildings_symbol", filters);
         map.setLayoutProperty("ada-day-buildings", "visibility", "visible");
         map.setLayoutProperty("ada day bounds", "visibility", "visible");
         map.setLayoutProperty(
@@ -157,6 +156,7 @@ const useFilterLayers = () => {
       } else if (timeFrame === "Night") {
         map.setFilter("ada-night-buildings", filters);
         map.setFilter("ada night bounds", filters);
+        map.setFilter("ada_night_buildings_symbol", filters);
         map.setLayoutProperty("ada-night-buildings", "visibility", "visible");
         map.setLayoutProperty("ada night bounds", "visibility", "visible");
         map.setLayoutProperty(
