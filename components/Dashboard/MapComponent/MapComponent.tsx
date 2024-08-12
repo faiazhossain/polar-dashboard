@@ -88,7 +88,7 @@ function MapComponent() {
           borderRadius: 20,
           position: "relative",
         }}
-        mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green/style.json"
+        mapStyle="http://localhost:4006/styles/barkoi_green/style.json"
         attributionControl={false}
       >
         <Link
