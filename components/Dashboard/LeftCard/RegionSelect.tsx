@@ -500,6 +500,13 @@ const RegionSelect: React.FC = () => {
               isLeaf: true,
             },
             {
+              id: "Banani",
+              pId: "Dhaka North",
+              value: "Banani",
+              title: "Banani",
+              isLeaf: true,
+            },
+            {
               id: "Banasree",
               pId: "Dhaka North",
               value: "Banasree",

@@ -21,9 +21,11 @@ import {
 } from "@/components/ui/tooltip";
 import { Select } from "antd";
 import { Button } from "@/components/ui/button";
-import { TreeSelect } from "antd";
 import CustomSlider from "./Slider";
 import RegionSelect from "./RegionSelect";
+import { setStatistics } from "@/lib/store/features/statistics/zoneStatisticsSlice";
+import { clearClickedEntity } from "@/lib/store/features/statistics/clickedEntitySlice";
+import { setBuildingStatistics } from "@/lib/store/features/statistics/buildingStatisticsSlice";
 
 const LeftCard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -41,6 +43,7 @@ const LeftCard: React.FC = () => {
   const [genderSliderValue, setGenderSliderValue] = useState(0);
   const [affluenceSliderValue, setAffluenceSliderValue] = useState(0);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [clickedText, setClickedText] = useState<string | null>(null);
 
   const handleDropdownChange =
     (
@@ -133,6 +136,63 @@ const LeftCard: React.FC = () => {
     },
   ];
 
+  const clickedOnDrop = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    let textContent = target.textContent || "";
+    if (!textContent && target.parentElement) {
+      textContent = target.parentElement.textContent || "";
+    }
+    const cleanText = textContent.replace(/\s*\(\d+%\)$/, "").trim();
+    setClickedText(cleanText);
+  };
+
+  // Reset all dropdowns and sliders
+  const resetAllValues = () => {
+    dispatch(setSelectedRegion(""));
+    dispatch(setSelectedAffluence(""));
+    dispatch(setSelectedAgeGroup(""));
+    dispatch(setSelectedGender(""));
+    dispatch(setSelectedAgeGroupPercentage(0));
+    dispatch(setGenderPercentage(0));
+    dispatch(setAffluencePercentage(0));
+    dispatch(
+      setStatistics({
+        "18-24": 0,
+        "25-34": 0,
+        "35-49": 0,
+        "50": 0,
+        DayCount: 0,
+        NightCount: 0,
+        F: 0,
+        High: 0,
+        M: 0,
+        Mid: 0,
+        Ultra_High: 0,
+        details: "",
+        geohash: "",
+        lat: 0,
+        lng: 0,
+        low: 0,
+        poi_count: 0,
+        region: "",
+      })
+    );
+    dispatch(
+      setBuildingStatistics({
+        details: "",
+        lat: 0,
+        lng: 0,
+        poi_count: 0,
+        region: "",
+        rank: 0,
+      })
+    );
+    dispatch(clearClickedEntity());
+    setAgeGroupSliderValue(0);
+    setGenderSliderValue(0);
+    setAffluenceSliderValue(0);
+  };
+
   return (
     <div className="bg-white h-full flex flex-col px-4 py-8 rounded-[20px] shadow-md">
       {dropdownData.map((dropdown, index) => (
@@ -161,6 +221,7 @@ const LeftCard: React.FC = () => {
             <Select
               value={dropdown?.value !== "" ? dropdown.value : null}
               onChange={dropdown.onChange}
+              onClick={clickedOnDrop}
               style={{ width: "100%" }}
               disabled={dropdown.disabled}
               placeholder={dropdown.placeHolder}
@@ -178,7 +239,7 @@ const LeftCard: React.FC = () => {
           )}
         </div>
       ))}
-      {activeDropdown === "Age Group" && selectedAgeGroup && (
+      {activeDropdown === "Age Group" && selectedAgeGroup === "" && (
         <CustomSlider
           label={`Percentage of ${selectedAgeGroup} group is ${selectedAgeGroupPercentage}%`}
           value={ageGroupSliderValue}
@@ -211,6 +272,14 @@ const LeftCard: React.FC = () => {
           disabled={!timeState}
         />
       )}
+
+      {/* Reset Button */}
+      <Button
+        className="mt-4 bg-[#EC1B23] hover:bg-[#ff0008] rounded-xl hover:text-white"
+        onClick={resetAllValues}
+      >
+        Reset All
+      </Button>
     </div>
   );
 };
