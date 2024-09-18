@@ -239,7 +239,7 @@ const LeftCard: React.FC = () => {
           )}
         </div>
       ))}
-      {activeDropdown === "Age Group" && selectedAgeGroup === "" && (
+      {activeDropdown === "Age Group" && selectedAgeGroup && (
         <CustomSlider
           label={`Percentage of ${selectedAgeGroup} group is ${selectedAgeGroupPercentage}%`}
           value={ageGroupSliderValue}
