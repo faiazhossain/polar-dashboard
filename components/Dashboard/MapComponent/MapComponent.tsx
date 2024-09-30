@@ -19,6 +19,14 @@ import ToggleButton from "./ui/ToggleButton";
 import BuildingStatisticsOnClick from "./ui/BuildingStatisticsOnClick";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "antd";
+import { FaInfoCircle } from "react-icons/fa";
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
@@ -81,6 +89,7 @@ function MapComponent() {
       <nav className="bg-white flex justify-between p-2 @apply shadow-[0px_2px_2px_0px_#00000066] z-40 absolute top-0 left-0 right-0 rounded-t-[20px]">
         <div className=" flex justify-center items-center">
           <span className="ml-4 mr-2 text-md">Current zoom level: </span>
+
           <div
             className={`${
               parseFloat(zoomLevel.toFixed(2)) >= 14
@@ -90,6 +99,22 @@ function MapComponent() {
           >
             {zoomLevel.toFixed(2)}
           </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button className="ml-1" type="text">
+                  <FaInfoCircle className="text-md" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p className="text-sm border-none">
+                  {" "}
+                  Zoom in to at least level 14 to view detailed building and
+                  zone data.{" "}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         <div className=" flex justify-center items-center">
           <Switch />

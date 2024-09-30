@@ -19,8 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Select } from "antd";
-import { Button } from "@/components/ui/button";
+import { Button, Select } from "antd";
 import CustomSlider from "./Slider";
 import RegionSelect from "./RegionSelect";
 import { setStatistics } from "@/lib/store/features/statistics/zoneStatisticsSlice";
@@ -203,7 +202,7 @@ const LeftCard: React.FC = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button>
+                    <Button type="text">
                       <FaInfoCircle className="text-md" />
                     </Button>
                   </TooltipTrigger>
@@ -274,12 +273,12 @@ const LeftCard: React.FC = () => {
       )}
 
       {/* Reset Button */}
-      <Button
-        className="mt-4 bg-[#EC1B23] hover:bg-[#ff0008] rounded-xl hover:text-white"
+      <button
+        className="mt-4 p-2 bg-[#EC1B23] hover:bg-[#ff0008] rounded-xl text-white hover:font-bold"
         onClick={resetAllValues}
       >
         Reset All
-      </Button>
+      </button>
     </div>
   );
 };
