@@ -220,7 +220,7 @@ const LeftCard: React.FC = () => {
           ) : (
             <Select
               value={dropdown?.value !== "" ? dropdown.value : null}
-              onChange={dropdown.onChange}
+              onSelect={dropdown.onChange}
               onClick={clickedOnDrop}
               style={{ width: "100%" }}
               disabled={dropdown.disabled}
