@@ -29,7 +29,6 @@
 //     setIsOpen(false);
 //   };
 //   const handleOpenPanel = (e: any) => {
-//     console.log("🚀 ~ handleOpenPanel ~ e:", e.target);
 //     !disabled && setIsOpen(!isOpen);
 //   };
 

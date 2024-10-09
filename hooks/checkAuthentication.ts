@@ -12,8 +12,6 @@
 //       // credentials: 'include', // Include cookies in the request
 //     });
 //     const data = await response.json();
-
-//     // console.log("data,token", data, token);
 //     // cookies().set("user", data);
 //     if (response.ok) {
 //       // User is authenticated

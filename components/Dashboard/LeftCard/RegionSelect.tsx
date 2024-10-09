@@ -1055,7 +1055,6 @@ const RegionSelect: React.FC = () => {
   const handleRegionChange = (value: string, label: any, extra: any) => {
     if (extra?.triggerNode?.props && myMapA) {
       const { title, pId, center } = extra?.triggerNode?.props;
-      console.log("🚀 ~ handleRegionChange ~ center:", center);
 
       dispatch(setSelectedRegion({ pId, title }));
       myMapA.flyTo({

@@ -44,7 +44,6 @@ const BuildingStatisticsOnClick: React.FC<StatisticsOnHoverProps> = ({
       ];
 
       const features = map.queryRenderedFeatures(e.point, { layers });
-      // console.log("🚀 ~ handleMapMouseClick ~ features:", features);
 
       if (features.length) {
         const coordinates = e.lngLat;

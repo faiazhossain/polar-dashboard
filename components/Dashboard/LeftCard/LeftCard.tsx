@@ -7,11 +7,6 @@ import {
   setSelectedAgeGroup,
   setSelectedGender,
 } from "@/lib/store/features/leftPanelSlice/leftPanelDataSlice";
-import {
-  setSelectedAgeGroupPercentage,
-  setGenderPercentage,
-  setAffluencePercentage,
-} from "@/lib/store/features/leftPanelSlice/leftPanelPercentageSlice";
 import { FaInfoCircle } from "react-icons/fa";
 import {
   Tooltip,
@@ -20,7 +15,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Button, Select } from "antd";
-import CustomSlider from "./Slider";
 import RegionSelect from "./RegionSelect";
 import { setStatistics } from "@/lib/store/features/statistics/zoneStatisticsSlice";
 import { clearClickedEntity } from "@/lib/store/features/statistics/clickedEntitySlice";
@@ -35,50 +29,11 @@ const LeftCard: React.FC = () => {
     selectedAgeGroup,
     selectedGender,
   } = useAppSelector((state) => state.leftPanel);
-  const { selectedAgeGroupPercentage, genderPercentage, affluencePercentage } =
-    useAppSelector((state) => state.leftPanelPercentage);
-
-  const [ageGroupSliderValue, setAgeGroupSliderValue] = useState(0);
-  const [genderSliderValue, setGenderSliderValue] = useState(0);
-  const [affluenceSliderValue, setAffluenceSliderValue] = useState(0);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [clickedText, setClickedText] = useState<string | null>(null);
 
   const handleDropdownChange =
-    (
-      action: any,
-      dropdownLabel: string,
-      sliderAction?: any,
-      setSliderValue?: any
-    ) =>
-    (value: any) => {
-      dispatch(action(value));
-      setActiveDropdown(dropdownLabel);
-      if (sliderAction && setSliderValue) {
-        const percentage = getPercentageForDropdown(dropdownLabel, value);
-        setSliderValue(percentage);
-        dispatch(sliderAction(percentage));
-      }
-    };
-
-  const handleSliderChange =
-    (setSliderValue: any, action: any) => (value: number) => {
-      setSliderValue(value);
+    (action: any, dropdownLabel: string) => (value: any) => {
       dispatch(action(value));
     };
-
-  const getPercentageForDropdown = (dropdownLabel: string, value: string) => {
-    switch (dropdownLabel) {
-      case "Age Group":
-        return selectedAgeGroupPercentage;
-      case "Select Gender":
-        return genderPercentage;
-      case "Affluence":
-        return affluencePercentage;
-      default:
-        return 0;
-    }
-  };
 
   const dropdownData = [
     {
@@ -99,12 +54,7 @@ const LeftCard: React.FC = () => {
       placeHolder: "Select Affluence",
       options: ["Ultra High", "High", "Medium", "Low"],
       value: selectedAffluence,
-      onChange: handleDropdownChange(
-        setSelectedAffluence,
-        "Affluence",
-        setAffluencePercentage,
-        setAffluenceSliderValue
-      ),
+      onChange: handleDropdownChange(setSelectedAffluence, "Affluence"),
       disabled: !timeState,
     },
     {
@@ -112,12 +62,7 @@ const LeftCard: React.FC = () => {
       placeHolder: "Select Gender",
       options: ["Male", "Female"],
       value: selectedGender,
-      onChange: handleDropdownChange(
-        setSelectedGender,
-        "Select Gender",
-        setGenderPercentage,
-        setGenderSliderValue
-      ),
+      onChange: handleDropdownChange(setSelectedGender, "Select Gender"),
       disabled: !timeState,
     },
     {
@@ -125,12 +70,7 @@ const LeftCard: React.FC = () => {
       placeHolder: "Select Age Group",
       options: ["18-24", "25-34", "35-49", "50+"],
       value: selectedAgeGroup,
-      onChange: handleDropdownChange(
-        setSelectedAgeGroup,
-        "Age Group",
-        setSelectedAgeGroupPercentage,
-        setAgeGroupSliderValue
-      ),
+      onChange: handleDropdownChange(setSelectedAgeGroup, "Age Group"),
       disabled: !timeState,
     },
   ];
@@ -141,19 +81,15 @@ const LeftCard: React.FC = () => {
     if (!textContent && target.parentElement) {
       textContent = target.parentElement.textContent || "";
     }
-    const cleanText = textContent.replace(/\s*\(\d+%\)$/, "").trim();
-    setClickedText(cleanText);
+    const cleanText = textContent.trim();
   };
 
-  // Reset all dropdowns and sliders
+  // Reset all dropdowns
   const resetAllValues = () => {
     dispatch(setSelectedRegion(""));
     dispatch(setSelectedAffluence(""));
     dispatch(setSelectedAgeGroup(""));
     dispatch(setSelectedGender(""));
-    dispatch(setSelectedAgeGroupPercentage(0));
-    dispatch(setGenderPercentage(0));
-    dispatch(setAffluencePercentage(0));
     dispatch(
       setStatistics({
         "18-24": 0,
@@ -187,9 +123,6 @@ const LeftCard: React.FC = () => {
       })
     );
     dispatch(clearClickedEntity());
-    setAgeGroupSliderValue(0);
-    setGenderSliderValue(0);
-    setAffluenceSliderValue(0);
   };
 
   return (
@@ -228,49 +161,12 @@ const LeftCard: React.FC = () => {
               {dropdown.options?.map((option) => (
                 <Select.Option key={option} value={option}>
                   {option}
-                  {dropdown.value === option &&
-                    dropdown.label !== "Time Based Filtration" &&
-                    dropdown.label !== "Region" &&
-                    ` (${getPercentageForDropdown(dropdown.label, option)}%)`}
                 </Select.Option>
               ))}
             </Select>
           )}
         </div>
       ))}
-      {activeDropdown === "Age Group" && selectedAgeGroup && (
-        <CustomSlider
-          label={`Percentage of ${selectedAgeGroup} group is ${selectedAgeGroupPercentage}%`}
-          value={ageGroupSliderValue}
-          onChange={handleSliderChange(
-            setAgeGroupSliderValue,
-            setSelectedAgeGroupPercentage
-          )}
-          disabled={!timeState}
-        />
-      )}
-      {activeDropdown === "Select Gender" && selectedGender && (
-        <CustomSlider
-          label={`Percentage of ${selectedGender} is ${genderPercentage}%`}
-          value={genderSliderValue}
-          onChange={handleSliderChange(
-            setGenderSliderValue,
-            setGenderPercentage
-          )}
-          disabled={!timeState}
-        />
-      )}
-      {activeDropdown === "Affluence" && selectedAffluence && (
-        <CustomSlider
-          label={`Percentage of ${selectedAffluence} is ${affluencePercentage}%`}
-          value={affluenceSliderValue}
-          onChange={handleSliderChange(
-            setAffluenceSliderValue,
-            setAffluencePercentage
-          )}
-          disabled={!timeState}
-        />
-      )}
 
       {/* Reset Button */}
       <button

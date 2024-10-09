@@ -3,6 +3,7 @@
 import { useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react";
 import { useMap } from "react-map-gl";
+import * as turf from "@turf/turf"; // Import all Turf functions as turf
 
 type State = {
   leftPanel: {
@@ -11,11 +12,6 @@ type State = {
     selectedGender: string;
     selectedAffluence: string;
     selectedRegion: string;
-  };
-  leftPanelPercentage: {
-    selectedAgeGroupPercentage: number;
-    genderPercentage: number;
-    affluencePercentage: number;
   };
 };
 
@@ -28,22 +24,14 @@ const useFilterLayers = () => {
   const region = useAppSelector(
     (state: State) => state.leftPanel.selectedRegion
   );
-  console.log("🚀 ~ useFilterLayers ~ region:", region);
   const genderGroup = useAppSelector(
     (state: State) => state.leftPanel.selectedGender
   );
   const affluenceGroup = useAppSelector(
     (state: State) => state.leftPanel.selectedAffluence
   );
-  const percentageAge = useAppSelector(
-    (state: State) => state.leftPanelPercentage.selectedAgeGroupPercentage
-  );
-  const percentageGender = useAppSelector(
-    (state: State) => state.leftPanelPercentage.genderPercentage
-  );
-  const percentAffluence = useAppSelector(
-    (state: State) => state.leftPanelPercentage.affluencePercentage
-  );
+
+  let highestAgeFeature = null; // Declare here
 
   const transformValue = (value: string, map: Record<string, string>): string =>
     map[value] || value;
@@ -62,33 +50,64 @@ const useFilterLayers = () => {
       Medium: "Mid",
     });
 
+  const getHighestValueFeature = (dataKey: string, filterData: any[]): any => {
+    let highestValue = 0;
+    let highestFeature = null;
+
+    filterData.forEach((feature: any) => {
+      const value = feature.properties[dataKey];
+      if (value && value > highestValue) {
+        highestValue = value;
+        highestFeature = feature; // Save the feature with the highest value
+      }
+    });
+
+    return highestFeature; // Return the feature with the highest value
+  };
+
   const getFilters = (): any[] => {
     const filters: any[] = ["all", ["==", ["geometry-type"], "Polygon"]];
+    const filteredData = myMapA?.queryRenderedFeatures(); // Get data from map
+    if (!filteredData) {
+      return filters;
+    }
 
     if (ageGroup) {
-      filters.push([
-        "any",
-        ["!", ["has", ageGroup]],
-        [
-          "all",
-          [">=", ["get", ageGroup], 0],
-          ["<=", ["get", ageGroup], percentageAge / 100],
-        ],
-      ]);
+      highestAgeFeature = getHighestValueFeature(ageGroup, filteredData); // Update the variable here
+      if (highestAgeFeature) {
+        console.log("🚀 ~ getFilters ~ highestAgeFeature:", highestAgeFeature);
+        const highestAgeValue = highestAgeFeature.properties[ageGroup];
+      }
     }
 
     const transformedGender = transformGender(genderGroup);
     if (transformedGender) {
-      filters.push([
-        "any",
-        ["!", ["has", transformedGender]],
-        [
-          "all",
-          [">=", ["get", transformedGender], 0],
-          ["<=", ["get", transformedGender], percentageGender / 100],
-        ],
-      ]);
+      const highestGenderFeature = getHighestValueFeature(
+        transformedGender,
+        filteredData
+      );
+      if (highestGenderFeature) {
+        console.log(
+          "🚀 ~ getFilters ~ highestGenderFeature:",
+          highestGenderFeature
+        );
+      }
     }
+
+    const transformedAffluence = transformAffluence(affluenceGroup);
+    if (transformedAffluence) {
+      const highestAffluenceFeature = getHighestValueFeature(
+        transformedAffluence,
+        filteredData
+      );
+      if (highestAffluenceFeature) {
+        console.log(
+          "🚀 ~ getFilters ~ highestAffluenceFeature:",
+          highestAffluenceFeature
+        );
+      }
+    }
+
     if (region.pId === "Division") {
       filters.push([
         "all",
@@ -111,19 +130,6 @@ const useFilterLayers = () => {
       ]);
     }
 
-    const transformedAffluence = transformAffluence(affluenceGroup);
-    if (transformedAffluence) {
-      filters.push([
-        "any",
-        ["!", ["has", transformedAffluence]],
-        [
-          "all",
-          [">=", ["get", transformedAffluence], 0],
-          ["<=", ["get", transformedAffluence], percentAffluence / 100],
-        ],
-      ]);
-    }
-
     return filters;
   };
 
@@ -134,6 +140,88 @@ const useFilterLayers = () => {
 
     const updateMapStyle = () => {
       const filters = getFilters();
+      // Highlight the feature with the highest age value
+      // Inside your updateMapStyle function:
+      // Clean up existing layers and sources if they exist
+      const map = myMapA?.getMap();
+      if (!map) return;
+
+      // Check if the highlight layers exist and remove them first
+      if (map.getLayer("highlight-highest-age-stroke")) {
+        map.removeLayer("highlight-highest-age-stroke");
+      }
+      if (map.getLayer("highlight-highest-age")) {
+        map.removeLayer("highlight-highest-age");
+      }
+
+      // Remove sources after layers
+      if (map.getSource("highest-age-feature")) {
+        map.removeSource("highest-age-feature");
+      }
+      if (map.getSource("highlight-highest-age-stroke")) {
+        map.removeSource("highlight-highest-age-stroke");
+      }
+
+      if (highestAgeFeature) {
+        // Add a source for the highest age feature if it doesn't exist
+        if (!map.getSource("highest-age-feature")) {
+          map.addSource("highest-age-feature", {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: [highestAgeFeature],
+            },
+          });
+        } else {
+          // If the source exists, update its data
+          map.getSource("highest-age-feature").setData({
+            type: "FeatureCollection",
+            features: [highestAgeFeature],
+          });
+        }
+
+        // Check if the fill layer already exists
+        if (!map.getLayer("highlight-highest-age")) {
+          // Add a layer to highlight the highest age feature with fill
+          map.addLayer({
+            id: "highlight-highest-age",
+            type: "fill",
+            source: "highest-age-feature",
+            layout: {},
+            paint: {
+              "fill-color": "#FF0000", // Set the fill color to red
+              "fill-opacity": 0.2, // Set the opacity
+            },
+          });
+        }
+
+        // Check if the stroke layer already exists
+        if (!map.getLayer("highlight-highest-age-stroke")) {
+          // Add a stroke layer to make it appear larger
+          map.addLayer({
+            id: "highlight-highest-age-stroke",
+            type: "line",
+            source: "highest-age-feature",
+            layout: {},
+            paint: {
+              "line-color": "#FF0000", // Set the stroke color to red
+              "line-width": 4, // Set the stroke width
+              "line-opacity": 0.5,
+            },
+          });
+        }
+
+        // Fly to the highest age feature's center
+        const centerCoordinates =
+          turf.center(highestAgeFeature).geometry.coordinates;
+        map.flyTo({
+          center: centerCoordinates, // Coordinates should be in [lng, lat] format
+          zoom: 14.5, // Adjust the zoom level as needed
+          speed: 1, // Adjust the speed of the flyTo animation
+          curve: 1, // Adjust the curve of the animation
+          essential: true, // This animation is considered essential
+        });
+      }
 
       if (timeFrame === "Day") {
         map.setFilter("ada-day-buildings", filters);
@@ -190,16 +278,7 @@ const useFilterLayers = () => {
     return () => {
       map.off("styledata", updateMapStyle);
     };
-  }, [
-    timeFrame,
-    myMapA,
-    ageGroup,
-    percentageAge,
-    genderGroup,
-    percentageGender,
-    percentAffluence,
-    region,
-  ]);
+  }, [timeFrame, myMapA, ageGroup, genderGroup, region, affluenceGroup]);
 };
 
 export default useFilterLayers;
