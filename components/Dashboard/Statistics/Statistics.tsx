@@ -77,7 +77,7 @@ const Statistics: React.FC = () => {
               <>
                 <StatisticCard
                   title="Total Polar Outlet (Zone)"
-                  value="584"
+                  value="24 (static)"
                   icon={total_polar_outlet}
                 />
                 <StatisticCard
@@ -104,7 +104,7 @@ const Statistics: React.FC = () => {
               <>
                 <StatisticCard
                   title="Total Polar Outlet (Building)"
-                  value="584"
+                  value="24 (static)"
                   icon={total_polar_outlet}
                 />
                 <StatisticCard

@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { TreeSelect } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { useMap } from "react-map-gl/maplibre";
+
 import {
   setBoundingBox,
   setSelectedRegion,
@@ -9,6 +11,7 @@ import {
 
 const RegionSelect: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { myMapA } = useMap();
   const { timeState, selectedRegion } = useAppSelector(
     (state) => state.leftPanel
   );
@@ -34,6 +37,7 @@ const RegionSelect: React.FC = () => {
               value: "Dhaka North",
               title: "Dhaka North",
               isLeaf: false,
+              center: [23.78341, 90.3439],
             },
             {
               id: "Dhaka South",
@@ -41,6 +45,7 @@ const RegionSelect: React.FC = () => {
               value: "Dhaka South",
               title: "Dhaka South",
               isLeaf: false,
+              center: [23.7387, 90.44336],
             },
           ];
           setTreeData([...treeData, ...regions]);
@@ -52,6 +57,7 @@ const RegionSelect: React.FC = () => {
               value: "Azimpur",
               title: "Azimpur",
               isLeaf: true,
+              center: [23.72723014974079, 90.38392595466992],
             },
             {
               id: "Saralia",
@@ -59,6 +65,23 @@ const RegionSelect: React.FC = () => {
               value: "Saralia",
               title: "Saralia",
               isLeaf: true,
+              center: [23.712787918207898, 90.49255684718764],
+            },
+            {
+              id: "Nawabpur",
+              pId: "Dhaka South",
+              value: "Nawabpur",
+              title: "Nawabpur",
+              isLeaf: true,
+              center: [23.712787918207898, 90.49255684718764],
+            },
+            {
+              id: "Sabujbagh",
+              pId: "Dhaka South",
+              value: "Sabujbagh",
+              title: "Sabujbagh",
+              isLeaf: true,
+              center: [23.74702951089918, 90.45391277002413],
             },
             {
               id: "Sakta",
@@ -66,6 +89,7 @@ const RegionSelect: React.FC = () => {
               value: "Sakta",
               title: "Sakta",
               isLeaf: true,
+              center: [23.73350519, 90.33418525],
             },
             {
               id: "Shonir Akhra",
@@ -73,6 +97,7 @@ const RegionSelect: React.FC = () => {
               value: "Shonir Akhra",
               title: "Shonir Akhra",
               isLeaf: true,
+              center: [23.701971178815192, 90.45079718421225],
             },
             {
               id: "Rayerbagh",
@@ -80,6 +105,7 @@ const RegionSelect: React.FC = () => {
               value: "Rayerbagh",
               title: "Rayerbagh",
               isLeaf: true,
+              center: [23.693573676412925, 90.45943689300644],
             },
             {
               id: "Bangshal",
@@ -87,307 +113,7 @@ const RegionSelect: React.FC = () => {
               value: "Bangshal",
               title: "Bangshal",
               isLeaf: true,
-            },
-            {
-              id: "Kalindi",
-              pId: "Dhaka South",
-              value: "Kalindi",
-              title: "Kalindi",
-              isLeaf: true,
-            },
-            {
-              id: "Kamlapur",
-              pId: "Dhaka South",
-              value: "Kamlapur",
-              title: "Kamlapur",
-              isLeaf: true,
-            },
-            {
-              id: "Manikdia",
-              pId: "Dhaka South",
-              value: "Manikdia",
-              title: "Manikdia",
-              isLeaf: true,
-            },
-            {
-              id: "Basabo",
-              pId: "Dhaka South",
-              value: "Basabo",
-              title: "Basabo",
-              isLeaf: true,
-            },
-            {
-              id: "Siddhirganj",
-              pId: "Dhaka South",
-              value: "Siddhirganj",
-              title: "Siddhirganj",
-              isLeaf: true,
-            },
-            {
-              id: "Postogola",
-              pId: "Dhaka South",
-              value: "Postogola",
-              title: "Postogola",
-              isLeaf: true,
-            },
-            {
-              id: "Madartek",
-              pId: "Dhaka South",
-              value: "Madartek",
-              title: "Madartek",
-              isLeaf: true,
-            },
-            {
-              id: "Trimohoni",
-              pId: "Dhaka South",
-              value: "Trimohoni",
-              title: "Trimohoni",
-              isLeaf: true,
-            },
-            {
-              id: "Sultanganj",
-              pId: "Dhaka South",
-              value: "Sultanganj",
-              title: "Sultanganj",
-              isLeaf: true,
-            },
-            {
-              id: "Chawkbazar",
-              pId: "Dhaka South",
-              value: "Chawkbazar",
-              title: "Chawkbazar",
-              isLeaf: true,
-            },
-            {
-              id: "Ramna",
-              pId: "Dhaka South",
-              value: "Ramna",
-              title: "Ramna",
-              isLeaf: true,
-            },
-            {
-              id: "Zinzira",
-              pId: "Dhaka South",
-              value: "Zinzira",
-              title: "Zinzira",
-              isLeaf: true,
-            },
-            {
-              id: "Kakrail",
-              pId: "Dhaka South",
-              value: "Kakrail",
-              title: "Kakrail",
-              isLeaf: true,
-            },
-            {
-              id: "Kutubpur",
-              pId: "Dhaka South",
-              value: "Kutubpur",
-              title: "Kutubpur",
-              isLeaf: true,
-            },
-            {
-              id: "Manda",
-              pId: "Dhaka South",
-              value: "Manda",
-              title: "Manda",
-              isLeaf: true,
-            },
-            {
-              id: "Gulistan",
-              pId: "Dhaka South",
-              value: "Gulistan",
-              title: "Gulistan",
-              isLeaf: true,
-            },
-            {
-              id: "Dhanmondi",
-              pId: "Dhaka South",
-              value: "Dhanmondi",
-              title: "Dhanmondi",
-              isLeaf: true,
-            },
-            {
-              id: "New Market",
-              pId: "Dhaka South",
-              value: "New Market",
-              title: "New Market",
-              isLeaf: true,
-            },
-            {
-              id: "Sutrapur",
-              pId: "Dhaka South",
-              value: "Sutrapur",
-              title: "Sutrapur",
-              isLeaf: true,
-            },
-            {
-              id: "Konda",
-              pId: "Dhaka South",
-              value: "Konda",
-              title: "Konda",
-              isLeaf: true,
-            },
-            {
-              id: "Goran",
-              pId: "Dhaka South",
-              value: "Goran",
-              title: "Goran",
-              isLeaf: true,
-            },
-            {
-              id: "Dhaka University Campus",
-              pId: "Dhaka South",
-              value: "Dhaka University Campus",
-              title: "Dhaka University Campus",
-              isLeaf: true,
-            },
-            {
-              id: "Kotwali",
-              pId: "Dhaka South",
-              value: "Kotwali",
-              title: "Kotwali",
-              isLeaf: true,
-            },
-            {
-              id: "Wari",
-              pId: "Dhaka South",
-              value: "Wari",
-              title: "Wari",
-              isLeaf: true,
-            },
-            {
-              id: "Sayedabad",
-              pId: "Dhaka South",
-              value: "Sayedabad",
-              title: "Sayedabad",
-              isLeaf: true,
-            },
-            {
-              id: "Golapbagh",
-              pId: "Dhaka South",
-              value: "Golapbagh",
-              title: "Golapbagh",
-              isLeaf: true,
-            },
-            {
-              id: "Mugda",
-              pId: "Dhaka South",
-              value: "Mugda",
-              title: "Mugda",
-              isLeaf: true,
-            },
-            {
-              id: "Jurain",
-              pId: "Dhaka South",
-              value: "Jurain",
-              title: "Jurain",
-              isLeaf: true,
-            },
-            {
-              id: "Rajarbagh",
-              pId: "Dhaka South",
-              value: "Rajarbagh",
-              title: "Rajarbagh",
-              isLeaf: true,
-            },
-            {
-              id: "Mohammadbagh",
-              pId: "Dhaka South",
-              value: "Mohammadbagh",
-              title: "Mohammadbagh",
-              isLeaf: true,
-            },
-            {
-              id: "Jatrabari",
-              pId: "Dhaka South",
-              value: "Jatrabari",
-              title: "Jatrabari",
-              isLeaf: true,
-            },
-            {
-              id: "Demra",
-              pId: "Dhaka South",
-              value: "Demra",
-              title: "Demra",
-              isLeaf: true,
-            },
-            {
-              id: "Motijheel",
-              pId: "Dhaka South",
-              value: "Motijheel",
-              title: "Motijheel",
-              isLeaf: true,
-            },
-            {
-              id: "Nandipara",
-              pId: "Dhaka South",
-              value: "Nandipara",
-              title: "Nandipara",
-              isLeaf: true,
-            },
-            {
-              id: "Kadamtali",
-              pId: "Dhaka South",
-              value: "Kadamtali",
-              title: "Kadamtali",
-              isLeaf: true,
-            },
-            {
-              id: "Muradpur",
-              pId: "Dhaka South",
-              value: "Muradpur",
-              title: "Muradpur",
-              isLeaf: true,
-            },
-            {
-              id: "Shyampur",
-              pId: "Dhaka South",
-              value: "Shyampur",
-              title: "Shyampur",
-              isLeaf: true,
-            },
-            {
-              id: "Khilgaon",
-              pId: "Dhaka South",
-              value: "Khilgaon",
-              title: "Khilgaon",
-              isLeaf: true,
-            },
-            {
-              id: "Matuail",
-              pId: "Dhaka South",
-              value: "Matuail",
-              title: "Matuail",
-              isLeaf: true,
-            },
-            {
-              id: "Subhadya",
-              pId: "Dhaka South",
-              value: "Subhadya",
-              title: "Subhadya",
-              isLeaf: true,
-            },
-            {
-              id: "Banasree",
-              pId: "Dhaka South",
-              value: "Banasree",
-              title: "Banasree",
-              isLeaf: true,
-            },
-            {
-              id: "Hazaribagh",
-              pId: "Dhaka South",
-              value: "Hazaribagh",
-              title: "Hazaribagh",
-              isLeaf: true,
-            },
-            {
-              id: "Shahbagh",
-              pId: "Dhaka South",
-              value: "Shahbagh",
-              title: "Shahbagh",
-              isLeaf: true,
+              center: [23.717978576564562, 90.40446217467932],
             },
             {
               id: "Bakshi Bazar",
@@ -395,6 +121,391 @@ const RegionSelect: React.FC = () => {
               value: "Bakshi Bazar",
               title: "Bakshi Bazar",
               isLeaf: true,
+              center: [23.717978576564562, 90.40446217467932],
+            },
+            {
+              id: "Bashabo",
+              pId: "Dhaka South",
+              value: "Bashabo",
+              title: "Bashabo",
+              isLeaf: true,
+              center: [23.74238, 90.431574],
+            },
+            {
+              id: "Kalindi",
+              pId: "Dhaka South",
+              value: "Kalindi",
+              title: "Kalindi",
+              isLeaf: true,
+              center: [23.705928, 90.358456],
+            },
+            {
+              id: "Kamlapur",
+              pId: "Dhaka South",
+              value: "Kamlapur",
+              title: "Kamlapur",
+              isLeaf: true,
+              center: [23.7313153496854, 90.42558870842126],
+            },
+            {
+              id: "Manikdia",
+              pId: "Dhaka South",
+              value: "Manikdia",
+              title: "Manikdia",
+              isLeaf: true,
+              center: [23.737611567301194, 90.4536064540402],
+            },
+            {
+              id: "Basabo",
+              pId: "Dhaka South",
+              value: "Basabo",
+              title: "Basabo",
+              isLeaf: true,
+              center: [23.739048640527386, 90.43345484339456],
+            },
+            {
+              id: "Siddhirganj",
+              pId: "Dhaka South",
+              value: "Siddhirganj",
+              title: "Siddhirganj",
+              isLeaf: true,
+              center: [23.700887, 90.491571],
+            },
+            {
+              id: "Narayanganj Sadar",
+              pId: "Dhaka South",
+              value: "Narayanganj Sadar",
+              title: "Narayanganj Sadar",
+              isLeaf: true,
+              center: [23.700887, 90.491571],
+            },
+            {
+              id: "Postogola",
+              pId: "Dhaka South",
+              value: "Postogola",
+              title: "Postogola",
+              isLeaf: true,
+              center: [23.689367450765737, 90.43064923711583],
+            },
+            {
+              id: "Madartek",
+              pId: "Dhaka South",
+              value: "Madartek",
+              title: "Madartek",
+              isLeaf: true,
+              center: [23.74427347687524, 90.43979659827755],
+            },
+            {
+              id: "Trimohoni",
+              pId: "Dhaka South",
+              value: "Trimohoni",
+              title: "Trimohoni",
+              isLeaf: true,
+              center: [23.759594008697057, 90.46157822107472],
+            },
+            {
+              id: "Sultanganj",
+              pId: "Dhaka South",
+              value: "Sultanganj",
+              title: "Sultanganj",
+              isLeaf: true,
+              center: [23.71220187, 90.37117822],
+            },
+            {
+              id: "Chawkbazar",
+              pId: "Dhaka South",
+              value: "Chawkbazar",
+              title: "Chawkbazar",
+              isLeaf: true,
+              center: [23.715485229697126, 90.39551652056431],
+            },
+            {
+              id: "Ramna",
+              pId: "Dhaka South",
+              value: "Ramna",
+              title: "Ramna",
+              isLeaf: true,
+              center: [23.740650764891555, 90.402844076645],
+            },
+            {
+              id: "Zinzira",
+              pId: "Dhaka South",
+              value: "Zinzira",
+              title: "Zinzira",
+              isLeaf: true,
+              center: [23.7074, 90.39452],
+            },
+            {
+              id: "Kakrail",
+              pId: "Dhaka South",
+              value: "Kakrail",
+              title: "Kakrail",
+              isLeaf: true,
+              center: [23.737965645326184, 90.40719592264426],
+            },
+            {
+              id: "Kutubpur",
+              pId: "Dhaka South",
+              value: "Kutubpur",
+              title: "Kutubpur",
+              isLeaf: true,
+              center: [23.8371, 88.6372],
+            },
+            {
+              id: "Manda",
+              pId: "Dhaka South",
+              value: "Manda",
+              title: "Manda",
+              isLeaf: true,
+              center: [23.728920720615267, 90.44257099593418],
+            },
+            {
+              id: "Gulistan",
+              pId: "Dhaka South",
+              value: "Gulistan",
+              title: "Gulistan",
+              isLeaf: true,
+              center: [23.725905849056875, 90.41045596976267],
+            },
+            {
+              id: "Dhanmondi",
+              pId: "Dhaka South",
+              value: "Dhanmondi",
+              title: "Dhanmondi",
+              isLeaf: true,
+              center: [23.747572704883257, 90.37497642278824],
+            },
+            {
+              id: "New Market",
+              pId: "Dhaka South",
+              value: "New Market",
+              title: "New Market",
+              isLeaf: true,
+              center: [23.735626999579974, 90.38372118673755],
+            },
+            {
+              id: "Sutrapur",
+              pId: "Dhaka South",
+              value: "Sutrapur",
+              title: "Sutrapur",
+              isLeaf: true,
+              center: [23.70756602990796, 90.41516747696411],
+            },
+            {
+              id: "Gendaria",
+              pId: "Dhaka South",
+              value: "Gendaria",
+              title: "Gendaria",
+              isLeaf: true,
+              center: [23.70756602990796, 90.41516747696411],
+            },
+            {
+              id: "Konda",
+              pId: "Dhaka South",
+              value: "Konda",
+              title: "Konda",
+              isLeaf: true,
+              center: [23.67275459, 90.44123525],
+            },
+            {
+              id: "Goran",
+              pId: "Dhaka South",
+              value: "Goran",
+              title: "Goran",
+              isLeaf: true,
+              center: [23.747893008265056, 90.43482324880253],
+            },
+            {
+              id: "Dhaka University Campus",
+              pId: "Dhaka South",
+              value: "Dhaka University Campus",
+              title: "Dhaka University Campus",
+              isLeaf: true,
+              center: [23.73121478509246, 90.39650425471027],
+            },
+            {
+              id: "Kotwali",
+              pId: "Dhaka South",
+              value: "Kotwali",
+              title: "Kotwali",
+              isLeaf: true,
+              center: [23.710725913167618, 90.40774840941113],
+            },
+            {
+              id: "Wari",
+              pId: "Dhaka South",
+              value: "Wari",
+              title: "Wari",
+              isLeaf: true,
+              center: [23.716023448590132, 90.41734514569427],
+            },
+            {
+              id: "Sayedabad",
+              pId: "Dhaka South",
+              value: "Sayedabad",
+              title: "Sayedabad",
+              isLeaf: true,
+              center: [23.714624211042125, 90.42826594570704],
+            },
+            {
+              id: "Golapbagh",
+              pId: "Dhaka South",
+              value: "Golapbagh",
+              title: "Golapbagh",
+              isLeaf: true,
+              center: [23.718394250728192, 90.42894485714102],
+            },
+            {
+              id: "Mugda",
+              pId: "Dhaka South",
+              value: "Mugda",
+              title: "Mugda",
+              isLeaf: true,
+              center: [23.72862449882099, 90.43450265430559],
+            },
+            {
+              id: "Jurain",
+              pId: "Dhaka South",
+              value: "Jurain",
+              title: "Jurain",
+              isLeaf: true,
+              center: [23.69173404171289, 90.43849330963057],
+            },
+            {
+              id: "Rajarbagh",
+              pId: "Dhaka South",
+              value: "Rajarbagh",
+              title: "Rajarbagh",
+              isLeaf: true,
+              center: [23.740751793754914, 90.41605723879475],
+            },
+            {
+              id: "Mohammadbagh",
+              pId: "Dhaka South",
+              value: "Mohammadbagh",
+              title: "Mohammadbagh",
+              isLeaf: true,
+              center: [23.68694917320268, 90.45945686129176],
+            },
+            {
+              id: "Jatrabari",
+              pId: "Dhaka South",
+              value: "Jatrabari",
+              title: "Jatrabari",
+              isLeaf: true,
+              center: [23.70853374832443, 90.43306656474884],
+            },
+            {
+              id: "Tikatuli",
+              pId: "Dhaka South",
+              value: "Tikatuli",
+              title: "Tikatuli",
+              isLeaf: true,
+              center: [23.70853374832443, 90.43306656474884],
+            },
+            {
+              id: "Demra",
+              pId: "Dhaka South",
+              value: "Demra",
+              title: "Demra",
+              isLeaf: true,
+              center: [23.72076981730677, 90.48569818935768],
+            },
+            {
+              id: "Motijheel",
+              pId: "Dhaka South",
+              value: "Motijheel",
+              title: "Motijheel",
+              isLeaf: true,
+              center: [23.73098048014453, 90.41969853511132],
+            },
+            {
+              id: "Nandipara",
+              pId: "Dhaka South",
+              value: "Nandipara",
+              title: "Nandipara",
+              isLeaf: true,
+              center: [23.74881442686262, 90.44951811216832],
+            },
+            {
+              id: "Kadamtali",
+              pId: "Dhaka South",
+              value: "Kadamtali",
+              title: "Kadamtali",
+              isLeaf: true,
+              center: [23.696420063518286, 90.4461535474917],
+            },
+            {
+              id: "Muradpur",
+              pId: "Dhaka South",
+              value: "Muradpur",
+              title: "Muradpur",
+              isLeaf: true,
+              center: [23.69701078127464, 90.43998672429393],
+            },
+            {
+              id: "Shyampur",
+              pId: "Dhaka South",
+              value: "Shyampur",
+              title: "Shyampur",
+              isLeaf: true,
+              center: [23.69167271343223, 90.43320124823266],
+            },
+            {
+              id: "Khilgaon",
+              pId: "Dhaka South",
+              value: "Khilgaon",
+              title: "Khilgaon",
+              isLeaf: true,
+              center: [23.750403193978666, 90.4246901021256],
+            },
+            {
+              id: "Matuail",
+              pId: "Dhaka South",
+              value: "Matuail",
+              title: "Matuail",
+              isLeaf: true,
+              center: [23.704084217400577, 90.46384823134066],
+            },
+            {
+              id: "Subhadya",
+              pId: "Dhaka South",
+              value: "Subhadya",
+              title: "Subhadya",
+              isLeaf: true,
+              center: [23.69512997, 90.3960677],
+            },
+            {
+              id: "Banasree",
+              pId: "Dhaka South",
+              value: "Banasree",
+              title: "Banasree",
+              isLeaf: true,
+              center: [23.755882, 90.443284],
+            },
+            {
+              id: "Hazaribagh",
+              pId: "Dhaka South",
+              value: "Hazaribagh",
+              title: "Hazaribagh",
+              isLeaf: true,
+              center: [23.732136787430452, 90.36509251493463],
+            },
+            {
+              id: "Shahbagh",
+              pId: "Dhaka South",
+              value: "Shahbagh",
+              title: "Shahbagh",
+              isLeaf: true,
+              center: [23.737710779731117, 90.39432021435958],
+            },
+            {
+              id: "Bakshi Bazar",
+              pId: "Dhaka South",
+              value: "Bakshi Bazar",
+              title: "Bakshi Bazar",
+              isLeaf: true,
+              center: [23.72206232790888, 90.39650566126386],
             },
             {
               id: "Dakkhingaon",
@@ -402,6 +513,7 @@ const RegionSelect: React.FC = () => {
               value: "Dakkhingaon",
               title: "Dakkhingaon",
               isLeaf: true,
+              center: [23.74702951089918, 90.45391277002413],
             },
             {
               id: "Keraniganj",
@@ -409,6 +521,7 @@ const RegionSelect: React.FC = () => {
               value: "Keraniganj",
               title: "Keraniganj",
               isLeaf: true,
+              center: [23.67485281, 90.43166168],
             },
             {
               id: "Lalbagh",
@@ -416,6 +529,7 @@ const RegionSelect: React.FC = () => {
               value: "Lalbagh",
               title: "Lalbagh",
               isLeaf: true,
+              center: [23.718070587666148, 90.38650844682485],
             },
             {
               id: "Kamrangirchar",
@@ -423,6 +537,7 @@ const RegionSelect: React.FC = () => {
               value: "Kamrangirchar",
               title: "Kamrangirchar",
               isLeaf: true,
+              center: [23.71557358712816, 90.37116426717672],
             },
             {
               id: "Donia",
@@ -430,6 +545,7 @@ const RegionSelect: React.FC = () => {
               value: "Donia",
               title: "Donia",
               isLeaf: true,
+              center: [23.69759853731042, 90.44785461529452],
             },
           ];
 
@@ -442,6 +558,7 @@ const RegionSelect: React.FC = () => {
               value: "Adabor",
               title: "Adabor",
               isLeaf: true,
+              center: [23.772919209467926, 90.3507305131545],
             },
             {
               id: "Aftabnagar",
@@ -449,6 +566,7 @@ const RegionSelect: React.FC = () => {
               value: "Aftabnagar",
               title: "Aftabnagar",
               isLeaf: true,
+              center: [23.767130508056105, 90.44644256288343],
             },
             {
               id: "Agargaon",
@@ -456,20 +574,23 @@ const RegionSelect: React.FC = () => {
               value: "Agargaon",
               title: "Agargaon",
               isLeaf: true,
+              center: [23.779904078531956, 90.37410211131579],
             },
-            {
-              id: "Amin Bazar",
-              pId: "Dhaka North",
-              value: "Amin Bazar",
-              title: "Amin Bazar",
-              isLeaf: true,
-            },
+            // {
+            //   id: "Amin Bazar",
+            //   pId: "Dhaka North",
+            //   value: "Amin Bazar",
+            //   title: "Amin Bazar",
+            //   isLeaf: true,
+            //   center: [23.774312, 90.327508],
+            // },
             {
               id: "Baunia",
               pId: "Dhaka North",
               value: "Baunia",
               title: "Baunia",
               isLeaf: true,
+              center: [23.862199018308715, 90.42521411522748],
             },
             {
               id: "Barua",
@@ -477,6 +598,7 @@ const RegionSelect: React.FC = () => {
               value: "Barua",
               title: "Barua",
               isLeaf: true,
+              center: [23.841198278608424, 90.45209509716625],
             },
             {
               id: "Bashundhara",
@@ -484,6 +606,7 @@ const RegionSelect: React.FC = () => {
               value: "Bashundhara",
               title: "Bashundhara",
               isLeaf: true,
+              center: [23.817049340960804, 90.45102913681447],
             },
             {
               id: "Badda",
@@ -491,6 +614,7 @@ const RegionSelect: React.FC = () => {
               value: "Badda",
               title: "Badda",
               isLeaf: true,
+              center: [23.783085565828774, 90.43191035258673],
             },
             {
               id: "Bakshi Bazar",
@@ -498,6 +622,15 @@ const RegionSelect: React.FC = () => {
               value: "Bakshi Bazar",
               title: "Bakshi Bazar",
               isLeaf: true,
+              center: [23.72206232790888, 90.39650566126386],
+            },
+            {
+              id: "Banani",
+              pId: "Dhaka North",
+              value: "Banani",
+              title: "Banani",
+              isLeaf: true,
+              center: [23.792285922060238, 90.40374436559394],
             },
             {
               id: "Banasree",
@@ -505,6 +638,7 @@ const RegionSelect: React.FC = () => {
               value: "Banasree",
               title: "Banasree",
               isLeaf: true,
+              center: [23.758266220155775, 90.43726479644994],
             },
             {
               id: "Bangshal",
@@ -512,13 +646,15 @@ const RegionSelect: React.FC = () => {
               value: "Bangshal",
               title: "Bangshal",
               isLeaf: true,
+              center: [23.717978576564562, 90.40446217467932],
             },
             {
-              id: "Bashantek",
+              id: "Bhashantek",
               pId: "Dhaka North",
-              value: "Bashantek",
-              title: "Bashantek",
+              value: "Bhashantek",
+              title: "Bhashantek",
               isLeaf: true,
+              center: [23.811928, 90.393037],
             },
             {
               id: "Beraid",
@@ -526,48 +662,48 @@ const RegionSelect: React.FC = () => {
               value: "Beraid",
               title: "Beraid",
               isLeaf: true,
+              center: [23.800064221005638, 90.47468455696485],
             },
-            {
-              id: "Bhakurta",
-              pId: "Dhaka North",
-              value: "Bhakurta",
-              title: "Bhakurta",
-              isLeaf: true,
-            },
+            // {
+            //   id: "Bhakurta",
+            //   pId: "Dhaka North",
+            //   value: "Bhakurta",
+            //   title: "Bhakurta",
+            //   isLeaf: true,
+            //   center: [23.76415, 90.293402],
+            // },
             {
               id: "Biman Bandar",
               pId: "Dhaka North",
               value: "Biman Bandar",
               title: "Biman Bandar",
               isLeaf: true,
+              center: [23.845915883229235, 90.40166790723393],
             },
-            {
-              id: "Biralia",
-              pId: "Dhaka North",
-              value: "Biralia",
-              title: "Biralia",
-              isLeaf: true,
-            },
-            {
-              id: "Dakkhingaon",
-              pId: "Dhaka North",
-              value: "Dakkhingaon",
-              title: "Dakkhingaon",
-              isLeaf: true,
-            },
+            // {
+            //   id: "Biralia",
+            //   pId: "Dhaka North",
+            //   value: "Biralia",
+            //   title: "Biralia",
+            //   isLeaf: true,
+            //   center: [23.861838, 90.309632],
+            // },
+
             {
               id: "Dakkhinkhan",
               pId: "Dhaka North",
               value: "Dakkhinkhan",
               title: "Dakkhinkhan",
               isLeaf: true,
+              center: [23.72723014974079, 90.38392595466992],
             },
             {
-              id: "Darus Salam",
+              id: "Darussalam",
               pId: "Dhaka North",
-              value: "Darus Salam",
-              title: "Darus Salam",
+              value: "Darussalam",
+              title: "Darussalam",
               isLeaf: true,
+              center: [23.785467, 90.347676],
             },
             {
               id: "Dhanmondi",
@@ -575,6 +711,7 @@ const RegionSelect: React.FC = () => {
               value: "Dhanmondi",
               title: "Dhanmondi",
               isLeaf: true,
+              center: [23.747572704883257, 90.37497642278824],
             },
             {
               id: "Donia",
@@ -582,6 +719,7 @@ const RegionSelect: React.FC = () => {
               value: "Donia",
               title: "Donia",
               isLeaf: true,
+              center: [23.69759853731042, 90.44785461529452],
             },
             {
               id: "Dumni",
@@ -589,6 +727,7 @@ const RegionSelect: React.FC = () => {
               value: "Dumni",
               title: "Dumni",
               isLeaf: true,
+              center: [23.830569971061273, 90.46701618962821],
             },
             {
               id: "Eskaton",
@@ -596,20 +735,23 @@ const RegionSelect: React.FC = () => {
               value: "Eskaton",
               title: "Eskaton",
               isLeaf: true,
+              center: [23.745564965768125, 90.39964086626327],
             },
-            {
-              id: "Ghatarchar",
-              pId: "Dhaka North",
-              value: "Ghatarchar",
-              title: "Ghatarchar",
-              isLeaf: true,
-            },
+            // {
+            //   id: "Ghatarchar",
+            //   pId: "Dhaka North",
+            //   value: "Ghatarchar",
+            //   title: "Ghatarchar",
+            //   isLeaf: true,
+            //   center: [23.735406, 90.33548],
+            // },
             {
               id: "Gulshan",
               pId: "Dhaka North",
               value: "Gulshan",
               title: "Gulshan",
               isLeaf: true,
+              center: [23.78907175191648, 90.4143804859367],
             },
             {
               id: "Harirampur",
@@ -617,20 +759,23 @@ const RegionSelect: React.FC = () => {
               value: "Harirampur",
               title: "Harirampur",
               isLeaf: true,
+              center: [23.860307, 90.369303],
             },
-            {
-              id: "Jatiyo Sangsad Bhaban (Parliament Of Bangladesh)",
-              pId: "Dhaka North",
-              value: "Jatiyo Sangsad Bhaban (Parliament Of Bangladesh)",
-              title: "Jatiyo Sangsad Bhaban (Parliament Of Bangladesh)",
-              isLeaf: true,
-            },
+            // {
+            //   id: "Jatiyo Sangsad Bhaban (Parliament Of Bangladesh)",
+            //   pId: "Dhaka North",
+            //   value: "Jatiyo Sangsad Bhaban (Parliament Of Bangladesh)",
+            //   title: "Jatiyo Sangsad Bhaban (Parliament Of Bangladesh)",
+            //   isLeaf: true,
+            //   center: [23.76098, 90.3785],
+            // },
             {
               id: "Joar Shahara",
               pId: "Dhaka North",
               value: "Joar Shahara",
               title: "Joar Shahara",
               isLeaf: true,
+              center: [23.816058959414043, 90.41824940360938],
             },
             {
               id: "Kalabagan",
@@ -638,6 +783,7 @@ const RegionSelect: React.FC = () => {
               value: "Kalabagan",
               title: "Kalabagan",
               isLeaf: true,
+              center: [23.74946133982729, 90.3828991619698],
             },
             {
               id: "Kalachandpur",
@@ -645,6 +791,7 @@ const RegionSelect: React.FC = () => {
               value: "Kalachandpur",
               title: "Kalachandpur",
               isLeaf: true,
+              center: [23.809662817497376, 90.41627302397399],
             },
             {
               id: "Kafrul",
@@ -652,6 +799,7 @@ const RegionSelect: React.FC = () => {
               value: "Kafrul",
               title: "Kafrul",
               isLeaf: true,
+              center: [23.792107380324264, 90.38235127808143],
             },
             {
               id: "Kaundiya",
@@ -659,6 +807,7 @@ const RegionSelect: React.FC = () => {
               value: "Kaundiya",
               title: "Kaundiya",
               isLeaf: true,
+              center: [23.798011, 90.338679],
             },
             {
               id: "Kaundia",
@@ -666,6 +815,7 @@ const RegionSelect: React.FC = () => {
               value: "Kaundia",
               title: "Kaundia",
               isLeaf: true,
+              center: [23.798011, 90.338679],
             },
             {
               id: "Korail",
@@ -673,6 +823,7 @@ const RegionSelect: React.FC = () => {
               value: "Korail",
               title: "Korail",
               isLeaf: true,
+              center: [23.78483374661296, 90.40889712874569],
             },
             {
               id: "Lalmatia",
@@ -680,6 +831,7 @@ const RegionSelect: React.FC = () => {
               value: "Lalmatia",
               title: "Lalmatia",
               isLeaf: true,
+              center: [23.7559127063885, 90.36887182576635],
             },
             {
               id: "Malibagh",
@@ -687,6 +839,7 @@ const RegionSelect: React.FC = () => {
               value: "Malibagh",
               title: "Malibagh",
               isLeaf: true,
+              center: [23.750455208272424, 90.41498359058936],
             },
             {
               id: "Meradia",
@@ -694,6 +847,7 @@ const RegionSelect: React.FC = () => {
               value: "Meradia",
               title: "Meradia",
               isLeaf: true,
+              center: [23.755543552908705, 90.43374042658594],
             },
             {
               id: "Mirpur",
@@ -701,6 +855,7 @@ const RegionSelect: React.FC = () => {
               value: "Mirpur",
               title: "Mirpur",
               isLeaf: true,
+              center: [23.811808557846412, 90.36315305217883],
             },
             {
               id: "Mohakhali",
@@ -708,6 +863,7 @@ const RegionSelect: React.FC = () => {
               value: "Mohakhali",
               title: "Mohakhali",
               isLeaf: true,
+              center: [23.778905432304786, 90.40234871858172],
             },
             {
               id: "Mohammadpur",
@@ -715,6 +871,7 @@ const RegionSelect: React.FC = () => {
               value: "Mohammadpur",
               title: "Mohammadpur",
               isLeaf: true,
+              center: [23.75789774013872, 90.3524327318356],
             },
             {
               id: "Mostul",
@@ -722,6 +879,7 @@ const RegionSelect: React.FC = () => {
               value: "Mostul",
               title: "Mostul",
               isLeaf: true,
+              center: [23.83462, 90.47586],
             },
             {
               id: "Nikunja",
@@ -729,6 +887,7 @@ const RegionSelect: React.FC = () => {
               value: "Nikunja",
               title: "Nikunja",
               isLeaf: true,
+              center: [23.82877522979805, 90.41669140631933],
             },
             {
               id: "Old Airport Tejgaon",
@@ -736,6 +895,7 @@ const RegionSelect: React.FC = () => {
               value: "Old Airport Tejgaon",
               title: "Old Airport Tejgaon",
               isLeaf: true,
+              center: [23.78476, 90.37954],
             },
             {
               id: "Pallabi",
@@ -743,6 +903,7 @@ const RegionSelect: React.FC = () => {
               value: "Pallabi",
               title: "Pallabi",
               isLeaf: true,
+              center: [23.82436, 90.36436],
             },
             {
               id: "Panthapath",
@@ -750,6 +911,7 @@ const RegionSelect: React.FC = () => {
               value: "Panthapath",
               title: "Panthapath",
               isLeaf: true,
+              center: [23.75101475723975, 90.38724179669832],
             },
             {
               id: "Rayer Bazar",
@@ -757,6 +919,7 @@ const RegionSelect: React.FC = () => {
               value: "Rayer Bazar",
               title: "Rayer Bazar",
               isLeaf: true,
+              center: [23.74729223266841, 90.36131853716228],
             },
             {
               id: "Rampura",
@@ -764,6 +927,7 @@ const RegionSelect: React.FC = () => {
               value: "Rampura",
               title: "Rampura",
               isLeaf: true,
+              center: [23.762061850515064, 90.42102719167755],
             },
             {
               id: "Satarkul",
@@ -771,6 +935,7 @@ const RegionSelect: React.FC = () => {
               value: "Satarkul",
               title: "Satarkul",
               isLeaf: true,
+              center: [23.789800241522794, 90.44672195698035],
             },
             {
               id: "Shyamoli",
@@ -778,6 +943,7 @@ const RegionSelect: React.FC = () => {
               value: "Shyamoli",
               title: "Shyamoli",
               isLeaf: true,
+              center: [23.77645277728923, 90.36504260881202],
             },
             {
               id: "Shahbagh",
@@ -785,6 +951,7 @@ const RegionSelect: React.FC = () => {
               value: "Shahbagh",
               title: "Shahbagh",
               isLeaf: true,
+              center: [23.737710779731117, 90.39432021435958],
             },
             {
               id: "Sher E Bangla Nagar",
@@ -792,6 +959,7 @@ const RegionSelect: React.FC = () => {
               value: "Sher E Bangla Nagar",
               title: "Sher E Bangla Nagar",
               isLeaf: true,
+              center: [23.767357606548924, 90.3764912478023],
             },
             {
               id: "Tejgaon",
@@ -799,6 +967,7 @@ const RegionSelect: React.FC = () => {
               value: "Tejgaon",
               title: "Tejgaon",
               isLeaf: true,
+              center: [23.762662525304155, 90.39567916520875],
             },
             {
               id: "Tongi",
@@ -806,6 +975,7 @@ const RegionSelect: React.FC = () => {
               value: "Tongi",
               title: "Tongi",
               isLeaf: true,
+              center: [23.88489, 90.40237],
             },
             {
               id: "Tongi Paurashava",
@@ -813,6 +983,7 @@ const RegionSelect: React.FC = () => {
               value: "Tongi Paurashava",
               title: "Tongi Paurashava",
               isLeaf: true,
+              center: [23.88291, 90.40326],
             },
             {
               id: "Turag",
@@ -820,6 +991,7 @@ const RegionSelect: React.FC = () => {
               value: "Turag",
               title: "Turag",
               isLeaf: true,
+              center: [23.885254171771816, 90.37355565020694],
             },
             {
               id: "Uttar Khan",
@@ -827,6 +999,7 @@ const RegionSelect: React.FC = () => {
               value: "Uttar Khan",
               title: "Uttar Khan",
               isLeaf: true,
+              center: [23.88305, 90.45477],
             },
             {
               id: "Uttara",
@@ -834,6 +1007,7 @@ const RegionSelect: React.FC = () => {
               value: "Uttara",
               title: "Uttara",
               isLeaf: true,
+              center: [23.864117694038782, 90.37705256283732],
             },
             {
               id: "Uttarkhan",
@@ -841,6 +1015,7 @@ const RegionSelect: React.FC = () => {
               value: "Uttarkhan",
               title: "Uttarkhan",
               isLeaf: true,
+              center: [23.87751579687646, 90.44576255596112],
             },
             {
               id: "Vatara",
@@ -848,6 +1023,7 @@ const RegionSelect: React.FC = () => {
               value: "Vatara",
               title: "Vatara",
               isLeaf: true,
+              center: [23.80436399355282, 90.4306637719076],
             },
             {
               id: "Washpur",
@@ -855,6 +1031,7 @@ const RegionSelect: React.FC = () => {
               value: "Washpur",
               title: "Washpur",
               isLeaf: true,
+              center: [23.74143, 90.33956],
             },
             {
               id: "Zoo Road",
@@ -862,6 +1039,7 @@ const RegionSelect: React.FC = () => {
               value: "Zoo Road",
               title: "Zoo Road",
               isLeaf: true,
+              center: [23.81135, 90.34851],
             },
           ];
           setTreeData([...treeData, ...areas]);
@@ -875,19 +1053,24 @@ const RegionSelect: React.FC = () => {
   // };
 
   const handleRegionChange = (value: string, label: any, extra: any) => {
-    if (extra?.triggerNode?.props) {
-      const { title, pId } = extra?.triggerNode?.props;
+    if (extra?.triggerNode?.props && myMapA) {
+      const { title, pId, center } = extra?.triggerNode?.props;
+      console.log("🚀 ~ handleRegionChange ~ center:", center);
+
       dispatch(setSelectedRegion({ pId, title }));
-      let bbox = null;
-      if (pId.includes("Dhaka")) {
-        bbox = {
-          minLng: 90.159745,
-          minLat: 23.572289,
-          maxLng: 90.698177,
-          maxLat: 23.989694,
-        };
-      }
-      dispatch(setBoundingBox(bbox));
+      myMapA.flyTo({
+        center: [center[1], center[0]],
+      });
+      // let bbox = null;
+      // if (pId.includes("Dhaka")) {
+      //   bbox = {
+      //     minLng: 90.159745,
+      //     minLat: 23.572289,
+      //     maxLng: 90.698177,
+      //     maxLat: 23.989694,
+      //   };
+      // }
+      // dispatch(setBoundingBox(bbox));
     }
   };
 

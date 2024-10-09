@@ -7,9 +7,9 @@ export interface LeftPanelPercentageState {
 }
 
 const initialState: LeftPanelPercentageState = {
-  selectedAgeGroupPercentage: 50,
-  genderPercentage: 50,
-  affluencePercentage: 50,
+  selectedAgeGroupPercentage: 100,
+  genderPercentage: 100,
+  affluencePercentage: 100,
 };
 
 export const leftPanelSlice = createSlice({

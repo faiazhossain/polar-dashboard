@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { Popup, useMap } from "react-map-gl";
+import React from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useAppSelector } from "@/lib/store/hooks";
 import { clearClickedEntity } from "@/lib/store/features/statistics/clickedEntitySlice";

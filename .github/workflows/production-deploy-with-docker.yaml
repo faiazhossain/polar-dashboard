@@ -44,7 +44,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd /var/www/html/polar-dashboard
+            cd /home/faiaz/projects/polar-dashboard
             ls -l docker-compose.yml
             docker compose down
             docker image prune -af
