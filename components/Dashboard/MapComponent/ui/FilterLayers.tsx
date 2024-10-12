@@ -31,7 +31,7 @@ const useFilterLayers = () => {
     (state: State) => state.leftPanel.selectedAffluence
   );
 
-  let highestAgeFeature = null; // Declare here
+  let highestAgeFeature = null;
 
   const transformValue = (value: string, map: Record<string, string>): string =>
     map[value] || value;
@@ -55,10 +55,15 @@ const useFilterLayers = () => {
     let highestFeature = null;
 
     filterData.forEach((feature: any) => {
-      const value = feature.properties[dataKey];
-      if (value && value > highestValue) {
-        highestValue = value;
-        highestFeature = feature; // Save the feature with the highest value
+      // Check if the feature ID is "ada day bounds"
+      if (feature?.layer?.id === "ada day bounds") {
+        // Extract the value for the given dataKey from the feature's properties
+        const value = feature.properties[dataKey];
+        // Compare the value and update the highestValue and highestFeature accordingly
+        if (value && value > highestValue) {
+          highestValue = value;
+          highestFeature = feature; // Save the feature with the highest value
+        }
       }
     });
 
@@ -68,14 +73,18 @@ const useFilterLayers = () => {
   const getFilters = (): any[] => {
     const filters: any[] = ["all", ["==", ["geometry-type"], "Polygon"]];
     const filteredData = myMapA?.queryRenderedFeatures(); // Get data from map
-    if (!filteredData) {
+
+    const featuresWithId = filteredData?.filter(
+      (feature) => feature.layer.id === "ada day bounds"
+    );
+
+    if (!featuresWithId) {
       return filters;
     }
 
     if (ageGroup) {
-      highestAgeFeature = getHighestValueFeature(ageGroup, filteredData); // Update the variable here
+      highestAgeFeature = getHighestValueFeature(ageGroup, featuresWithId); // Update the variable here
       if (highestAgeFeature) {
-        console.log("🚀 ~ getFilters ~ highestAgeFeature:", highestAgeFeature);
         const highestAgeValue = highestAgeFeature.properties[ageGroup];
       }
     }
@@ -84,13 +93,9 @@ const useFilterLayers = () => {
     if (transformedGender) {
       const highestGenderFeature = getHighestValueFeature(
         transformedGender,
-        filteredData
+        featuresWithId
       );
       if (highestGenderFeature) {
-        console.log(
-          "🚀 ~ getFilters ~ highestGenderFeature:",
-          highestGenderFeature
-        );
       }
     }
 
@@ -98,13 +103,9 @@ const useFilterLayers = () => {
     if (transformedAffluence) {
       const highestAffluenceFeature = getHighestValueFeature(
         transformedAffluence,
-        filteredData
+        featuresWithId
       );
       if (highestAffluenceFeature) {
-        console.log(
-          "🚀 ~ getFilters ~ highestAffluenceFeature:",
-          highestAffluenceFeature
-        );
       }
     }
 
