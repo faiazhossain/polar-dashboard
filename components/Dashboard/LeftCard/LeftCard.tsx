@@ -19,9 +19,11 @@ import RegionSelect from "./RegionSelect";
 import { setStatistics } from "@/lib/store/features/statistics/zoneStatisticsSlice";
 import { clearClickedEntity } from "@/lib/store/features/statistics/clickedEntitySlice";
 import { setBuildingStatistics } from "@/lib/store/features/statistics/buildingStatisticsSlice";
+import { useMap } from "react-map-gl";
 
 const LeftCard: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { myMapA } = useMap();
   const {
     timeState,
     selectedRegion,
@@ -90,6 +92,22 @@ const LeftCard: React.FC = () => {
     dispatch(setSelectedAffluence(""));
     dispatch(setSelectedAgeGroup(""));
     dispatch(setSelectedGender(""));
+
+  // Access the underlying map instance
+  const mapInstance = myMapA?.getMap();
+
+  // Array of layer IDs you want to remove
+  const layerIds = ["highlight-highest-age", "highlight-highest-gender", "highlight-highest-affluence","highlight-highest-age-stroke","highlight-highest-gender-stroke","highlight-highest-affluence-stroke"]; // Replace with actual layer IDs
+  const layerSources = ["highest-age-feature", "highest-gender-feature", "highest-affluence-feature"]; // Replace with actual layer IDs
+
+  // Loop through each layer ID and remove it
+  layerIds.forEach((layerId) => {
+    if (mapInstance?.getLayer(layerId)) {
+      mapInstance.removeLayer(layerId);
+      // mapInstance.removeSource(layerId); // Also remove the source associated with the layer if needed
+    }
+  });
+
     dispatch(
       setStatistics({
         "18-24": 0,

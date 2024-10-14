@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Button } from "antd";
 import { FaInfoCircle } from "react-icons/fa";
+import { Padding } from "maplibre-gl";
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
@@ -140,6 +141,11 @@ function MapComponent() {
         mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green/style.json"
         attributionControl={false}
       >
+        <div style={{position:'absolute',top:'200px',right:'10px',display:'flex',flexDirection:'column',backgroundColor:'white'}}>
+          <p style={{backgroundColor:'rgba(0, 255, 0, .3)',padding:'0 4px'}}>AFFLUENCE</p>
+          <p style={{backgroundColor:'rgba(0, 0, 255, .3)',padding:'0 4px'}}>GENDER</p>
+          <p style={{backgroundColor:'rgba(255, 0, 0, .3)',padding:'0 4px'}}>AGE</p>
+        </div>
         <Link
           href="https://barikoi.com/"
           className="absolute bottom-2 left-3 w-16"
