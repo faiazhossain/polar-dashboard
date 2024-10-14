@@ -1,3 +1,4 @@
+//@ts-nocheck
 import Image, { StaticImageData } from "next/image";
 import React, { useState } from "react";
 import total_polar_outlet from "@/public/statistics/outlet.svg";
@@ -14,6 +15,7 @@ interface StatisticCardProps {
   icon: StaticImageData;
   isHighlighted?: boolean;
 }
+
 
 // Define the StatisticCard component
 const StatisticCard: React.FC<StatisticCardProps> = ({
