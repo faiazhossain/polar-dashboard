@@ -32,7 +32,7 @@ import { Padding } from "maplibre-gl";
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
   const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
-  const [zoomLevel, setZoomLevel] = React.useState(16.5);
+  const [zoomLevel, setZoomLevel] = React.useState(14.30);
   const { statistics } = useAppSelector((state) => state.statistics);
   const statisticsBuilding = useAppSelector(
     (state) => state.buildingstatistics.buildingStatistics
@@ -128,7 +128,7 @@ function MapComponent() {
         initialViewState={{
           longitude: 90.403387,
           latitude: 23.71253,
-          zoom: 16.5,
+          zoom: 14.30,
         }}
         onZoom={handleZoom} // Listen for zoom changes
         style={{

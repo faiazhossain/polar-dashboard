@@ -52,11 +52,7 @@ const useFilterLayers = () => {
       Medium: "Mid",
     });
 
-  const getHighestValueFeature = (
-    dataKey: string,
-    filterData: any[],
-    region: any
-  ): any => {
+  const getExactBoundFeature = (dataKey: string, filterData: any[], region: any): any => {
     const filteredFeatures = filterData.filter((feature: any) => {
       return (
         feature?.layer?.id === "ada day bounds" &&
@@ -64,19 +60,16 @@ const useFilterLayers = () => {
       );
     });
 
-    let highestValue = 0;
-    let highestFeature = null;
+    let highestValueFeature = null;
 
-    // Loop through the filtered features to find the highest value
     filteredFeatures.forEach((feature: any) => {
       const value = feature.properties[dataKey];
-      if (value && value > highestValue) {
-        highestValue = value;
-        highestFeature = feature;
+      if (value && (!highestValueFeature || value > highestValueFeature.properties[dataKey])) {
+        highestValueFeature = feature;
       }
     });
 
-    return highestFeature;
+    return highestValueFeature;
   };
 
   const getFilters = (): any[] => {
@@ -92,29 +85,17 @@ const useFilterLayers = () => {
     }
 
     if (ageGroup) {
-      highestAgeFeature = getHighestValueFeature(
-        ageGroup,
-        featuresWithId,
-        region
-      );
+      highestAgeFeature = getExactBoundFeature(ageGroup, featuresWithId, region);
     }
 
     const transformedGender = transformGender(genderGroup);
     if (transformedGender) {
-      highestGenderFeature = getHighestValueFeature(
-        transformedGender,
-        featuresWithId,
-        region
-      );
+      highestGenderFeature = getExactBoundFeature(transformedGender, featuresWithId, region);
     }
 
     const transformedAffluence = transformAffluence(affluenceGroup);
     if (transformedAffluence) {
-      highestAffluenceFeature = getHighestValueFeature(
-        transformedAffluence,
-        featuresWithId,
-        region
-      );
+      highestAffluenceFeature = getExactBoundFeature(transformedAffluence, featuresWithId, region);
     }
 
     if (region.pId === "Division") {
@@ -194,14 +175,10 @@ const useFilterLayers = () => {
       },
     });
 
-    const centerCoordinates = turf.center(feature).geometry.coordinates;
-    map.flyTo({
-      center: centerCoordinates,
-      zoom: 14,
-      speed: 1,
-      curve: 1,
-      essential: true,
-    });
+     // Use setCenter and setZoom to show the bounds without flying
+  const centerCoordinates = turf.center(feature).geometry.coordinates;
+  map.setCenter(centerCoordinates); // Set the map center immediately
+  map.setZoom(14); 
   };
 
   useEffect(() => {
@@ -211,33 +188,27 @@ const useFilterLayers = () => {
 
     const updateMapStyle = () => {
       const filters = getFilters();
+      const filteredData = myMapA?.queryRenderedFeatures(); // Query features again to ensure we have the latest
 
-      addHighlightLayer(
-        map,
-        "highest-age-feature",
-        "highlight-highest-age-stroke",
-        "highlight-highest-age",
-        "#FF0000",
-        highestAgeFeature
+      const featuresWithId = filteredData?.filter(
+        (feature) => feature.layer.id === "ada day bounds"
       );
 
-      addHighlightLayer(
-        map,
-        "highest-gender-feature",
-        "highlight-highest-gender-stroke",
-        "highlight-highest-gender",
-        "#0000FF",
-        highestGenderFeature
-      );
+      console.log('Filtered Data:', filteredData);
+      console.log('Features with ID:', featuresWithId);
+  
+      highestAgeFeature = getExactBoundFeature(ageGroup, featuresWithId, region);
+      highestGenderFeature = getExactBoundFeature(transformGender(genderGroup), featuresWithId, region);
+      highestAffluenceFeature = getExactBoundFeature(transformAffluence(affluenceGroup), featuresWithId, region);
+  
+      console.log('Highest Age Feature:', highestAgeFeature);
+      console.log('Highest Gender Feature:', highestGenderFeature);
+      console.log('Highest Affluence Feature:', highestAffluenceFeature);
 
-      addHighlightLayer(
-        map,
-        "highest-affluence-feature",
-        "highlight-highest-affluence-stroke",
-        "highlight-highest-affluence",
-        "#00FF00",
-        highestAffluenceFeature
-      );
+      // Add highlight layers
+      addHighlightLayer(map, "highest-age-feature", "highlight-highest-age-stroke", "highlight-highest-age", "#FF0000", highestAgeFeature);
+      addHighlightLayer(map, "highest-gender-feature", "highlight-highest-gender-stroke", "highlight-highest-gender", "#0000FF", highestGenderFeature);
+      addHighlightLayer(map, "highest-affluence-feature", "highlight-highest-affluence-stroke", "highlight-highest-affluence", "#00FF00", highestAffluenceFeature);
 
       if (timeFrame === "Day") {
         map.setFilter("ada-day-buildings", filters);
@@ -245,29 +216,17 @@ const useFilterLayers = () => {
         map.setFilter("ada_day_buildings_symbol", filters);
         map.setLayoutProperty("ada-day-buildings", "visibility", "visible");
         map.setLayoutProperty("ada day bounds", "visibility", "visible");
-        map.setLayoutProperty(
-          "ada_day_buildings_symbol",
-          "visibility",
-          "visible"
-        );
+        map.setLayoutProperty("ada_day_buildings_symbol", "visibility", "visible");
         map.setLayoutProperty("ada-night-buildings", "visibility", "none");
         map.setLayoutProperty("ada night bounds", "visibility", "none");
-        map.setLayoutProperty(
-          "ada_night_buildings_symbol",
-          "visibility",
-          "none"
-        );
+        map.setLayoutProperty("ada_night_buildings_symbol", "visibility", "none");
       } else if (timeFrame === "Night") {
         map.setFilter("ada-night-buildings", filters);
         map.setFilter("ada night bounds", filters);
         map.setFilter("ada_night_buildings_symbol", filters);
         map.setLayoutProperty("ada-night-buildings", "visibility", "visible");
         map.setLayoutProperty("ada night bounds", "visibility", "visible");
-        map.setLayoutProperty(
-          "ada_night_buildings_symbol",
-          "visibility",
-          "visible"
-        );
+        map.setLayoutProperty("ada_night_buildings_symbol", "visibility", "visible");
         map.setLayoutProperty("ada-day-buildings", "visibility", "none");
         map.setLayoutProperty("ada day bounds", "visibility", "none");
         map.setLayoutProperty("ada_day_buildings_symbol", "visibility", "none");
@@ -277,24 +236,22 @@ const useFilterLayers = () => {
         map.setLayoutProperty("ada_day_buildings_symbol", "visibility", "none");
         map.setLayoutProperty("ada-night-buildings", "visibility", "none");
         map.setLayoutProperty("ada day bounds", "visibility", "none");
-        map.setLayoutProperty(
-          "ada_night_buildings_symbol",
-          "visibility",
-          "none"
-        );
+        map.setLayoutProperty("ada_night_buildings_symbol", "visibility", "none");
       }
     };
 
     if (map.isStyleLoaded()) {
       updateMapStyle();
     } else {
-      map.on("styledata", updateMapStyle);
+      map.on("style.load", updateMapStyle);
     }
 
     return () => {
-      map.off("styledata", updateMapStyle);
+      map.off("style.load", updateMapStyle);
     };
-  }, [timeFrame, myMapA, ageGroup, genderGroup, region, affluenceGroup]);
+  }, [myMapA, timeFrame, ageGroup, region, genderGroup, affluenceGroup]);
+
+  return null; // Or return something meaningful if needed
 };
 
 export default useFilterLayers;
