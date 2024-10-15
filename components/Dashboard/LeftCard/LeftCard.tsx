@@ -39,68 +39,86 @@ const LeftCard: React.FC = () => {
 
   const handleDropdownChange =
     (action: any, dropdownLabel: string) => (value: any) => {
+      // Dispatch the action to update the selected value
       dispatch(action(value));
 
       setTimeout(() => {
-        const filteredData = myMapA?.queryRenderedFeatures(); // Log filtered data
+        const filteredData = myMapA?.queryRenderedFeatures(); // Get the filtered data from the map
 
-        // Initialize matched arrays for each layer
-        const matchedAge: any = [...matchedAgeFeatures]; // Keep existing matched age features
-        const matchedGender: any = [...matchedGenderFeatures]; // Keep existing matched gender features
-        const matchedAffluence: any = [...matchedAffluenceFeatures]; // Keep existing matched affluence features
+        // Initialize arrays for matched features
+        let updatedMatchedFeatures = {
+          matchedAge: [...matchedAgeFeatures],
+          matchedGender: [...matchedGenderFeatures],
+          matchedAffluence: [...matchedAffluenceFeatures],
+        };
 
-        // Log features with properties that match the provided value
+        // Clear only the relevant matched features based on the dropdown label
+        if (dropdownLabel === "Age Group") {
+          updatedMatchedFeatures.matchedAge = []; // Clear age matches
+        } else if (dropdownLabel === "Select Gender") {
+          updatedMatchedFeatures.matchedGender = []; // Clear gender matches
+        } else if (dropdownLabel === "Affluence") {
+          updatedMatchedFeatures.matchedAffluence = []; // Clear affluence matches
+        }
+
+        // Update matched features based on the selected value
         filteredData?.forEach((feature) => {
           if (feature?.properties) {
             Object.entries(feature.properties).forEach(([key, propValue]) => {
-              // Check if the feature is part of the age layer and the label is Age Group
+              // Match features based on the selected dropdown
               if (
                 dropdownLabel === "Age Group" &&
                 feature.layer.id === "highlight-highest-age" &&
                 key === value
               ) {
-                matchedAge.push({ key, propValue, feature }); // Add to matched age array
+                updatedMatchedFeatures.matchedAge.push({
+                  key,
+                  propValue,
+                  feature,
+                });
               }
 
-              // Check if the feature is part of the gender layer and the label is Select Gender
               if (
                 dropdownLabel === "Select Gender" &&
                 feature.layer.id === "highlight-highest-gender"
               ) {
-                // Map the abbreviated gender values to full names
-                const fullGender = {
-                  F: "Female",
-                  M: "Male",
-                }[key];
-
-                // Check if the full gender matches the selected value
+                const fullGender = { F: "Female", M: "Male" }[key];
                 if (fullGender === value) {
-                  matchedGender.push({ key, propValue, feature }); // Add to matched gender array
+                  updatedMatchedFeatures.matchedGender.push({
+                    key,
+                    propValue,
+                    feature,
+                  });
                 }
               }
-              // Check if the feature is part of the affluence layer and the label is Affluence
+
               if (
                 dropdownLabel === "Affluence" &&
                 feature.layer.id === "highlight-highest-affluence"
               ) {
-                // Map the affluence values to their full forms
                 const fullAffluence = {
                   Ultra_High: "Ultra High",
+                  High: "High",
                   low: "Low",
                   Mid: "Medium",
                 }[key];
                 if (fullAffluence === value) {
-                  matchedAffluence.push({ key, propValue, feature }); // Add to matched affluence array
+                  updatedMatchedFeatures.matchedAffluence.push({
+                    key,
+                    propValue,
+                    feature,
+                  });
                 }
               }
             });
           }
         });
 
-        setMatchedAgeFeatures(matchedAge);
-        setMatchedGenderFeatures(matchedGender);
-        setMatchedAffluenceFeatures(matchedAffluence);
-      }, 300); // Delay in milliseconds (adjust the time as needed)
+        // Update the state only for the specific matched features that changed
+        setMatchedAgeFeatures(updatedMatchedFeatures.matchedAge);
+        setMatchedGenderFeatures(updatedMatchedFeatures.matchedGender);
+        setMatchedAffluenceFeatures(updatedMatchedFeatures.matchedAffluence);
+      }, 300);
     };
 
   const dropdownData = [
@@ -108,7 +126,7 @@ const LeftCard: React.FC = () => {
       label: "Time Based Filtration",
       options: ["Day", "Night"],
       value: timeState,
-      onChange: handleDropdownChange(timeFrame, "Time Based Filtration"),
+      onSelect: handleDropdownChange(timeFrame, "Time Based Filtration"),
     },
     {
       label: "Region",
@@ -122,7 +140,7 @@ const LeftCard: React.FC = () => {
       placeHolder: "Select Affluence",
       options: ["Ultra High", "High", "Medium", "Low"],
       value: selectedAffluence,
-      onChange: handleDropdownChange(setSelectedAffluence, "Affluence"),
+      onSelect: handleDropdownChange(setSelectedAffluence, "Affluence"),
       disabled: !selectedRegion?.title, // Enable only if region is selected
     },
     {
@@ -130,7 +148,7 @@ const LeftCard: React.FC = () => {
       placeHolder: "Select Gender",
       options: ["Male", "Female"],
       value: selectedGender,
-      onChange: handleDropdownChange(setSelectedGender, "Select Gender"),
+      onSelect: handleDropdownChange(setSelectedGender, "Select Gender"),
       disabled: !selectedRegion?.title, // Enable only if region is selected
     },
     {
@@ -138,7 +156,7 @@ const LeftCard: React.FC = () => {
       placeHolder: "Select Age Group",
       options: ["18-24", "25-34", "35-49", "50"],
       value: selectedAgeGroup,
-      onChange: handleDropdownChange(setSelectedAgeGroup, "Age Group"),
+      onSelect: handleDropdownChange(setSelectedAgeGroup, "Age Group"),
       disabled: !selectedRegion?.title, // Enable only if region is selected
     },
   ];
@@ -251,7 +269,7 @@ const LeftCard: React.FC = () => {
           ) : (
             <Select
               value={dropdown?.value !== "" ? dropdown.value : null}
-              onSelect={dropdown.onChange}
+              onSelect={dropdown.onSelect}
               onClick={clickedOnDrop}
               style={{ width: "100%" }}
               disabled={dropdown.disabled}

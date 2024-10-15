@@ -153,7 +153,7 @@ function MapComponent() {
         mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green/style.json"
         attributionControl={false}
       >
-        {region?.title && (
+        {/* {region?.title && (
           <div
             style={{
               position: "absolute",
@@ -195,7 +195,7 @@ function MapComponent() {
               </p>
             )}
           </div>
-        )}
+        )} */}
         <Link
           href="https://barikoi.com/"
           className="absolute bottom-2 left-3 w-16"
