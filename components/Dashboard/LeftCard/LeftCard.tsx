@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
   timeFrame,
@@ -31,6 +31,7 @@ const LeftCard: React.FC = () => {
     selectedAgeGroup,
     selectedGender,
   } = useAppSelector((state) => state.leftPanel);
+  console.log("🚀 ~ selectedRegion:", selectedRegion);
 
   const handleDropdownChange =
     (action: any, dropdownLabel: string) => (value: any) => {
@@ -57,7 +58,7 @@ const LeftCard: React.FC = () => {
       options: ["Ultra High", "High", "Medium", "Low"],
       value: selectedAffluence,
       onChange: handleDropdownChange(setSelectedAffluence, "Affluence"),
-      disabled: !timeState,
+      disabled: !selectedRegion?.title, // Enable only if region is selected
     },
     {
       label: "Select Gender",
@@ -65,7 +66,7 @@ const LeftCard: React.FC = () => {
       options: ["Male", "Female"],
       value: selectedGender,
       onChange: handleDropdownChange(setSelectedGender, "Select Gender"),
-      disabled: !timeState,
+      disabled: !selectedRegion?.title, // Enable only if region is selected
     },
     {
       label: "Age Group",
@@ -73,7 +74,7 @@ const LeftCard: React.FC = () => {
       options: ["18-24", "25-34", "35-49", "50+"],
       value: selectedAgeGroup,
       onChange: handleDropdownChange(setSelectedAgeGroup, "Age Group"),
-      disabled: !timeState,
+      disabled: !selectedRegion?.title, // Enable only if region is selected
     },
   ];
 
@@ -93,20 +94,30 @@ const LeftCard: React.FC = () => {
     dispatch(setSelectedAgeGroup(""));
     dispatch(setSelectedGender(""));
 
-  // Access the underlying map instance
-  const mapInstance = myMapA?.getMap();
+    // Access the underlying map instance
+    const mapInstance = myMapA?.getMap();
 
-  // Array of layer IDs you want to remove
-  const layerIds = ["highlight-highest-age", "highlight-highest-gender", "highlight-highest-affluence","highlight-highest-age-stroke","highlight-highest-gender-stroke","highlight-highest-affluence-stroke"]; // Replace with actual layer IDs
-  const layerSources = ["highest-age-feature", "highest-gender-feature", "highest-affluence-feature"]; // Replace with actual layer IDs
+    // Array of layer IDs to remove
+    const layerIds = [
+      "highlight-highest-age",
+      "highlight-highest-gender",
+      "highlight-highest-affluence",
+      "highlight-highest-age-stroke",
+      "highlight-highest-gender-stroke",
+      "highlight-highest-affluence-stroke",
+    ];
+    const layerSources = [
+      "highest-age-feature",
+      "highest-gender-feature",
+      "highest-affluence-feature",
+    ];
 
-  // Loop through each layer ID and remove it
-  layerIds.forEach((layerId) => {
-    if (mapInstance?.getLayer(layerId)) {
-      mapInstance.removeLayer(layerId);
-      // mapInstance.removeSource(layerId); // Also remove the source associated with the layer if needed
-    }
-  });
+    // Remove layers
+    layerIds.forEach((layerId) => {
+      if (mapInstance?.getLayer(layerId)) {
+        mapInstance.removeLayer(layerId);
+      }
+    });
 
     dispatch(
       setStatistics({

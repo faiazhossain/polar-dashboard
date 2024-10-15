@@ -32,13 +32,23 @@ import { Padding } from "maplibre-gl";
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
   const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
-  const [zoomLevel, setZoomLevel] = React.useState(14.30);
+  const [zoomLevel, setZoomLevel] = React.useState(14.3);
   const { statistics } = useAppSelector((state) => state.statistics);
   const statisticsBuilding = useAppSelector(
     (state) => state.buildingstatistics.buildingStatistics
   );
-  const bbox = useAppSelector((state) => state.leftPanel.boundingBox);
+  const bbox = useAppSelector((state: any) => state.leftPanel.boundingBox);
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
+  const region = useAppSelector((state: any) => state.leftPanel.selectedRegion);
+  const ageGroup = useAppSelector(
+    (state: any) => state.leftPanel.selectedAgeGroup
+  );
+  const genderGroup = useAppSelector(
+    (state: any) => state.leftPanel.selectedGender
+  );
+  const affluenceGroup = useAppSelector(
+    (state: any) => state.leftPanel.selectedAffluence
+  );
   useFilterLayers();
 
   // Update zoom level on zoom event
@@ -128,7 +138,7 @@ function MapComponent() {
         initialViewState={{
           longitude: 90.403387,
           latitude: 23.71253,
-          zoom: 14.30,
+          zoom: 14.3,
         }}
         onZoom={handleZoom} // Listen for zoom changes
         style={{
@@ -141,11 +151,49 @@ function MapComponent() {
         mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green/style.json"
         attributionControl={false}
       >
-        <div style={{position:'absolute',top:'200px',right:'10px',display:'flex',flexDirection:'column',backgroundColor:'white'}}>
-          <p style={{backgroundColor:'rgba(0, 255, 0, .3)',padding:'0 4px'}}>AFFLUENCE</p>
-          <p style={{backgroundColor:'rgba(0, 0, 255, .3)',padding:'0 4px'}}>GENDER</p>
-          <p style={{backgroundColor:'rgba(255, 0, 0, .3)',padding:'0 4px'}}>AGE</p>
-        </div>
+        {region?.title && (
+          <div
+            style={{
+              position: "absolute",
+              top: "200px",
+              right: "10px",
+              display: "flex",
+              flexDirection: "column",
+              backgroundColor: "white",
+            }}
+          >
+            {affluenceGroup && (
+              <p
+                style={{
+                  backgroundColor: "rgba(0, 255, 0, .3)",
+                  padding: "0 4px",
+                }}
+              >
+                AFFLUENCE
+              </p>
+            )}
+            {genderGroup && (
+              <p
+                style={{
+                  backgroundColor: "rgba(0, 0, 255, .3)",
+                  padding: "0 4px",
+                }}
+              >
+                GENDER
+              </p>
+            )}
+            {ageGroup && (
+              <p
+                style={{
+                  backgroundColor: "rgba(255, 0, 0, .3)",
+                  padding: "0 4px",
+                }}
+              >
+                AGE
+              </p>
+            )}
+          </div>
+        )}
         <Link
           href="https://barikoi.com/"
           className="absolute bottom-2 left-3 w-16"
