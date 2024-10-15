@@ -4,10 +4,10 @@ import React from "react";
 import { useDispatch } from "react-redux";
 
 const ToggleButton = () => {
-  const selection = useAppSelector((state) => state.mapdata.selectedButton);
+  const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
   const dispatch = useDispatch();
   return (
-    <div className="absolute right-2 top-12">
+    <div className="absolute right-2 top-16">
       <button
         className={`px-4 py-2 rounded-l ${
           selection === "Building"

@@ -165,6 +165,7 @@ const useFilterLayers = () => {
       map.removeSource(sourceId);
     }
 
+    // Add source with the feature
     map.addSource(sourceId, {
       type: "geojson",
       data: {
@@ -173,33 +174,35 @@ const useFilterLayers = () => {
       },
     });
 
+    // Add a fill layer without color (transparent)
     map.addLayer({
       id: fillLayerId,
       type: "fill",
       source: sourceId,
       layout: {},
       paint: {
-        "fill-color": color,
-        "fill-opacity": 0.2,
+        "fill-color": "#000000", // Set color to black (or any color you prefer)
+        "fill-opacity": 0, // Set fill opacity to 0 (completely transparent)
       },
     });
 
+    // Add a stroke layer without color (transparent)
     map.addLayer({
       id: strokeLayerId,
       type: "line",
       source: sourceId,
       layout: {},
       paint: {
-        "line-color": color,
+        "line-color": "#000000", // Set line color to black (or any color you prefer)
         "line-width": 4,
-        "line-opacity": 0.5,
+        "line-opacity": 0, // Set line opacity to 0 (completely transparent)
       },
     });
 
     // Use setCenter and setZoom to show the bounds without flying
-    const centerCoordinates = turf.center(feature).geometry.coordinates;
-    map.setCenter(centerCoordinates); // Set the map center immediately
-    map.setZoom(14);
+    // const centerCoordinates = turf.center(feature).geometry.coordinates;
+    // map.setCenter(centerCoordinates); // Set the map center immediately
+    // map.setZoom(14);
   };
 
   useEffect(() => {

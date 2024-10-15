@@ -100,7 +100,6 @@ function MapComponent() {
       <nav className="bg-white flex justify-between p-2 @apply shadow-[0px_2px_2px_0px_#00000066] z-40 absolute top-0 left-0 right-0 rounded-t-[20px]">
         <div className=" flex justify-center items-center">
           <span className="ml-4 mr-2 text-md">Current zoom level: </span>
-
           <div
             className={`${
               parseFloat(zoomLevel.toFixed(2)) >= 14
@@ -126,6 +125,9 @@ function MapComponent() {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+        </div>
+        <div className="ml-4 mr-2 text-md font-semibold text-gray-700 rounded-md p-2 ">
+          Latest Update: October 10
         </div>
         <div className=" flex justify-center items-center">
           <Switch />

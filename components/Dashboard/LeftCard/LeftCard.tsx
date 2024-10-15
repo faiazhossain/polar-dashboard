@@ -1,4 +1,5 @@
-import React from "react";
+//@ts-nocheck
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import {
   timeFrame,
@@ -31,11 +32,75 @@ const LeftCard: React.FC = () => {
     selectedAgeGroup,
     selectedGender,
   } = useAppSelector((state) => state.leftPanel);
-  console.log("🚀 ~ selectedRegion:", selectedRegion);
+
+  const [matchedAgeFeatures, setMatchedAgeFeatures] = useState([]);
+  const [matchedGenderFeatures, setMatchedGenderFeatures] = useState([]);
+  const [matchedAffluenceFeatures, setMatchedAffluenceFeatures] = useState([]);
 
   const handleDropdownChange =
     (action: any, dropdownLabel: string) => (value: any) => {
       dispatch(action(value));
+
+      setTimeout(() => {
+        const filteredData = myMapA?.queryRenderedFeatures(); // Log filtered data
+
+        // Initialize matched arrays for each layer
+        const matchedAge: any = [...matchedAgeFeatures]; // Keep existing matched age features
+        const matchedGender: any = [...matchedGenderFeatures]; // Keep existing matched gender features
+        const matchedAffluence: any = [...matchedAffluenceFeatures]; // Keep existing matched affluence features
+
+        // Log features with properties that match the provided value
+        filteredData?.forEach((feature) => {
+          if (feature?.properties) {
+            Object.entries(feature.properties).forEach(([key, propValue]) => {
+              // Check if the feature is part of the age layer and the label is Age Group
+              if (
+                dropdownLabel === "Age Group" &&
+                feature.layer.id === "highlight-highest-age" &&
+                key === value
+              ) {
+                matchedAge.push({ key, propValue, feature }); // Add to matched age array
+              }
+
+              // Check if the feature is part of the gender layer and the label is Select Gender
+              if (
+                dropdownLabel === "Select Gender" &&
+                feature.layer.id === "highlight-highest-gender"
+              ) {
+                // Map the abbreviated gender values to full names
+                const fullGender = {
+                  F: "Female",
+                  M: "Male",
+                }[key];
+
+                // Check if the full gender matches the selected value
+                if (fullGender === value) {
+                  matchedGender.push({ key, propValue, feature }); // Add to matched gender array
+                }
+              }
+              // Check if the feature is part of the affluence layer and the label is Affluence
+              if (
+                dropdownLabel === "Affluence" &&
+                feature.layer.id === "highlight-highest-affluence"
+              ) {
+                // Map the affluence values to their full forms
+                const fullAffluence = {
+                  Ultra_High: "Ultra High",
+                  low: "Low",
+                  Mid: "Medium",
+                }[key];
+                if (fullAffluence === value) {
+                  matchedAffluence.push({ key, propValue, feature }); // Add to matched affluence array
+                }
+              }
+            });
+          }
+        });
+
+        setMatchedAgeFeatures(matchedAge);
+        setMatchedGenderFeatures(matchedGender);
+        setMatchedAffluenceFeatures(matchedAffluence);
+      }, 300); // Delay in milliseconds (adjust the time as needed)
     };
 
   const dropdownData = [
@@ -71,7 +136,7 @@ const LeftCard: React.FC = () => {
     {
       label: "Age Group",
       placeHolder: "Select Age Group",
-      options: ["18-24", "25-34", "35-49", "50+"],
+      options: ["18-24", "25-34", "35-49", "50"],
       value: selectedAgeGroup,
       onChange: handleDropdownChange(setSelectedAgeGroup, "Age Group"),
       disabled: !selectedRegion?.title, // Enable only if region is selected
@@ -93,6 +158,9 @@ const LeftCard: React.FC = () => {
     dispatch(setSelectedAffluence(""));
     dispatch(setSelectedAgeGroup(""));
     dispatch(setSelectedGender(""));
+    setMatchedAgeFeatures([]);
+    setMatchedGenderFeatures([]);
+    setMatchedAffluenceFeatures([]);
 
     // Access the underlying map instance
     const mapInstance = myMapA?.getMap();
@@ -154,6 +222,8 @@ const LeftCard: React.FC = () => {
     dispatch(clearClickedEntity());
   };
 
+  const filteredData = myMapA?.queryRenderedFeatures();
+
   return (
     <div className="bg-white h-full flex flex-col px-4 py-8 rounded-[20px] shadow-md">
       {dropdownData.map((dropdown, index) => (
@@ -204,6 +274,75 @@ const LeftCard: React.FC = () => {
       >
         Reset All
       </button>
+      <div className="mt-4">
+        {matchedAffluenceFeatures.length > 0 && (
+          <div className="p-4 bg-gradient-to-r from-green-300 to-green-100 text-green-900 rounded-lg shadow-lg mb-2 relative">
+            <div className="absolute top-0 right-0 p-2 bg-green-600 text-white rounded-full text-xs font-bold">
+              {(() => {
+                const affluenceMap: { [key: string]: string } = {
+                  Ultra_High: "Ultra High",
+                  Mid: "Medium",
+                  low: "Low",
+                };
+                return (
+                  affluenceMap[matchedAffluenceFeatures[0].key] ||
+                  matchedAffluenceFeatures[0].key
+                );
+              })()}
+            </div>
+            <div className="flex items-center mb-2">
+              <span className="font-bold text-lg">
+                % of Affluence in the Location
+              </span>
+            </div>
+            <div className="text-2xl font-semibold">
+              {(Number(matchedAffluenceFeatures[0].propValue) * 100).toFixed(2)}
+              %
+            </div>
+          </div>
+        )}
+
+        {matchedGenderFeatures.length > 0 && (
+          <div className="p-4 bg-gradient-to-r from-blue-300 to-blue-100 text-blue-900 rounded-lg shadow-lg mb-2 relative">
+            <div className="absolute top-0 right-0 p-2 bg-blue-600 text-white rounded-full text-xs font-bold">
+              {(() => {
+                const genderMap: { [key: string]: string } = {
+                  F: "Female",
+                  M: "Male",
+                };
+                return (
+                  genderMap[matchedGenderFeatures[0].key] ||
+                  matchedGenderFeatures[0].key
+                );
+              })()}
+            </div>
+            <div className="flex items-center mb-2">
+              <span className="font-bold text-lg">
+                ⁠% of Gender in the Location
+              </span>
+            </div>
+            <div className="text-2xl font-semibold">
+              {(Number(matchedGenderFeatures[0].propValue) * 100).toFixed(2)}%
+            </div>
+          </div>
+        )}
+
+        {matchedAgeFeatures.length > 0 && (
+          <div className="p-4 bg-gradient-to-r from-red-300 to-red-100 text-red-900 rounded-lg shadow-lg mb-2 relative">
+            <div className="absolute top-0 right-0 p-2 bg-red-600 text-white rounded-full text-xs font-bold">
+              {matchedAgeFeatures[0].key}
+            </div>
+            <div className="flex items-center mb-2">
+              <span className="font-bold text-lg">
+                ⁠% of Age Band in the Location
+              </span>
+            </div>
+            <div className="text-2xl font-semibold">
+              {(Number(matchedAgeFeatures[0].propValue) * 100).toFixed(2)}%
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
