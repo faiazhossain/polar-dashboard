@@ -12,6 +12,7 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   const dispatch = useDispatch();
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
   const statistics = useAppSelector((state) => state.statistics.statistics);
+  console.log("🚀 ~ statistics:", statistics);
   const showPopup = useAppSelector(
     (state) => state.clickedEntitySlice.clickedEntity
   );
@@ -114,7 +115,10 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
         statisticsBuilding?.details &&
         selection === "Building" &&
         renderBuildingDetails()}
-      {showPopup && statistics && selection === "Zone" && renderZoneDetails()}
+      {showPopup &&
+        (statistics.DayCount > 0 || statistics.NightCount > 0) &&
+        selection === "Zone" &&
+        renderZoneDetails()}
     </div>
   );
 };

@@ -138,8 +138,8 @@ function MapComponent() {
         ref={mapRef}
         id="myMapA"
         initialViewState={{
-          longitude: 90.403387,
-          latitude: 23.71253,
+          longitude: 90.42214,
+          latitude: 23.71421,
           zoom: 14.3,
         }}
         onZoom={handleZoom} // Listen for zoom changes

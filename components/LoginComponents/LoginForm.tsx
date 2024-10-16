@@ -7,6 +7,7 @@ import EmailInput from "./EmailInput";
 import ErrorMessage from "./ErrorMessage";
 import PasswordInput from "./PasswordInput";
 import useLoginForm from "@/hooks/useLoginForm";
+import { FaSpinner } from "react-icons/fa";
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -18,30 +19,41 @@ const LoginForm: React.FC = () => {
     handleEmailChange,
     handlePasswordChange,
     validateForm,
-    setErrors, // Destructure setErrors from the hook
+    setErrors,
   } = useLoginForm();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (validateForm()) {
-      if (email === "test@gmail.com" && password === "Test@1234") {
-        document.cookie = "token=test-token; path=/";
+      setLoading(true);
 
-        if (!emailSuggestions.includes(email)) {
-          const updatedEmailSuggestions = [...emailSuggestions, email];
-          localStorage.setItem(
-            "emailSuggestions",
-            JSON.stringify(updatedEmailSuggestions)
-          );
+      // Simulating API call with a timeout
+      setTimeout(() => {
+        if (email === "test@gmail.com" && password === "Test@1234") {
+          document.cookie = "token=test-token; path=/";
+
+          if (!emailSuggestions.includes(email)) {
+            const updatedEmailSuggestions = [...emailSuggestions, email];
+            localStorage.setItem(
+              "emailSuggestions",
+              JSON.stringify(updatedEmailSuggestions)
+            );
+          }
+
+          router.push("/dashboard");
+        } else {
+          setErrors({
+            email: "",
+            password: "Incorrect test email or password",
+          });
         }
 
-        router.push("/dashboard");
-      } else {
-        setErrors({ email: "", password: "Incorrect test email or password" });
-      }
+        setLoading(false);
+      }, 2000);
     }
   };
 
@@ -81,8 +93,7 @@ const LoginForm: React.FC = () => {
                   className="leading-loose text-pink-600 border-none"
                 />
                 <span className="py-2 text-sm text-gray-600 leading-snug">
-                  {" "}
-                  Remember{" "}
+                  Remember
                 </span>
               </label>
               <a
@@ -92,14 +103,19 @@ const LoginForm: React.FC = () => {
                 Forgot Password?
               </a>
             </div>
+
             <button
               type="submit"
-              className="mt-3 text-lg font-lato font-semibold bg-[#EC1B23] w-full text-white rounded-lg px-6 py-3 shadow-xl hover:bg-[#dd1919]"
+              className={`mt-3 text-lg font-lato font-semibold bg-[#EC1B23] w-full text-white rounded-lg px-6 py-3 shadow-xl hover:bg-[#dd1919] flex items-center justify-center ${
+                loading ? "opacity-75 cursor-not-allowed" : ""
+              }`}
+              disabled={loading}
             >
-              Login
+              {loading ? <FaSpinner className="animate-spin mr-2" /> : "Login"}
             </button>
           </div>
         </form>
+
         <datalist id="email-suggestions">
           {emailSuggestions.map((suggestion) => (
             <option key={suggestion} value={suggestion} />
