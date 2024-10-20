@@ -124,7 +124,7 @@ const LeftCard: React.FC = () => {
   const dropdownData = [
     {
       label: "Time Based Filtration",
-      options: ["Day", "Night"],
+      options: ["6AM-12PM", "12PM-6PM", "6PM-12AM", "12AM-6AM"],
       value: timeState,
       onSelect: handleDropdownChange(timeFrame, "Time Based Filtration"),
     },

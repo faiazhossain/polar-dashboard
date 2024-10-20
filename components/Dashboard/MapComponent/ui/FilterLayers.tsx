@@ -214,8 +214,17 @@ const useFilterLayers = () => {
       const filters = getFilters();
       const filteredData = myMapA?.queryRenderedFeatures(); // Query features again to ensure we have the latest
 
+      // Dynamically get the correct layer ID based on the time frame
+      const timeFrameLayer = {
+        "6AM-12PM": "polar-zone-6AM-12PM",
+        "12AM-6AM": "polar-zone-12AM-6AM",
+        "12PM-6PM": "polar-zone-12PM-6PM",
+        "6PM-12AM": "polar-zone-6PM-12AM",
+      }[timeFrame];
+
+      // Get features for the dynamically selected layer
       const featuresWithId = filteredData?.filter(
-        (feature) => feature.layer.id === "ada day bounds"
+        (feature) => feature.layer.id === timeFrameLayer
       );
 
       highestAgeFeature = getExactBoundFeature(
@@ -260,49 +269,26 @@ const useFilterLayers = () => {
         highestAffluenceFeature
       );
 
-      if (timeFrame === "Day") {
-        map.setFilter("ada-day-buildings", filters);
-        map.setFilter("ada day bounds", filters);
-        map.setFilter("ada_day_buildings_symbol", filters);
-        map.setLayoutProperty("ada-day-buildings", "visibility", "visible");
-        map.setLayoutProperty("ada day bounds", "visibility", "visible");
-        map.setLayoutProperty(
-          "ada_day_buildings_symbol",
-          "visibility",
-          "visible"
-        );
-        map.setLayoutProperty("ada-night-buildings", "visibility", "none");
-        map.setLayoutProperty("ada night bounds", "visibility", "none");
-        map.setLayoutProperty(
-          "ada_night_buildings_symbol",
-          "visibility",
-          "none"
-        );
-      } else if (timeFrame === "Night") {
-        map.setFilter("ada-night-buildings", filters);
-        map.setFilter("ada night bounds", filters);
-        map.setFilter("ada_night_buildings_symbol", filters);
-        map.setLayoutProperty("ada-night-buildings", "visibility", "visible");
-        map.setLayoutProperty("ada night bounds", "visibility", "visible");
-        map.setLayoutProperty(
-          "ada_night_buildings_symbol",
-          "visibility",
-          "visible"
-        );
-        map.setLayoutProperty("ada-day-buildings", "visibility", "none");
-        map.setLayoutProperty("ada day bounds", "visibility", "none");
-        map.setLayoutProperty("ada_day_buildings_symbol", "visibility", "none");
+      // Hide all layers by default
+      const allLayers = [
+        "polar-zone-12AM-6AM",
+        "polar-zone-6AM-12PM",
+        "polar-zone-12PM-6PM",
+        "polar-zone-6PM-12AM",
+      ];
+
+      allLayers.forEach((layer) => {
+        map.setLayoutProperty(layer, "visibility", "none");
+      });
+
+      // Set visibility and filters for the current time frame layer
+      if (timeFrameLayer) {
+        map.setFilter(timeFrameLayer, filters);
+        map.setLayoutProperty(timeFrameLayer, "visibility", "visible");
       } else {
-        map.setLayoutProperty("ada-day-buildings", "visibility", "none");
-        map.setLayoutProperty("ada night bounds", "visibility", "none");
-        map.setLayoutProperty("ada_day_buildings_symbol", "visibility", "none");
-        map.setLayoutProperty("ada-night-buildings", "visibility", "none");
-        map.setLayoutProperty("ada day bounds", "visibility", "none");
-        map.setLayoutProperty(
-          "ada_night_buildings_symbol",
-          "visibility",
-          "none"
-        );
+        allLayers.forEach((layer) => {
+          map.setLayoutProperty(layer, "visibility", "none");
+        });
       }
     };
 

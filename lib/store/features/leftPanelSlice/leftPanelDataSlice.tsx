@@ -22,7 +22,7 @@ export interface LeftPanelState {
 }
 
 const initialState: LeftPanelState = {
-  timeState: "Day",
+  timeState: "6AM-12PM",
   zoneState: "",
   selectedRegion: { pId: undefined, title: undefined },
   selectedAffluence: "",

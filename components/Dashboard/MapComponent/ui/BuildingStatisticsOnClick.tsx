@@ -9,7 +9,7 @@ import { useMap } from "react-map-gl";
 import { useDispatch } from "react-redux";
 
 interface StatisticsOnHoverProps {
-  mode: "Day" | "Night";
+  mode: "6AM-12PM" | "12PM-6PM" | "6PM-12AM" | "12AM-6AM";
 }
 
 const BuildingStatisticsOnClick: React.FC<StatisticsOnHoverProps> = ({
@@ -40,9 +40,16 @@ const BuildingStatisticsOnClick: React.FC<StatisticsOnHoverProps> = ({
 
     const handleMapMouseClick = (e: any) => {
       const layers = [
-        mode === "Day" ? "ada-day-buildings" : "ada-night-buildings",
+        mode === "6AM-12PM"
+          ? "polar-zone-6AM-12PM"
+          : mode === "12PM-6PM"
+          ? "polar-zone-12PM-6PM"
+          : mode === "6PM-12AM"
+          ? "polar-zone-6PM-12AM"
+          : mode === "12AM-6AM"
+          ? "polar-zone-12AM-6AM"
+          : "",
       ];
-
       const features = map.queryRenderedFeatures(e.point, { layers });
 
       if (features.length) {
