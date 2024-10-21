@@ -214,17 +214,69 @@ const useFilterLayers = () => {
       const filters = getFilters();
       const filteredData = myMapA?.queryRenderedFeatures(); // Query features again to ensure we have the latest
 
-      // Dynamically get the correct layer ID based on the time frame
-      const timeFrameLayer = {
-        "6AM-12PM": "polar-zone-6AM-12PM",
-        "12AM-6AM": "polar-zone-12AM-6AM",
-        "12PM-6PM": "polar-zone-12PM-6PM",
-        "6PM-12AM": "polar-zone-6PM-12AM",
-      }[timeFrame];
+      // Define the dynamic colors based on the time frame
+      const timeBasedFillColor = {
+        "6AM-12PM": [
+          "case",
+          ["has", "geohash"],
+          "rgba(109, 41, 50, .1)",
+          ["all", [">=", ["get", "rank"], 1], ["<=", ["get", "rank"], 4]],
+          "#FF9B50",
+          ["all", [">=", ["get", "rank"], 5], ["<=", ["get", "rank"], 10]],
+          "#E25E3E",
+          ["all", [">", ["get", "rank"], 10], ["<=", ["get", "rank"], 20]],
+          "#C63D2F",
+          "#4D2932",
+        ],
+        "12PM-6PM": [
+          "case",
+          ["has", "geohash"],
+          "rgba(89, 33, 40, .2)",
+          ["all", [">=", ["get", "rank"], 1], ["<=", ["get", "rank"], 4]],
+          "#E68946",
+          ["all", [">=", ["get", "rank"], 5], ["<=", ["get", "rank"], 10]],
+          "#C14F34",
+          ["all", [">", ["get", "rank"], 10], ["<=", ["get", "rank"], 20]],
+          "#A53229",
+          "#3D2227",
+        ],
+        "6PM-12AM": [
+          "case",
+          ["has", "geohash"],
+          "rgba(41, 50, 109, .1)",
+          ["all", [">=", ["get", "rank"], 1], ["<=", ["get", "rank"], 4]],
+          "#99afff",
+          ["all", [">=", ["get", "rank"], 5], ["<=", ["get", "rank"], 10]],
+          "#3352ff",
+          ["all", [">", ["get", "rank"], 10], ["<=", ["get", "rank"], 20]],
+          "#2432b3",
+          "#1a204d",
+        ],
+        "12AM-6AM": [
+          "case",
+          ["has", "geohash"],
+          "rgba(41, 50, 109, .2)",
+          ["all", [">=", ["get", "rank"], 1], ["<=", ["get", "rank"], 4]],
+          "#8097ff",
+          ["all", [">=", ["get", "rank"], 5], ["<=", ["get", "rank"], 10]],
+          "#002ae6",
+          ["all", [">", ["get", "rank"], 10], ["<=", ["get", "rank"], 20]],
+          "#001780",
+          "#000933",
+        ],
+      };
 
-      // Get features for the dynamically selected layer
+      // Get the current fill color based on the selected time frame
+      const currentFillColor = timeBasedFillColor[timeFrame];
+
+      // Set the fill-color dynamically for the polar-zone layer
+      if (currentFillColor) {
+        map.setPaintProperty("polar-zone", "fill-color", currentFillColor);
+      }
+
+      // Highlight layers logic remains unchanged
       const featuresWithId = filteredData?.filter(
-        (feature) => feature.layer.id === timeFrameLayer
+        (feature) => feature.layer.id === "polar-zone"
       );
 
       highestAgeFeature = getExactBoundFeature(
@@ -270,26 +322,15 @@ const useFilterLayers = () => {
       );
 
       // Hide all layers by default
-      const allLayers = [
-        "polar-zone-12AM-6AM",
-        "polar-zone-6AM-12PM",
-        "polar-zone-12PM-6PM",
-        "polar-zone-6PM-12AM",
-      ];
+      const allLayers = ["polar-zone"];
 
       allLayers.forEach((layer) => {
         map.setLayoutProperty(layer, "visibility", "none");
       });
 
       // Set visibility and filters for the current time frame layer
-      if (timeFrameLayer) {
-        map.setFilter(timeFrameLayer, filters);
-        map.setLayoutProperty(timeFrameLayer, "visibility", "visible");
-      } else {
-        allLayers.forEach((layer) => {
-          map.setLayoutProperty(layer, "visibility", "none");
-        });
-      }
+      map.setLayoutProperty("polar-zone", "visibility", "visible");
+      map.setFilter("polar-zone", filters);
     };
 
     if (map.isStyleLoaded()) {

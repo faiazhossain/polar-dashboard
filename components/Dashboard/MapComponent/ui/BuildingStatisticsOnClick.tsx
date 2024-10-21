@@ -18,69 +18,52 @@ const BuildingStatisticsOnClick: React.FC<StatisticsOnHoverProps> = ({
   const { current: map } = useMap();
   const dispatch = useDispatch();
   const selection = useAppSelector((state) => state.mapdata.selectedButton);
-  // Function to format details JSON string
-  const formatDetails = (details?: string) => {
-    if (!details) return "";
 
-    try {
-      const detailsObj = JSON.parse(details);
-      const formattedDetails = Object.entries(detailsObj)
-        .map(([key, value]) => `${value} ${key}`)
-        .join(", ");
-
-      return formattedDetails;
-    } catch (error) {
-      console.error("Error parsing details:", error);
-      return "";
-    }
-  };
+  const LAYERS = ["polar-zone"]; // Constant for layers
 
   useEffect(() => {
     if (!map) return;
 
     const handleMapMouseClick = (e: any) => {
-      const layers = [
-        mode === "6AM-12PM"
-          ? "polar-zone-6AM-12PM"
-          : mode === "12PM-6PM"
-          ? "polar-zone-12PM-6PM"
-          : mode === "6PM-12AM"
-          ? "polar-zone-6PM-12AM"
-          : mode === "12AM-6AM"
-          ? "polar-zone-12AM-6AM"
-          : "",
-      ];
-      const features = map.queryRenderedFeatures(e.point, { layers });
+      const features = map.queryRenderedFeatures(e.point, { layers: LAYERS });
+      const featuresWithoutGeohash = features.filter(
+        (feature) => !feature?.properties?.geohash
+      );
 
-      if (features.length) {
+      // If there are features without geohash
+      if (featuresWithoutGeohash.length) {
         const coordinates = e.lngLat;
-        const properties = features[0]?.properties;
+        const properties = featuresWithoutGeohash[0]?.properties;
 
         if (properties) {
+          // Create the poi_info string while excluding the area property
+          const poiInfoArray = Object.entries(properties)
+            .filter(([key]) => key !== "area")
+            .map(([key, value]) => `${key}: ${value}`)
+            .join(", ");
+
           dispatch(
             setBuildingStatistics({
-              details: formatDetails(properties.details),
+              poi_info: poiInfoArray,
               lat: coordinates.lat,
               lng: coordinates.lng,
-              poi_count: properties.poi_count || 0,
               region: properties.region || "",
               rank: properties.rank || 0,
             })
           );
           dispatch(setClickedEntity({ type: "building" }));
         }
-      } else {
-        if (selection === "Building") {
-          dispatch(clearClickedEntity());
-        }
+      } else if (selection === "Building") {
+        dispatch(clearClickedEntity());
       }
     };
 
     map.on("click", handleMapMouseClick);
+
     return () => {
       map.off("click", handleMapMouseClick);
     };
-  }, [map, mode]);
+  }, [map, mode, dispatch, selection]);
 
   return null;
 };

@@ -5,17 +5,17 @@ import { clearClickedEntity } from "@/lib/store/features/statistics/clickedEntit
 import { useDispatch } from "react-redux";
 
 interface PopUpOnClickProps {
-  mode: "Day" | "Night";
+  mode: "6AM-12PM" | "12PM-6PM" | "6PM-12AM" | "12AM-6AM";
 }
 
 const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   const dispatch = useDispatch();
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
   const statistics = useAppSelector((state) => state.statistics.statistics);
-  console.log("🚀 ~ statistics:", statistics);
   const showPopup = useAppSelector(
     (state) => state.clickedEntitySlice.clickedEntity
   );
+
   const statisticsBuilding = useAppSelector(
     (state) => state.buildingstatistics.buildingStatistics
   );
@@ -25,40 +25,44 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   };
 
   const renderBuildingDetails = () => {
-    const formatDetails = (details: any) => {
-      return details.split(",").join(",<br />");
+    const formatPoiInfo = (poiInfo: string) => {
+      return poiInfo.split(",").map((entry) => {
+        const [key, value] = entry.split(":");
+        return { key: key.trim(), value: parseInt(value.trim(), 10) };
+      });
     };
 
+    const poiDetails = formatPoiInfo(statisticsBuilding.poi_info || "");
+
     return (
-      <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1">
+      <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1 w-44">
+        {" "}
+        {/* Fixed width added here */}
         <div className="w-full relative">
           <IoIosCloseCircleOutline
             onClick={() => dispatch(clearClickedEntity())}
             className="absolute right-0 top-0 text-xl hover:text-red-600"
           />
-          {statisticsBuilding.details && (
-            <div className=" w-40">
-              <h1 className="font-bold mb-2 w-full">Building Details:</h1>
-              <div className="font-bold">
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: formatDetails(statisticsBuilding.details),
-                  }}
-                />
-              </div>
-              <ul className="flex text-sm mt-2">
-                <li className="font-bold">Rank:</li>
-                <li className="ml-2">{statisticsBuilding.rank}</li>
-              </ul>
-            </div>
-          )}
+          <h1 className="font-bold mb-2 w-full">Building Details:</h1>
+          <ul className="text-sm">
+            {poiDetails
+              .filter(({ value }) => value > 0)
+              .map(({ key, value }) => (
+                <li key={key} className="flex">
+                  <span className="font-bold">{key}:</span>
+                  <span className="ml-2">{value}</span>
+                </li>
+              ))}
+          </ul>
         </div>
       </div>
     );
   };
 
   const renderZoneDetails = () => (
-    <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1">
+    <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1 w-64">
+      {" "}
+      {/* Fixed width added here */}
       <div className="w-full relative">
         <IoIosCloseCircleOutline
           onClick={() => dispatch(clearClickedEntity())}
@@ -96,7 +100,7 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
         </ul>
         <h1 className="font-bold my-2 text-md">Affluance</h1>
         <ul className="grid grid-cols-2 text-sm">
-          <li className="font-bold">Ulra-High</li>
+          <li className="font-bold">Ultra-High</li>
           <li>{formatPercentage(statistics.Ultra_High)}</li>{" "}
           <li className="font-bold">High</li>
           <li>{formatPercentage(statistics.High)}</li>{" "}
@@ -112,7 +116,7 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   return (
     <div>
       {showPopup &&
-        statisticsBuilding?.details &&
+        statisticsBuilding?.poi_info &&
         selection === "Building" &&
         renderBuildingDetails()}
       {showPopup &&

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // Define the interface for the statistics data
 interface BuildingStatisticsData {
-  details: string;
+  poi_info: string;
   lat: number;
   lng: number;
   poi_count: number;
@@ -16,7 +16,7 @@ export interface StatisticsOnClick {
 
 const initialState: StatisticsOnClick = {
   buildingStatistics: {
-    details: "",
+    poi_info: "",
     lat: 0,
     lng: 0,
     poi_count: 0,

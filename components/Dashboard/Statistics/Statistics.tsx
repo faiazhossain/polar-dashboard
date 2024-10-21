@@ -110,7 +110,7 @@ const Statistics: React.FC = () => {
                 <StatisticCard
                   title="Number of POI (Building)"
                   value={calculateTotalFromDetails(
-                    statisticsBuilding?.details || "0"
+                    statisticsBuilding?.poi_info || "0"
                   )}
                   icon={poi}
                 />
@@ -122,7 +122,7 @@ const Statistics: React.FC = () => {
                 <StatisticCard
                   title={`Key Highlight (Based on Building)`}
                   value={
-                    statisticsBuilding?.details ||
+                    statisticsBuilding?.poi_info ||
                     "Click a specific building to see data"
                   }
                   icon={highlight}

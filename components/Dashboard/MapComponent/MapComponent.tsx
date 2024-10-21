@@ -70,7 +70,7 @@ function MapComponent() {
 
   React.useEffect(() => {
     if (
-      statisticsBuilding.details &&
+      statisticsBuilding.poi_info &&
       selection === "Building" &&
       mapRef.current
     ) {
@@ -225,7 +225,7 @@ function MapComponent() {
             latitude={statistics?.lat}
           />
         )}
-        {statisticsBuilding.details && selection === "Building" && (
+        {statisticsBuilding.poi_info && selection === "Building" && (
           <Marker
             longitude={statisticsBuilding?.lng}
             color="blue"

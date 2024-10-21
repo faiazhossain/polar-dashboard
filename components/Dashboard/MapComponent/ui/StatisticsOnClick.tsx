@@ -9,13 +9,16 @@ import { useMap } from "react-map-gl";
 import { useDispatch } from "react-redux";
 
 interface StatisticsOnHoverProps {
-  mode: "Day" | "Night";
+  mode: "6AM-12PM" | "12PM-6PM" | "6PM-12AM" | "12AM-6AM";
 }
 
 const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
   const { current: map } = useMap();
   const dispatch = useDispatch();
   const selection = useAppSelector((state) => state.mapdata.selectedButton);
+  const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
+  console.log("🚀 ~ TimeFrame:", typeof.TimeFrame)
+  const LAYERS = ["polar-zone"]; // Constant for layers
   // Function to format details JSON string
   const formatDetails = (details?: string) => {
     if (!details) return "";
@@ -37,13 +40,14 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
     if (!map) return;
 
     const handleMapMouseClick = (e: any) => {
-      const features = map.queryRenderedFeatures(e.point, {
-        layers: [mode === "Day" ? "ada day bounds" : "ada night bounds"],
-      });
-
+      const features = map.queryRenderedFeatures(e.point, { layers: LAYERS });
+      const featuresWithGeohash = features.filter(
+        (feature) => feature?.properties?.geohash
+      );
+      console.log(featuresWithGeohash[TimeFrame], "properties");
       if (features.length) {
         const coordinates = e.lngLat;
-        const properties = features[0]?.properties;
+        const properties = featuresWithGeohash[0]?.properties;
 
         if (properties) {
           dispatch(
