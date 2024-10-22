@@ -17,7 +17,7 @@ interface StatisticsData {
   lat: number;
   lng: number;
   low: number;
-  poi_count: number;
+  poi_count: string;
   region: string;
 }
 
@@ -44,7 +44,7 @@ const initialState: StatisticsOnClick = {
     lat: 0,
     lng: 0,
     low: 0,
-    poi_count: 0,
+    poi_count: "",
     region: "",
   },
 };

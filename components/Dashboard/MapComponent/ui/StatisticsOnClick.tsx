@@ -15,9 +15,10 @@ interface StatisticsOnHoverProps {
 const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
   const { current: map } = useMap();
   const dispatch = useDispatch();
-  const selection = useAppSelector((state) => state.mapdata.selectedButton);
+  const selection = useAppSelector(
+    (state: any) => state.mapdata.selectedButton
+  );
   const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
-  console.log("🚀 ~ TimeFrame:", typeof.TimeFrame)
   const LAYERS = ["polar-zone"]; // Constant for layers
   // Function to format details JSON string
   const formatDetails = (details?: string) => {
@@ -44,11 +45,13 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
       const featuresWithGeohash = features.filter(
         (feature) => feature?.properties?.geohash
       );
-      console.log(featuresWithGeohash[TimeFrame], "properties");
+
       if (features.length) {
         const coordinates = e.lngLat;
-        const properties = featuresWithGeohash[0]?.properties;
-
+        const propertiesString =
+          featuresWithGeohash[0]?.properties?.[TimeFrame];
+        const properties = JSON.parse(propertiesString);
+        console.log("🚀 ~ handleMapMouseClick ~ properties:", properties);
         if (properties) {
           dispatch(
             setStatistics({
@@ -68,7 +71,7 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
               lat: coordinates.lat,
               lng: coordinates.lng,
               low: properties.low || 0,
-              poi_count: properties.poi_count || 0,
+              poi_count: properties.poi_count || "",
               region: properties.region || "",
             })
           );
@@ -86,7 +89,7 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
     return () => {
       map.off("click", handleMapMouseClick);
     };
-  }, [map, mode]);
+  }, [mode]);
 
   return null;
 };

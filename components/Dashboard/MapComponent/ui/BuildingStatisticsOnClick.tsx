@@ -63,7 +63,7 @@ const BuildingStatisticsOnClick: React.FC<StatisticsOnHoverProps> = ({
     return () => {
       map.off("click", handleMapMouseClick);
     };
-  }, [map, mode, dispatch, selection]);
+  }, [mode, dispatch, selection]);
 
   return null;
 };

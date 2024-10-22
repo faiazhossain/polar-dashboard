@@ -59,7 +59,7 @@ const useFilterLayers = () => {
   ): any => {
     const filteredFeatures = filterData.filter((feature: any) => {
       return (
-        feature?.layer?.id === "ada day bounds" &&
+        feature?.layer?.id === "polar-zone" &&
         feature?.properties?.area === region?.title &&
         feature?.properties?.geohash
       );
@@ -86,7 +86,7 @@ const useFilterLayers = () => {
     const filteredData = myMapA?.queryRenderedFeatures();
 
     const featuresWithId = filteredData?.filter(
-      (feature) => feature.layer.id === "ada day bounds"
+      (feature) => feature?.layer?.id === "polar-zone"
     );
 
     if (!featuresWithId) {
@@ -119,25 +119,11 @@ const useFilterLayers = () => {
       );
     }
 
-    if (region.pId === "Division") {
+    if (region.value) {
       filters.push([
         "all",
         ["==", ["geometry-type"], "Polygon"],
-        ["==", ["get", "division"], region?.title],
-      ]);
-    }
-    if (region.pId === "Dhaka") {
-      filters.push([
-        "all",
-        ["==", ["geometry-type"], "Polygon"],
-        ["==", ["get", "region"], `${region?.title} City Corporation`],
-      ]);
-    }
-    if (region.pId === "Dhaka North" || region.pId === "Dhaka South") {
-      filters.push([
-        "all",
-        ["==", ["geometry-type"], "Polygon"],
-        ["==", ["get", "area"], `${region?.title}`],
+        ["==", ["get", "area"], `${region?.value}`],
       ]);
     }
 
@@ -342,7 +328,7 @@ const useFilterLayers = () => {
     return () => {
       map.off("style.load", updateMapStyle);
     };
-  }, [myMapA, timeFrame, ageGroup, region, genderGroup, affluenceGroup]);
+  }, [timeFrame, ageGroup, region, genderGroup, affluenceGroup]);
 
   return null; // Or return something meaningful if needed
 };

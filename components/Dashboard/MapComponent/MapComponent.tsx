@@ -3,6 +3,8 @@ import Map, { MapRef } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Switch } from "@/components/ui/switch";
 import BarikoiLogo from "@/app/image/barikoi-logo-black.svg";
+import { throttle } from "lodash";
+
 import {
   AttributionControl,
   FullscreenControl,
@@ -52,12 +54,15 @@ function MapComponent() {
   useFilterLayers();
 
   // Update zoom level on zoom event
-  const handleZoom = React.useCallback(() => {
-    const zoom = mapRef?.current?.getZoom();
-    if (zoom) {
-      setZoomLevel(zoom);
-    }
-  }, []);
+  const handleZoom = React.useCallback(
+    throttle(() => {
+      const zoom = mapRef?.current?.getZoom();
+      if (zoom) {
+        setZoomLevel(zoom);
+      }
+    }, 200), // Adjust the delay as needed
+    []
+  );
 
   React.useEffect(() => {
     if (statistics.lng != 0 && selection === "Zone" && mapRef.current) {
@@ -142,7 +147,7 @@ function MapComponent() {
           latitude: 23.71421,
           zoom: 14.3,
         }}
-        onZoom={handleZoom} // Listen for zoom changes
+        onZoomEnd={handleZoom} // Listen for zoom changes
         style={{
           width: "100%",
           height: "100%",

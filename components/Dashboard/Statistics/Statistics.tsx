@@ -53,6 +53,40 @@ const StatisticCard: React.FC<StatisticCardProps> = ({
   );
 };
 
+const parseAndFilterPoiInfo = (poiInfo: string): string => {
+  // Split the string by commas to get individual key-value pairs
+  const poiEntries = poiInfo.split(", ");
+
+  // Convert the key-value pairs into an object
+  const poiObject = poiEntries.reduce(
+    (acc: Record<string, number | string>, entry) => {
+      const [key, value] = entry.split(": ");
+      if (key && value) {
+        acc[key] = isNaN(Number(value)) ? value : Number(value);
+      }
+      return acc;
+    },
+    {}
+  );
+  // Filter the object to keep only values greater than 0 (excluding non-numeric values like 'region', 'division')
+  const filteredPoiObject = Object.entries(poiObject)
+    .filter(([key, value]) => typeof value === "number" && value > 0)
+    .reduce((acc: Record<string, number>, [key, value]) => {
+      acc[key] = value as number;
+      return acc;
+    }, {});
+
+  // If no values are greater than 0, return a default message
+  if (Object.keys(filteredPoiObject).length === 0) {
+    return "No data greater than 0";
+  }
+
+  // Convert the filtered object back to a string
+  return Object.entries(filteredPoiObject)
+    .map(([key, value]) => `${key}: ${value}`)
+    .join(", ");
+};
+
 // Define the Statistics component
 const Statistics: React.FC = () => {
   const { statistics } = useAppSelector((state) => state.statistics);
@@ -60,11 +94,13 @@ const Statistics: React.FC = () => {
     (state) => state.buildingstatistics.buildingStatistics
   );
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
-  // Function to calculate the total from details string
+
   const calculateTotalFromDetails = (details: string): number => {
-    const numbers = details.match(/\d+/g);
+    // Match numbers that are not preceded by 'rank:'
+    const numbers = details.match(/(?<!rank:\s*)\b\d+\b/g);
     return numbers ? numbers.map(Number).reduce((sum, num) => sum + num, 0) : 0;
   };
+
   return (
     <div className="bg-white rounded-[20px] h-full md:min-h-[30vh] relative @apply shadow-[rgba(60,64,67,0.3)_0px_1px_2px_0px,rgba(60,64,67,0.15)_0px_2px_6px_2px] pb-4">
       <div className="absolute rounded-t-[20px] w-[220px] h-[50px] flex justify-center items-center bg-[#EC1B23]">
@@ -122,7 +158,7 @@ const Statistics: React.FC = () => {
                 <StatisticCard
                   title={`Key Highlight (Based on Building)`}
                   value={
-                    statisticsBuilding?.poi_info ||
+                    parseAndFilterPoiInfo(statisticsBuilding?.poi_info || "") ||
                     "Click a specific building to see data"
                   }
                   icon={highlight}

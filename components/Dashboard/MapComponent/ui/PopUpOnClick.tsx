@@ -12,6 +12,7 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   const dispatch = useDispatch();
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
   const statistics = useAppSelector((state) => state.statistics.statistics);
+
   const showPopup = useAppSelector(
     (state) => state.clickedEntitySlice.clickedEntity
   );
@@ -60,7 +61,7 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   };
 
   const renderZoneDetails = () => (
-    <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1 w-64">
+    <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1 w-44">
       {" "}
       {/* Fixed width added here */}
       <div className="w-full relative">
@@ -120,7 +121,7 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
         selection === "Building" &&
         renderBuildingDetails()}
       {showPopup &&
-        (statistics.DayCount > 0 || statistics.NightCount > 0) &&
+        (statistics.geohash || statistics.NightCount > 0) &&
         selection === "Zone" &&
         renderZoneDetails()}
     </div>
