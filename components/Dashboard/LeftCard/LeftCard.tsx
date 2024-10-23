@@ -32,6 +32,7 @@ const LeftCard: React.FC = () => {
     selectedAgeGroup,
     selectedGender,
   } = useAppSelector((state) => state.leftPanel);
+  console.log("🚀 ~ selectedRegion:", selectedRegion);
 
   const [matchedAgeFeatures, setMatchedAgeFeatures] = useState([]);
   const [matchedGenderFeatures, setMatchedGenderFeatures] = useState([]);
@@ -141,7 +142,7 @@ const LeftCard: React.FC = () => {
       options: ["Ultra High", "High", "Medium", "Low"],
       value: selectedAffluence,
       onSelect: handleDropdownChange(setSelectedAffluence, "Affluence"),
-      disabled: !selectedRegion?.title, // Enable only if region is selected
+      disabled: !selectedRegion?.value, // Enable only if region is selected
     },
     {
       label: "Select Gender",
@@ -149,7 +150,7 @@ const LeftCard: React.FC = () => {
       options: ["Male", "Female"],
       value: selectedGender,
       onSelect: handleDropdownChange(setSelectedGender, "Select Gender"),
-      disabled: !selectedRegion?.title, // Enable only if region is selected
+      disabled: !selectedRegion?.value, // Enable only if region is selected
     },
     {
       label: "Age Group",
@@ -157,7 +158,7 @@ const LeftCard: React.FC = () => {
       options: ["18-24", "25-34", "35-49", "50"],
       value: selectedAgeGroup,
       onSelect: handleDropdownChange(setSelectedAgeGroup, "Age Group"),
-      disabled: !selectedRegion?.title, // Enable only if region is selected
+      disabled: !selectedRegion?.value, // Enable only if region is selected
     },
   ];
 

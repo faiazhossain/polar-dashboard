@@ -129,7 +129,7 @@ const Statistics: React.FC = () => {
                 <StatisticCard
                   title={`Key Highlight (Based on Zone)`}
                   value={
-                    statistics?.details ||
+                    statistics?.poi_info ||
                     "Click a specific block of a region to see data"
                   }
                   icon={highlight}

@@ -1,7 +1,7 @@
 //@ts-nocheck
 import React, { useState, useEffect } from "react";
 import { Select, Spin, Alert } from "antd";
-import { useAppDispatch } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { setSelectedRegion } from "@/lib/store/features/leftPanelSlice/leftPanelDataSlice";
 import { useMap } from "react-map-gl";
 
@@ -48,6 +48,7 @@ const RegionSelect = () => {
   const [error, setError] = useState(null);
   const dispatch = useAppDispatch();
   const { myMapA } = useMap();
+  const { selectedRegion } = useAppSelector((state) => state.leftPanel);
   useEffect(() => {
     fetch("/data.json")
       .then((response) => {
@@ -113,6 +114,13 @@ const RegionSelect = () => {
           item.title.toLowerCase().includes(searchTerm.toLowerCase())
         )
       : [];
+  useEffect(() => {
+    if (selectedRegion === "") {
+      setSelectedDivision("");
+      setSelectedPid("");
+      setSelectedValue("");
+    }
+  }, [selectedRegion]);
 
   return (
     <div className="p-4">

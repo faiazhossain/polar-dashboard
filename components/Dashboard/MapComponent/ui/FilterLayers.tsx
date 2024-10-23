@@ -60,19 +60,21 @@ const useFilterLayers = () => {
     const filteredFeatures = filterData.filter((feature: any) => {
       return (
         feature?.layer?.id === "polar-zone" &&
-        feature?.properties?.area === region?.title &&
+        feature?.properties?.area === region?.value &&
         feature?.properties?.geohash
       );
     });
 
     let highestValueFeature = null;
     filteredFeatures.forEach((feature: any) => {
-      const value = feature.properties[dataKey];
+      const value = feature.properties[timeFrame];
+      const properties = JSON.parse(value);
+      const propertiesValue = properties[dataKey];
       const geohash = feature;
       if (
-        value &&
+        propertiesValue &&
         (!highestValueFeature ||
-          value > highestValueFeature.properties[dataKey])
+          propertiesValue > highestValueFeature.properties[dataKey])
       ) {
         highestValueFeature = feature;
       }
@@ -86,7 +88,9 @@ const useFilterLayers = () => {
     const filteredData = myMapA?.queryRenderedFeatures();
 
     const featuresWithId = filteredData?.filter(
-      (feature) => feature?.layer?.id === "polar-zone"
+      (feature) =>
+        feature?.layer?.id === "polar-zone" ||
+        feature?.layer?.id === "polar_buildings_symbol"
     );
 
     if (!featuresWithId) {
@@ -270,6 +274,7 @@ const useFilterLayers = () => {
         featuresWithId,
         region
       );
+
       highestGenderFeature = getExactBoundFeature(
         transformGender(genderGroup),
         featuresWithId,
@@ -308,7 +313,7 @@ const useFilterLayers = () => {
       );
 
       // Hide all layers by default
-      const allLayers = ["polar-zone"];
+      const allLayers = ["polar-zone", "polar_buildings_symbol"];
 
       allLayers.forEach((layer) => {
         map.setLayoutProperty(layer, "visibility", "none");
@@ -317,6 +322,8 @@ const useFilterLayers = () => {
       // Set visibility and filters for the current time frame layer
       map.setLayoutProperty("polar-zone", "visibility", "visible");
       map.setFilter("polar-zone", filters);
+      map.setLayoutProperty("polar_buildings_symbol", "visibility", "visible");
+      map.setFilter("polar_buildings_symbol", filters);
     };
 
     if (map.isStyleLoaded()) {

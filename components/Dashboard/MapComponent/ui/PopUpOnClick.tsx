@@ -34,28 +34,34 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
     };
 
     const poiDetails = formatPoiInfo(statisticsBuilding.poi_info || "");
+    const rankObj = poiDetails.find((item) => item.key === "rank");
 
     return (
       <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1 w-44">
         {" "}
-        {/* Fixed width added here */}
-        <div className="w-full relative">
-          <IoIosCloseCircleOutline
-            onClick={() => dispatch(clearClickedEntity())}
-            className="absolute right-0 top-0 text-xl hover:text-red-600"
-          />
-          <h1 className="font-bold mb-2 w-full">Building Details:</h1>
-          <ul className="text-sm">
-            {poiDetails
-              .filter(({ value }) => value > 0)
-              .map(({ key, value }) => (
-                <li key={key} className="flex">
-                  <span className="font-bold">{key}:</span>
-                  <span className="ml-2">{value}</span>
-                </li>
-              ))}
-          </ul>
-        </div>
+        {rankObj && rankObj?.value > 1 ? (
+          <div className="w-full relative">
+            <IoIosCloseCircleOutline
+              onClick={() => dispatch(clearClickedEntity())}
+              className="absolute right-0 top-0 text-xl hover:text-red-600"
+            />
+            <h1 className="font-bold mb-2 w-full">Building Details:</h1>
+            <ul className="text-sm">
+              {poiDetails
+                .filter(({ key, value }: any) => value > 0)
+                .map(({ key, value }) => (
+                  <li key={key} className="flex">
+                    <span className="font-bold">{key}:</span>
+                    <span className="ml-2">{value}</span>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        ) : (
+          <h1 className="font-bold mb-2 w-full">
+            This building don't have any POI
+          </h1>
+        )}
       </div>
     );
   };

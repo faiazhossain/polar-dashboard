@@ -46,12 +46,35 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
         (feature) => feature?.properties?.geohash
       );
 
+      // Get the raw string from featuresWithGeohash
+      const rawPoiInfo = featuresWithGeohash[0]?.properties?.poi_info;
+
+      // Clean the string and parse it into an object
+      let cleanedPoiInfo: { [key: string]: number } = {}; // Explicit type for parsed object
+      if (rawPoiInfo) {
+        cleanedPoiInfo = JSON.parse(
+          rawPoiInfo.replace(/[\[\]]/g, "").replace(/\\/g, "")
+        );
+      }
+
+      // Summing all the values in the cleaned object
+      const totalCount: number = Object.values(cleanedPoiInfo).reduce(
+        (acc: number, value: number) => acc + value,
+        0
+      );
+
+      // Create a string from the keys where values are greater than 0
+      const filteredPoiInfoString: string = Object.entries(cleanedPoiInfo)
+        .filter(([key, value]) => value > 0) // Filter where value > 0
+        .map(([key, value]) => `${key}: ${value}`) // Convert to "key: value" format
+        .join(", "); // Join into a single string
+
       if (features.length) {
         const coordinates = e.lngLat;
         const propertiesString =
           featuresWithGeohash[0]?.properties?.[TimeFrame];
         const properties = JSON.parse(propertiesString);
-        console.log("🚀 ~ handleMapMouseClick ~ properties:", properties);
+
         if (properties) {
           dispatch(
             setStatistics({
@@ -71,7 +94,8 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
               lat: coordinates.lat,
               lng: coordinates.lng,
               low: properties.low || 0,
-              poi_count: properties.poi_count || "",
+              poi_count: totalCount,
+              poi_info: filteredPoiInfoString,
               region: properties.region || "",
             })
           );
