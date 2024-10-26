@@ -19,6 +19,9 @@ export interface LeftPanelState {
   selectedGender: string;
   selectedPriceRange: string;
   boundingBox: bbox;
+  highestAffluence: object;
+  highestGender: object;
+  highestAgeGroup: object;
 }
 
 const initialState: LeftPanelState = {
@@ -29,6 +32,9 @@ const initialState: LeftPanelState = {
   selectedAgeGroup: "",
   selectedGender: "",
   selectedPriceRange: "",
+  highestAffluence: [],
+  highestGender: [],
+  highestAgeGroup: [],
   boundingBox: {
     minLng: undefined,
     minLat: undefined,
@@ -65,6 +71,15 @@ export const leftPanelSlice = createSlice({
     setBoundingBox: (state, action) => {
       state.boundingBox = action.payload;
     },
+    setHighestAffluence: (state, action) => {
+      state.highestAffluence = action.payload;
+    },
+    setHighestGender: (state, action) => {
+      state.highestGender = action.payload;
+    },
+    setHighestAgeGroup: (state, action) => {
+      state.highestAgeGroup = action.payload;
+    },
   },
 });
 
@@ -78,5 +93,8 @@ export const {
   setSelectedGender,
   setSelectedPriceRange,
   setBoundingBox,
+  setHighestAffluence,
+  setHighestGender,
+  setHighestAgeGroup,
 } = leftPanelSlice.actions;
 export default leftPanelSlice.reducer;

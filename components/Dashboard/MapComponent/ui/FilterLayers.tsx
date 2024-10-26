@@ -4,6 +4,12 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { useEffect } from "react";
 import { useMap } from "react-map-gl";
 import * as turf from "@turf/turf";
+import { useDispatch } from "react-redux";
+import {
+  setHighestAffluence,
+  setHighestAgeGroup,
+  setHighestGender,
+} from "@/lib/store/features/leftPanelSlice/leftPanelDataSlice";
 
 type State = {
   leftPanel: {
@@ -17,6 +23,7 @@ type State = {
 
 const useFilterLayers = () => {
   const { myMapA } = useMap();
+  const dispatch = useDispatch();
   const timeFrame = useAppSelector((state: State) => state.leftPanel.timeState);
   const region = useAppSelector(
     (state: State) => state.leftPanel.selectedRegion
@@ -77,6 +84,23 @@ const useFilterLayers = () => {
           propertiesValue > highestValueFeature.properties[dataKey])
       ) {
         highestValueFeature = feature;
+        if (
+          dataKey === "Ultra_High" ||
+          dataKey === "High" ||
+          dataKey === "low" ||
+          dataKey === "Mid"
+        ) {
+          dispatch(setHighestAffluence([dataKey, propertiesValue]));
+        } else if (dataKey === "M" || dataKey === "F") {
+          dispatch(setHighestGender([dataKey, propertiesValue]));
+        } else if (
+          dataKey === "18-24" ||
+          dataKey === "25-34" ||
+          dataKey === "35-49" ||
+          dataKey === "50"
+        ) {
+          dispatch(setHighestAgeGroup([dataKey, propertiesValue]));
+        }
       }
     });
 
