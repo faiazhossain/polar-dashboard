@@ -221,6 +221,7 @@ const useFilterLayers = () => {
 
   useEffect(() => {
     const map = myMapA?.getMap();
+    console.log("🚀 ~ useEffect ~ map:", map);
 
     if (!map) return;
 
@@ -340,7 +341,7 @@ const useFilterLayers = () => {
       const allLayers = ["polar-zone", "polar_buildings_symbol"];
 
       allLayers.forEach((layer) => {
-        map.setLayoutProperty(layer, "visibility", "none");
+        map.setLayoutProperty(layer, "visibility", "visible");
       });
 
       // Set visibility and filters for the current time frame layer
@@ -359,7 +360,7 @@ const useFilterLayers = () => {
     return () => {
       map.off("style.load", updateMapStyle);
     };
-  }, [timeFrame, ageGroup, region, genderGroup, affluenceGroup]);
+  }, [myMapA, timeFrame, ageGroup, region, genderGroup, affluenceGroup]);
 
   return null; // Or return something meaningful if needed
 };

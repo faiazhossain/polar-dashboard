@@ -2628,15 +2628,6 @@
     "center": [24.768676758, 90.252685547]
   },
   {
-    "id": "Mohammadpur",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Mohammadpur",
-    "title": "Mohammadpur",
-    "isLeaf": true,
-    "center": [23.75793457, 90.329589844]
-  },
-  {
     "id": "Ajgana",
     "pId": "Gazipur",
     "division": "Dhaka",
