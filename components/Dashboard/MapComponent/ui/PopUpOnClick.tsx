@@ -59,7 +59,7 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
           </div>
         ) : (
           <h1 className="font-bold mb-2 w-full">
-            This building don't have any POI
+            This building don&apos;t have any POI
           </h1>
         )}
       </div>
