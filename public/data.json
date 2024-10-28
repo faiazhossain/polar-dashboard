@@ -7732,15 +7732,6 @@
     "center": [24.708251953, 90.549316406]
   },
   {
-    "id": "Keraniganj",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Keraniganj",
-    "title": "Keraniganj",
-    "isLeaf": true,
-    "center": [23.664550781, 90.428466797]
-  },
-  {
     "id": "Satnal",
     "pId": "Chandpur",
     "division": "Chattogram",

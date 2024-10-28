@@ -32,28 +32,26 @@ const LoginForm: React.FC = () => {
       setLoading(true);
 
       // Simulating API call with a timeout
-      setTimeout(() => {
-        if (email === "test@gmail.com" && password === "Test@1234") {
-          document.cookie = "token=test-token; path=/";
 
-          if (!emailSuggestions.includes(email)) {
-            const updatedEmailSuggestions = [...emailSuggestions, email];
-            localStorage.setItem(
-              "emailSuggestions",
-              JSON.stringify(updatedEmailSuggestions)
-            );
-          }
+      if (email === "test@gmail.com" && password === "Test@1234") {
+        document.cookie = "token=test-token; path=/";
 
-          router.push("/dashboard");
-        } else {
-          setErrors({
-            email: "",
-            password: "Incorrect test email or password",
-          });
+        if (!emailSuggestions.includes(email)) {
+          const updatedEmailSuggestions = [...emailSuggestions, email];
+          localStorage.setItem(
+            "emailSuggestions",
+            JSON.stringify(updatedEmailSuggestions)
+          );
         }
 
+        router.push("/dashboard");
+      } else {
+        setErrors({
+          email: "",
+          password: "Incorrect test email or password",
+        });
         setLoading(false);
-      }, 2000);
+      }
     }
   };
 
