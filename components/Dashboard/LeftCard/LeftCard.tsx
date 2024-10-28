@@ -147,16 +147,38 @@ const LeftCard: React.FC = () => {
 
   const filteredData = myMapA?.queryRenderedFeatures();
 
-  // Function to render individual statistics
+  const colorMap = {
+    green: {
+      gradientFrom: "from-green-300",
+      gradientTo: "to-green-100",
+      textColor: "text-green-900",
+      badgeBg: "bg-green-600",
+    },
+    blue: {
+      gradientFrom: "from-blue-300",
+      gradientTo: "to-blue-100",
+      textColor: "text-blue-900",
+      badgeBg: "bg-blue-600",
+    },
+    red: {
+      gradientFrom: "from-red-300",
+      gradientTo: "to-red-100",
+      textColor: "text-red-900",
+      badgeBg: "bg-red-600",
+    },
+  };
+
   const renderStatistic = (data, color, label, map) => {
     if (data.length === 0) return null;
 
+    const colorClasses = colorMap[color] || colorMap.green; // Fallback to green if color is not found
+
     return (
       <div
-        className={`p-4 bg-gradient-to-r from-${color}-300 to-${color}-100 text-${color}-900 rounded-lg shadow-lg mb-2 relative`}
+        className={`p-4 bg-gradient-to-r ${colorClasses.gradientFrom} ${colorClasses.gradientTo} ${colorClasses.textColor} rounded-lg shadow-lg mb-2 relative`}
       >
         <div
-          className={`absolute top-0 right-0 p-2 bg-${color}-600 text-white rounded-full text-xs font-bold`}
+          className={`absolute top-0 right-0 p-2 ${colorClasses.badgeBg} text-white rounded-full text-xs font-bold`}
         >
           {map ? map[data[0]] || data[0] : data[0]}
         </div>
