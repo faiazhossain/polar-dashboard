@@ -71,11 +71,6 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
       const properties = propertiesString
         ? JSON.parse(propertiesString)
         : featuresWithGeohash[0]?.properties;
-      console.log("🚀 ~ handleMapClick ~ properties:", properties);
-      console.log(
-        "🚀 ~ handleMapClick ~ featuresWithGeohash[0]?.properties:",
-        features[0]?.properties
-      );
 
       if (properties) {
         dispatch(
