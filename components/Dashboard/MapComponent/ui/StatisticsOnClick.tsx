@@ -19,7 +19,7 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
     (state: any) => state.mapdata.selectedButton
   );
   const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
-  const LAYERS = ["polar-zone"]; // Constant for layers
+  const LAYERS = ["polar-zone"];
 
   // State to store the last clicked coordinates
   const [lastClickedCoords, setLastClickedCoords] = useState<{
@@ -68,8 +68,14 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
 
     if (features.length) {
       const propertiesString = featuresWithGeohash[0]?.properties?.[TimeFrame];
-      const properties = JSON.parse(propertiesString);
+      const properties = propertiesString
+        ? JSON.parse(propertiesString)
+        : featuresWithGeohash[0]?.properties;
       console.log("🚀 ~ handleMapClick ~ properties:", properties);
+      console.log(
+        "🚀 ~ handleMapClick ~ featuresWithGeohash[0]?.properties:",
+        features[0]?.properties
+      );
 
       if (properties) {
         dispatch(
@@ -109,7 +115,7 @@ const StatisticsOnHover: React.FC<StatisticsOnHoverProps> = ({ mode }) => {
 
     const onMapClick = (e: any) => {
       const coordinates = e.lngLat;
-      setLastClickedCoords(coordinates); // Update last clicked coordinates
+      setLastClickedCoords(coordinates);
       handleMapClick(coordinates);
     };
 

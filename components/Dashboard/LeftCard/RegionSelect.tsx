@@ -4,6 +4,8 @@ import { Select, Spin, Alert } from "antd";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { setSelectedRegion } from "@/lib/store/features/leftPanelSlice/leftPanelDataSlice";
 import { useMap } from "react-map-gl";
+import { setStatistics } from "@/lib/store/features/statistics/zoneStatisticsSlice";
+import { setBuildingStatistics } from "@/lib/store/features/statistics/buildingStatisticsSlice";
 
 const { Option } = Select;
 
@@ -97,23 +99,59 @@ const RegionSelect = () => {
         essential: true,
       });
     }
-
+    dispatch(
+      setStatistics({
+        "18-24": 0,
+        "25-34": 0,
+        "35-49": 0,
+        "50": 0,
+        DayCount: 0,
+        NightCount: 0,
+        F: 0,
+        High: 0,
+        M: 0,
+        Mid: 0,
+        Ultra_High: 0,
+        details: "",
+        geohash: "",
+        lat: 0,
+        lng: 0,
+        low: 0,
+        poi_count: 0,
+        region: "",
+      })
+    );
+    dispatch(
+      setBuildingStatistics({
+        details: "",
+        lat: 0,
+        lng: 0,
+        poi_count: 0,
+        region: "",
+        rank: 0,
+      })
+    );
     dispatch(setSelectedRegion({ pId: selectedPid, value }));
   };
 
   const filteredPids =
     selectedDivision && data[selectedDivision]
-      ? Object.keys(data[selectedDivision].children)
+      ? Object.keys(data[selectedDivision].children).sort((a, b) =>
+          a.localeCompare(b)
+        ) // Sort districts alphabetically
       : [];
 
   const filteredValues =
     selectedDivision &&
     selectedPid &&
     data[selectedDivision].children[selectedPid]
-      ? data[selectedDivision].children[selectedPid].values.filter((item) =>
-          item.title.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+      ? data[selectedDivision].children[selectedPid].values
+          .filter((item) =>
+            item.title.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .sort((a, b) => a.title.localeCompare(b.title)) // Sort areas alphabetically
       : [];
+
   useEffect(() => {
     if (selectedRegion === "") {
       setSelectedDivision("");

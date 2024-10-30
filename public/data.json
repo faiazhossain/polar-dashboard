@@ -504,15 +504,6 @@
     "center": [23.977661133, 90.252685547]
   },
   {
-    "id": "Savar",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Savar",
-    "title": "Savar",
-    "isLeaf": true,
-    "center": [23.790893555, 90.307617188]
-  },
-  {
     "id": "Talsahar",
     "pId": "Brahmanbaria",
     "division": "Chattogram",
@@ -1906,15 +1897,6 @@
     "title": "Sutrapur",
     "isLeaf": true,
     "center": [23.70300293, 90.406494141]
-  },
-  {
-    "id": "Tejgaon",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Tejgaon",
-    "title": "Tejgaon",
-    "isLeaf": true,
-    "center": [23.7527906, 90.3770677]
   },
   {
     "id": "Jampur",
@@ -5662,15 +5644,6 @@
     "center": [23.944702148, 90.263671875]
   },
   {
-    "id": "Kayet Para",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Kayet Para",
-    "title": "Kayet Para",
-    "isLeaf": true,
-    "center": [23.807373047, 90.483398438]
-  },
-  {
     "id": "Sayedpur",
     "pId": "Narayanganj City Corporation",
     "division": "Dhaka",
@@ -6020,15 +5993,6 @@
     "title": "Targaon",
     "isLeaf": true,
     "center": [24.120483398, 90.560302734]
-  },
-  {
-    "id": "Kaundiya",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Kaundiya",
-    "title": "Kaundiya",
-    "isLeaf": true,
-    "center": [23.796386719, 90.318603516]
   },
   {
     "id": "Louhajang Teotia",
@@ -6409,15 +6373,6 @@
     "center": [24.565429688, 90.736083984]
   },
   {
-    "id": "Subhadya",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Subhadya",
-    "title": "Subhadya",
-    "isLeaf": true,
-    "center": [23.681030273, 90.406494141]
-  },
-  {
     "id": "Konakhola",
     "pId": "Dhaka",
     "division": "Dhaka",
@@ -6713,15 +6668,6 @@
     "title": "Saista",
     "isLeaf": true,
     "center": [23.75793457, 90.164794922]
-  },
-  {
-    "id": "Birulia",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Birulia",
-    "title": "Birulia",
-    "isLeaf": true,
-    "center": [23.851318359, 90.318603516]
   },
   {
     "id": "Uchitpur",
@@ -7703,15 +7649,6 @@
     "title": "Sutarpara",
     "isLeaf": true,
     "center": [23.604125977, 90.494384766]
-  },
-  {
-    "id": "Sakta",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Sakta",
-    "title": "Sakta",
-    "isLeaf": true,
-    "center": [23.708496094, 90.3515625]
   },
   {
     "id": "Danga",
@@ -9127,15 +9064,6 @@
     "center": [23.543701172, 90.461425781]
   },
   {
-    "id": "Rampura",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Rampura",
-    "title": "Rampura",
-    "isLeaf": true,
-    "center": [23.761741897, 90.432994768]
-  },
-  {
     "id": "Bhadra",
     "pId": "Tangail",
     "division": "Dhaka",
@@ -9638,15 +9566,6 @@
     "title": "Hajir Bazar",
     "isLeaf": true,
     "center": [24.362182617, 90.373535156]
-  },
-  {
-    "id": "Zinzira",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Zinzira",
-    "title": "Zinzira",
-    "isLeaf": true,
-    "center": [23.697509766, 90.373535156]
   },
   {
     "id": "Salimabad",
@@ -10945,15 +10864,6 @@
     "center": [24.851074219, 89.868164062]
   },
   {
-    "id": "Shahbagh",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Shahbagh",
-    "title": "Shahbagh",
-    "isLeaf": true,
-    "center": [23.741455078, 90.395507812]
-  },
-  {
     "id": "Noumahal",
     "pId": "Mymensingh City Corporation",
     "division": "Mymensingh",
@@ -11908,15 +11818,6 @@
     "center": [24.845581055, 89.901123047]
   },
   {
-    "id": "Pagla",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Pagla",
-    "title": "Pagla",
-    "isLeaf": true,
-    "center": [23.659057617, 90.450439453]
-  },
-  {
     "id": "Kathora",
     "pId": "Gazipur City Corporation",
     "division": "Dhaka",
@@ -12095,15 +11996,6 @@
     "title": "Gowalmari",
     "isLeaf": true,
     "center": [23.488769531, 90.725097656]
-  },
-  {
-    "id": "Siddheshwari",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Siddheshwari",
-    "title": "Siddheshwari",
-    "isLeaf": true,
-    "center": [23.746948242, 90.406494141]
   },
   {
     "id": "Mugda",
@@ -12518,15 +12410,6 @@
     "title": "Segunbagicha",
     "isLeaf": true,
     "center": [23.724975586, 90.395507812]
-  },
-  {
-    "id": "Washpur",
-    "pId": "Dhaka",
-    "division": "Dhaka",
-    "value": "Washpur",
-    "title": "Washpur",
-    "isLeaf": true,
-    "center": [23.735961914, 90.340576172]
   },
   {
     "id": "Maijbagh",

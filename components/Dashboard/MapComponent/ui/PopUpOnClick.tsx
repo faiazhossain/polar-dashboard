@@ -12,6 +12,7 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   const dispatch = useDispatch();
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
   const statistics = useAppSelector((state) => state.statistics.statistics);
+  const TimeFrame = useAppSelector((state: any) => state.leftPanel.timeState);
 
   const showPopup = useAppSelector(
     (state) => state.clickedEntitySlice.clickedEntity
@@ -38,7 +39,21 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
 
     return (
       <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1 w-44">
-        {" "}
+        <div
+          className={`${
+            TimeFrame === "6AM-12PM"
+              ? "bg-[#ffcda4]"
+              : TimeFrame === "12PM-6PM"
+              ? "bg-[#ffcb9e]"
+              : TimeFrame === "6PM-12AM"
+              ? "bg-[#d5edff]"
+              : TimeFrame === "12AM-6AM"
+              ? "bg-[#d5efff]"
+              : "bg-white"
+          } font-mono text-center mb-2`}
+        >
+          {TimeFrame}
+        </div>
         {rankObj && rankObj?.value > 1 ? (
           <div className="w-full relative">
             <IoIosCloseCircleOutline
@@ -67,13 +82,27 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
   };
 
   const renderZoneDetails = () => (
-    <div className="bg-white p-2 absolute rounded-xl bottom-9 left-1 w-44">
-      {" "}
+    <div className={`bg-white p-2 absolute rounded-xl bottom-9 left-1 w-44`}>
+      <div
+        className={`${
+          TimeFrame === "6AM-12PM"
+            ? "bg-[#ffcda4]"
+            : TimeFrame === "12PM-6PM"
+            ? "bg-[#ffcb9e]"
+            : TimeFrame === "6PM-12AM"
+            ? "bg-[#d5edff]"
+            : TimeFrame === "12AM-6AM"
+            ? "bg-[#d5efff]"
+            : "bg-white"
+        } font-mono text-center mb-2`}
+      >
+        {TimeFrame}
+      </div>
       {/* Fixed width added here */}
       <div className="w-full relative">
         <IoIosCloseCircleOutline
           onClick={() => dispatch(clearClickedEntity())}
-          className="absolute right-0 top-0 text-xl hover:text-red-600"
+          className={`absolute  right-0 top-0 text-xl hover:text-red-600`}
         />
         <h1 className="font-bold mb-2 text-md">Age Group</h1>
         <ul className="grid grid-cols-2 text-sm">
