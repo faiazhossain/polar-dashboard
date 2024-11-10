@@ -10,6 +10,7 @@ import {
   setHighestAgeGroup,
   setHighestGender,
 } from "@/lib/store/features/leftPanelSlice/leftPanelDataSlice";
+import { setFilteredGeohash } from "@/lib/store/features/MapSlice/mapSlice";
 
 type State = {
   leftPanel: {
@@ -20,7 +21,7 @@ type State = {
     selectedRegion: string;
   };
 };
-
+// Custom hook to filter and update map layers based on various filters
 const useFilterLayers = () => {
   const { myMapA } = useMap();
   const dispatch = useDispatch();
@@ -37,20 +38,27 @@ const useFilterLayers = () => {
   const affluenceGroup = useAppSelector(
     (state: State) => state.leftPanel.selectedAffluence
   );
+  const filteredGeohashData = useAppSelector(
+    (state) => state?.mapdata?.filteredGeohash
+  );
 
+  // Variables to store the highest features
   let highestAgeFeature = null;
   let highestGenderFeature = null;
   let highestAffluenceFeature = null;
 
+  // Function to map string values to specific codes or formats
   const transformValue = (value: string, map: Record<string, string>): string =>
     map[value] || value;
 
+  // Convert gender to specific codes (e.g., Male to "M", Female to "F")
   const transformGender = (gender: string): string =>
     transformValue(gender, {
       Male: "M",
       Female: "F",
     });
 
+  // Convert affluence to specific codes (e.g., "Ultra High" to "Ultra_High")
   const transformAffluence = (affluence: string): string =>
     transformValue(affluence, {
       "Ultra High": "Ultra_High",
@@ -59,11 +67,13 @@ const useFilterLayers = () => {
       Medium: "Mid",
     });
 
+  // Function to find the highest value feature for a given data key
   const getExactBoundFeature = (
     dataKey: string,
     filterData: any[],
     region: any
   ): any => {
+    // Filter features based on layer and region area
     const filteredFeatures = filterData.filter((feature: any) => {
       return (
         feature?.layer?.id === "polar-zone" &&
@@ -73,17 +83,19 @@ const useFilterLayers = () => {
     });
 
     let highestValueFeature = null;
+    // Loop through filtered features to find the one with the highest value
     filteredFeatures.forEach((feature: any) => {
       const value = feature.properties[timeFrame];
       const properties = JSON.parse(value);
       const propertiesValue = properties[dataKey];
-      const geohash = feature;
+      // Check if the current feature has a higher value
       if (
         propertiesValue &&
         (!highestValueFeature ||
           propertiesValue > highestValueFeature.properties[dataKey])
       ) {
         highestValueFeature = feature;
+        // Dispatch appropriate actions to update Redux state
         if (
           dataKey === "Ultra_High" ||
           dataKey === "High" ||
@@ -107,6 +119,7 @@ const useFilterLayers = () => {
     return highestValueFeature;
   };
 
+  // Function to build filters for querying features on the map
   const getFilters = (): any[] => {
     const filters: any[] = ["all", ["==", ["geometry-type"], "Polygon"]];
     const filteredData = myMapA?.queryRenderedFeatures();
@@ -120,6 +133,19 @@ const useFilterLayers = () => {
     if (!featuresWithId) {
       return filters;
     }
+
+    const geohashMap: Record<number, string> = {};
+    let counter = 1;
+
+    featuresWithId.forEach((feature) => {
+      const geohash = feature?.properties?.geohash;
+      if (geohash) {
+        geohashMap[counter] = geohash;
+        counter++;
+      }
+    });
+
+    dispatch(setFilteredGeohash(geohashMap));
 
     if (ageGroup) {
       highestAgeFeature = getExactBoundFeature(
@@ -154,7 +180,6 @@ const useFilterLayers = () => {
         ["==", ["get", "area"], `${region?.value}`],
       ]);
     }
-
     return filters;
   };
 
@@ -221,7 +246,6 @@ const useFilterLayers = () => {
 
   useEffect(() => {
     const map = myMapA?.getMap();
-    console.log("🚀 ~ useEffect ~ map:", map);
 
     if (!map) return;
 

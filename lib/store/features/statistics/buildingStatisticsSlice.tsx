@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 // Define the interface for the statistics data
 interface BuildingStatisticsData {
   poi_info: string;
@@ -6,11 +7,13 @@ interface BuildingStatisticsData {
   lng: number;
   rank: number;
   region: string;
+  locationData: object;
 }
 
 // Define the interface for the state
 export interface StatisticsOnClick {
   buildingStatistics: BuildingStatisticsData;
+  loading: boolean; // Directly use boolean type here
 }
 
 const initialState: StatisticsOnClick = {
@@ -20,7 +23,9 @@ const initialState: StatisticsOnClick = {
     lng: 0,
     region: "",
     rank: 0,
+    locationData: [],
   },
+  loading: false, // Initial state for loading is a boolean
 };
 
 export const buildingStatisticsOnClick = createSlice({
@@ -33,9 +38,13 @@ export const buildingStatisticsOnClick = createSlice({
     ) => {
       state.buildingStatistics = action.payload;
     },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload; // Accepts a boolean directly
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setBuildingStatistics } = buildingStatisticsOnClick.actions;
+export const { setBuildingStatistics, setLoading } =
+  buildingStatisticsOnClick.actions;
 export default buildingStatisticsOnClick.reducer;

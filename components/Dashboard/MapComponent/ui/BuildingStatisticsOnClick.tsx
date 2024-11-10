@@ -1,4 +1,7 @@
-import { setBuildingStatistics } from "@/lib/store/features/statistics/buildingStatisticsSlice";
+import {
+  setBuildingStatistics,
+  setLoading,
+} from "@/lib/store/features/statistics/buildingStatisticsSlice";
 import {
   clearClickedEntity,
   setClickedEntity,
@@ -20,38 +23,63 @@ const BuildingStatisticsOnClick: React.FC<StatisticsOnHoverProps> = ({
   const selection = useAppSelector((state) => state.mapdata.selectedButton);
 
   const LAYERS = ["polar-zone"]; // Constant for layers
+  const fetchLocationData = async (longitude: number, latitude: number) => {
+    dispatch(setLoading(true));
+    try {
+      const response = await fetch(
+        `/api/reverse-geocode?longitude=${longitude}&latitude=${latitude}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch location data");
 
+      const data = await response.json();
+      dispatch(setLoading(false));
+      return data;
+    } catch (error) {
+      console.error("Error fetching location data:", error);
+      dispatch(setLoading(false));
+      return null;
+    }
+  };
   useEffect(() => {
     if (!map) return;
 
-    const handleMapMouseClick = (e: any) => {
+    const handleMapMouseClick = async (e: any) => {
       const features = map.queryRenderedFeatures(e.point, { layers: LAYERS });
+      const coordinates = e.lngLat;
       const featuresWithoutGeohash = features.filter(
         (feature) => !feature?.properties?.geohash
       );
 
-      // If there are features without geohash
       if (featuresWithoutGeohash.length) {
-        const coordinates = e.lngLat;
         const properties = featuresWithoutGeohash[0]?.properties;
 
         if (properties) {
-          // Create the poi_info string while excluding the area property
-          const poiInfoArray = Object.entries(properties)
-            .filter(([key]) => key !== "area")
-            .map(([key, value]) => `${key}: ${value}`)
-            .join(", ");
-
-          dispatch(
-            setBuildingStatistics({
-              poi_info: poiInfoArray,
-              lat: coordinates.lat,
-              lng: coordinates.lng,
-              region: properties.region || "",
-              rank: properties.rank || 0,
-            })
+          // Fetch location data based on the clicked coordinates
+          const locationData = await fetchLocationData(
+            coordinates.lng,
+            coordinates.lat
           );
-          dispatch(setClickedEntity({ type: "building" }));
+
+          if (locationData) {
+            // Create the poi_info string while excluding the area property
+            const poiInfoArray = Object.entries(properties)
+              .filter(([key]) => key !== "area")
+              .map(([key, value]) => `${key}: ${value}`)
+              .join(", ");
+
+            // Update Redux with building statistics and location data
+            dispatch(
+              setBuildingStatistics({
+                poi_info: poiInfoArray,
+                lat: coordinates.lat,
+                lng: coordinates.lng,
+                region: properties.region || "",
+                rank: properties.rank || 0,
+                locationData: locationData, // Include fetched location data
+              })
+            );
+            dispatch(setClickedEntity({ type: "building" }));
+          }
         }
       } else if (selection === "Building") {
         dispatch(clearClickedEntity());

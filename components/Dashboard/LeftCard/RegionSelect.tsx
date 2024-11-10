@@ -229,6 +229,29 @@ const RegionSelect = () => {
               </Select>
             </div>
           )}
+          {/* {selectedValue && (
+            <div>
+              <label className="block text-gray-700 mb-2 text-sm">
+                Select Zone
+              </label>
+              <Select
+                showSearch
+                value={selectedValue}
+                onChange={handleValueChange}
+                placeholder="Select Value"
+                className="w-full"
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().includes(input.toLowerCase())
+                }
+              >
+                {filteredValues.map((item) => (
+                  <Option key={item.value} value={item.value}>
+                    {item.title}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+          )} */}
         </div>
       )}
     </div>

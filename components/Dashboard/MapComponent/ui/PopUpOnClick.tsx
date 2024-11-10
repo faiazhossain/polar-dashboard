@@ -65,10 +65,12 @@ const PopUpOnClick: React.FC<PopUpOnClickProps> = ({ mode }) => {
               {poiDetails
                 .filter(({ key, value }: any) => value > 0)
                 .map(({ key, value }) => (
-                  <li key={key} className="flex">
-                    <span className="font-bold">{key}:</span>
-                    <span className="ml-2">{value}</span>
-                  </li>
+                  <ul>
+                    <li key={key} className="flex">
+                      <span className="font-bold">{key}:</span>
+                      <span className="ml-2">{value}</span>
+                    </li>
+                  </ul>
                 ))}
             </ul>
           </div>
