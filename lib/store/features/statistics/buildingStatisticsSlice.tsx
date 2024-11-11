@@ -14,6 +14,7 @@ interface BuildingStatisticsData {
 export interface StatisticsOnClick {
   buildingStatistics: BuildingStatisticsData;
   loading: boolean; // Directly use boolean type here
+  geohash: string;
 }
 
 const initialState: StatisticsOnClick = {
@@ -26,6 +27,7 @@ const initialState: StatisticsOnClick = {
     locationData: [],
   },
   loading: false, // Initial state for loading is a boolean
+  geohash: "",
 };
 
 export const buildingStatisticsOnClick = createSlice({
@@ -41,10 +43,13 @@ export const buildingStatisticsOnClick = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload; // Accepts a boolean directly
     },
+    setGeohash: (state, action) => {
+      state.geohash = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setBuildingStatistics, setLoading } =
+export const { setBuildingStatistics, setLoading, setGeohash } =
   buildingStatisticsOnClick.actions;
 export default buildingStatisticsOnClick.reducer;

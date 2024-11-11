@@ -134,19 +134,6 @@ const useFilterLayers = () => {
       return filters;
     }
 
-    const geohashMap: Record<number, string> = {};
-    let counter = 1;
-
-    featuresWithId.forEach((feature) => {
-      const geohash = feature?.properties?.geohash;
-      if (geohash) {
-        geohashMap[counter] = geohash;
-        counter++;
-      }
-    });
-
-    dispatch(setFilteredGeohash(geohashMap));
-
     if (ageGroup) {
       highestAgeFeature = getExactBoundFeature(
         ageGroup,

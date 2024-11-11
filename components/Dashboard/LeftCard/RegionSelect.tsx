@@ -5,7 +5,10 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { setSelectedRegion } from "@/lib/store/features/leftPanelSlice/leftPanelDataSlice";
 import { useMap } from "react-map-gl";
 import { setStatistics } from "@/lib/store/features/statistics/zoneStatisticsSlice";
-import { setBuildingStatistics } from "@/lib/store/features/statistics/buildingStatisticsSlice";
+import {
+  setBuildingStatistics,
+  setGeohash,
+} from "@/lib/store/features/statistics/buildingStatisticsSlice";
 
 const { Option } = Select;
 
@@ -45,12 +48,17 @@ const RegionSelect = () => {
   const [selectedDivision, setSelectedDivision] = useState("");
   const [selectedPid, setSelectedPid] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
+  const [selectedGeohash, setSelectedGeohash] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const dispatch = useAppDispatch();
   const { myMapA } = useMap();
   const { selectedRegion } = useAppSelector((state) => state.leftPanel);
+  const filteredGeohashData = useAppSelector(
+    (state) => state?.mapdata?.filteredGeohash
+  );
+
   useEffect(() => {
     fetch("/data.json")
       .then((response) => {
@@ -76,15 +84,22 @@ const RegionSelect = () => {
     setSelectedDivision(value);
     setSelectedPid("");
     setSelectedValue("");
+    setSelectedGeohash("");
   };
 
   const handlePidChange = (value) => {
     setSelectedPid(value);
     setSelectedValue("");
+    setSelectedGeohash("");
+  };
+  const handleGeohashChange = (value) => {
+    setSelectedGeohash(value);
+    dispatch(setGeohash(value));
   };
 
   const handleValueChange = (value) => {
     setSelectedValue(value);
+    setSelectedGeohash("");
 
     const selectedItem = data[selectedDivision].children[
       selectedPid
@@ -229,29 +244,29 @@ const RegionSelect = () => {
               </Select>
             </div>
           )}
-          {/* {selectedValue && (
+          {selectedValue && (
             <div>
               <label className="block text-gray-700 mb-2 text-sm">
                 Select Zone
               </label>
               <Select
                 showSearch
-                value={selectedValue}
-                onChange={handleValueChange}
+                value={selectedGeohash}
+                onChange={handleGeohashChange}
                 placeholder="Select Value"
                 className="w-full"
                 filterOption={(input, option) =>
                   option.children.toLowerCase().includes(input.toLowerCase())
                 }
               >
-                {filteredValues.map((item) => (
-                  <Option key={item.value} value={item.value}>
-                    {item.title}
+                {filteredGeohashData.map((item) => (
+                  <Option key={item} value={item}>
+                    {item}
                   </Option>
                 ))}
               </Select>
             </div>
-          )} */}
+          )}
         </div>
       )}
     </div>

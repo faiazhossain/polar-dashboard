@@ -31,6 +31,7 @@ import { Button } from "antd";
 import { FaInfoCircle } from "react-icons/fa";
 import { Padding } from "maplibre-gl";
 import AreaPopupOnClick from "./ui/AreaPopupOnClick";
+import useFilteredFeaturesByRegion from "./ui/useFilteredFeaturesByRegion";
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
@@ -53,6 +54,7 @@ function MapComponent() {
     (state: any) => state.leftPanel.selectedAffluence
   );
   useFilterLayers();
+  useFilteredFeaturesByRegion();
 
   // Update zoom level on zoom event
   const handleZoom = React.useCallback(
