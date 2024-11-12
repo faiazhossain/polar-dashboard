@@ -43,7 +43,7 @@ export const buildingStatisticsOnClick = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload; // Accepts a boolean directly
     },
-    setGeohash: (state, action) => {
+    setGeohash: (state, action: PayloadAction<string>) => {
       state.geohash = action.payload;
     },
   },
