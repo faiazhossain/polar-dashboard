@@ -1,8 +1,9 @@
 //@ts-nocheck
 "use client";
 import { useEffect, useState } from "react";
-import { useAppSelector } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useMap } from "react-map-gl";
+import { addClickedCoordinate } from "@/lib/store/features/MapSlice/mapSlice";
 
 type State = {
   leftPanel: {
@@ -14,10 +15,11 @@ type State = {
 
 const useFilteredFeaturesByRegion = () => {
   const { myMapA } = useMap();
-
+  const dispatch = useAppDispatch();
   const region = useAppSelector(
     (state: State) => state.leftPanel.selectedRegion
   );
+
   const [filteredFeatures, setFilteredFeatures] = useState([]);
   const [hoveredFeatureId, setHoveredFeatureId] = useState(null);
 
@@ -37,64 +39,77 @@ const useFilteredFeaturesByRegion = () => {
         );
       });
 
-      setFilteredFeatures(regionFeatures); // Log filtered features here
+      setFilteredFeatures(regionFeatures);
     };
 
     // Fetch filtered features after the map style is loaded
     fetchFilteredFeatures();
     map.on("moveend", fetchFilteredFeatures);
 
-    // Track feature under the cursor on mousemove
-    map.on("mousemove", "polar-zone", (e) => {
-      const hoveredFeature = e.features[0];
+    map.on("click", "polar-zone", (e) => {
+      const clickedFeature = e.features[0];
+      if (!clickedFeature || !clickedFeature.properties.geohash) return;
 
-      if (!hoveredFeature || !hoveredFeature.properties.geohash) return;
+      const clickedGeoHash = clickedFeature.properties.geohash;
 
-      const featureGeoHash = hoveredFeature.properties.geohash;
+      // Query all features and find those with matching geohash === b_hash and rank > 6
+      const allFeatures = map.queryRenderedFeatures();
+      const matchingFeatures = allFeatures.filter(
+        (feature) =>
+          feature?.layer?.id === "polar-zone" &&
+          feature?.properties?.b_hash === clickedGeoHash &&
+          feature?.properties?.rank > 6
+      );
 
-      // Avoid updating the layer if already highlighting this feature
-      if (hoveredFeatureId === featureGeoHash) return;
-
-      setHoveredFeatureId(featureGeoHash);
-
-      const sourceData = {
+      // Create GeoJSON for the markers, placing one marker at each feature's center
+      const markerGeoJSON = {
         type: "FeatureCollection",
-        features: [hoveredFeature],
+        features: matchingFeatures.map((feature) => ({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates:
+              feature.geometry.type === "Point"
+                ? feature.geometry.coordinates
+                : getFeatureCenter(feature.geometry), // Use center for polygons
+          },
+          properties: {
+            rank: feature.properties.rank, // Add the rank to the properties
+          },
+        })),
       };
 
-      // Add or update the highlight layer with the hovered feature
-      if (map.getLayer("highlighted-feature")) {
-        map.getSource("highlighted-feature").setData(sourceData);
-      } else {
-        map.addSource("highlighted-feature", {
-          type: "geojson",
-          data: sourceData,
-        });
-        map.addLayer({
-          id: "highlighted-feature",
-          type: "fill",
-          source: "highlighted-feature",
-          paint: {
-            "fill-color": "red",
-            "fill-opacity": 0.6,
-          },
+      if (markerGeoJSON.features) {
+        markerGeoJSON.features.map((marker) => {
+          // Dispatch the coordinates and rank
+          dispatch(
+            addClickedCoordinate({
+              coordinates: marker.geometry.coordinates,
+              rank: marker.properties.rank,
+            })
+          );
         });
       }
-    });
 
-    map.on("mouseleave", "polar-zone", () => {
-      // Remove the highlight layer and reset hoveredFeatureId when the cursor leaves the layer
-      setHoveredFeatureId(null);
-      if (map.getLayer("highlighted-feature")) {
-        map.removeLayer("highlighted-feature");
-        map.removeSource("highlighted-feature");
+      // Recenter the map to the clicked feature's center point
+      const center =
+        clickedFeature.geometry.type === "Point"
+          ? clickedFeature.geometry.coordinates
+          : getFeatureCenter(clickedFeature.geometry);
+
+      if (center) {
+        map.flyTo({ center, zoom: 12 });
       }
     });
 
     return () => {
       map.off("moveend", fetchFilteredFeatures);
-      map.off("mousemove", "polar-zone");
-      map.off("mouseleave", "polar-zone");
+      map.off("click", "polar-zone");
+
+      if (map.getLayer("matched-features-markers")) {
+        map.removeLayer("matched-features-markers");
+        map.removeSource("matched-features-markers");
+      }
     };
   }, [myMapA, region, hoveredFeatureId]);
 
@@ -102,3 +117,16 @@ const useFilteredFeaturesByRegion = () => {
 };
 
 export default useFilteredFeaturesByRegion;
+
+// Helper function to calculate the center of a non-point feature
+const getFeatureCenter = (geometry) => {
+  if (!geometry || geometry.type !== "Polygon") return null;
+
+  const coordinates = geometry.coordinates[0]; // Outer ring
+  const [sumX, sumY] = coordinates.reduce(
+    ([sumX, sumY], [x, y]) => [sumX + x, sumY + y],
+    [0, 0]
+  );
+  const count = coordinates.length;
+  return [sumX / count, sumY / count]; // Average coordinates
+};

@@ -4,8 +4,9 @@ import total_polar_outlet from "@/public/statistics/outlet.svg";
 import poi from "@/public/statistics/poi.svg";
 import suggestion from "@/public/statistics/light.svg";
 import highlight from "@/public/statistics/light.svg";
-import export_png from "@/public/statistics/export.png";
+
 import { useAppSelector } from "@/lib/store/hooks";
+import Export from "./Export";
 
 // Define the props for StatisticCard
 interface StatisticCardProps {
@@ -166,15 +167,7 @@ const Statistics: React.FC = () => {
                 />
               </>
             )}
-            <button className="bg-[#EC1B23] text-white px-2 w-full py-4 rounded-[8px] hover:bg-[#dC1B23] transition-colors flex justify-center items-center gap-4">
-              <p>EXPORT</p>
-              <Image
-                src={export_png}
-                width={18}
-                height={16}
-                alt="export logo"
-              />
-            </button>
+            <Export />
           </div>
         </div>
       </div>

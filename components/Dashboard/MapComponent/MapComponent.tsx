@@ -32,6 +32,7 @@ import { FaInfoCircle } from "react-icons/fa";
 import { Padding } from "maplibre-gl";
 import AreaPopupOnClick from "./ui/AreaPopupOnClick";
 import useFilteredFeaturesByRegion from "./ui/useFilteredFeaturesByRegion";
+import ZoneClickedMarkers from "./MarkerSection/ZoneClickedMarkers";
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
@@ -168,7 +169,7 @@ function MapComponent() {
           borderRadius: 20,
           position: "relative",
         }}
-        mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green/style.json"
+        mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green_test/style.json"
         attributionControl={false}
       >
         <Link
@@ -193,7 +194,7 @@ function MapComponent() {
         {statisticsBuilding.poi_info && <AreaPopupOnClick />}
         <StatisticsOnHover mode={TimeFrame} />
         <BuildingStatisticsOnClick mode={TimeFrame} />
-
+        <ZoneClickedMarkers />
         {statistics && selection === "Zone" && (
           <Marker
             longitude={statistics?.lng}
