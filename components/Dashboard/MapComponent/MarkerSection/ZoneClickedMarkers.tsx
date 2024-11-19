@@ -1,12 +1,16 @@
-import { useAppSelector } from "@/lib/store/hooks";
-import React from "react";
-import { Marker } from "react-map-gl";
-import { motion } from "framer-motion";
-import Cirle from "@/public/circle.svg";
+import { useAppSelector } from '@/lib/store/hooks';
+import React from 'react';
+import { Marker } from 'react-map-gl';
+import { motion } from 'framer-motion';
+import Cirle from '@/public/circle.svg';
 
 const ZoneClickedMarkers = () => {
   const clickedZoneMarkers = useAppSelector(
     (state) => state.mapdata.clickedCoordinates
+  );
+  console.log(
+    '🚀 ~ ZoneClickedMarkers ~ clickedZoneMarkers:',
+    clickedZoneMarkers
   );
 
   return (
@@ -22,15 +26,15 @@ const ZoneClickedMarkers = () => {
               initial={{ y: -100, opacity: 0 }} // Start above the map
               animate={{ y: 0, opacity: 1 }} // Drop to the marker position
               transition={{
-                type: "spring",
+                type: 'spring',
                 stiffness: 200,
                 damping: 15,
                 duration: 0.5,
                 delay: index * 0.05, // Sequential delay based on index
               }}
               style={{
-                width: "30px", // Adjust size as needed
-                height: "30px",
+                width: '30px', // Adjust size as needed
+                height: '30px',
               }}
               src={Cirle.src} // Use .src if using imported image
               alt="Marker Icon"

@@ -1,10 +1,10 @@
 //@ts-nocheck
-import Image from "next/image";
-import React, { useState } from "react";
-import export_png from "@/public/statistics/export.png";
-import { useAppSelector } from "@/lib/store/hooks";
-import * as XLSX from "xlsx";
-import { message } from "antd"; // Import Ant Design's message component
+import Image from 'next/image';
+import React, { useState } from 'react';
+import export_png from '@/public/statistics/export.png';
+import { useAppSelector } from '@/lib/store/hooks';
+import * as XLSX from 'xlsx';
+import { message } from 'antd'; // Import Ant Design's message component
 
 // Define the type for geocoded data
 type GeocodedData = {
@@ -35,7 +35,7 @@ const Export = () => {
 
   const handleExport = async () => {
     if (clickedZoneMarkers.length === 0) {
-      message.error("No addresses to export!"); // Use Ant Design message.error for error notification
+      message.error('No addresses to export!'); // Use Ant Design message.error for error notification
       return;
     }
 
@@ -47,7 +47,7 @@ const Export = () => {
           const response = await fetch(
             `/api/reverse-geocode?latitude=${latitude}&longitude=${longitude}`
           );
-          if (!response.ok) throw new Error("API request failed");
+          if (!response.ok) throw new Error('API request failed');
 
           const data = await response.json();
 
@@ -58,10 +58,10 @@ const Export = () => {
 
       setGeocodedData(results);
       exportToExcel(results);
-      message.success("Export completed successfully!"); // Use Ant Design message.success for success notification
+      message.success('Export completed successfully!'); // Use Ant Design message.success for success notification
     } catch (error) {
-      console.error("Error during export:", error);
-      message.error("Failed to export coordinates!"); // Use Ant Design message.error for error notification
+      console.error('Error during export:', error);
+      message.error('Failed to export coordinates!'); // Use Ant Design message.error for error notification
     }
   };
 
@@ -80,7 +80,7 @@ const Export = () => {
     const worksheet = XLSX.utils.json_to_sheet(formattedData);
 
     // Append the worksheet to the workbook
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Exported Data");
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Exported Data');
 
     // Write and trigger download
     XLSX.writeFile(workbook, `Exported_Addresses of ${region?.value}.xlsx`);
