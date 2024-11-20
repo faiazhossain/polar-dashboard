@@ -1,12 +1,15 @@
-import Image, { StaticImageData } from "next/image";
-import React, { useState } from "react";
-import total_polar_outlet from "@/public/statistics/outlet.svg";
-import poi from "@/public/statistics/poi.svg";
-import suggestion from "@/public/statistics/light.svg";
-import highlight from "@/public/statistics/light.svg";
+import Image, { StaticImageData } from 'next/image';
+import React, { useState } from 'react';
+import total_polar_outlet from '@/public/statistics/outlet.svg';
+import poi from '@/public/statistics/poi.svg';
+import suggestion from '@/public/statistics/light.svg';
+import highlight from '@/public/statistics/light.svg';
 
-import { useAppSelector } from "@/lib/store/hooks";
-import Export from "./Export";
+import { useAppSelector } from '@/lib/store/hooks';
+import Export from './Export';
+import { Button, ConfigProvider, Tooltip } from 'antd';
+import { IoInformation } from 'react-icons/io5';
+import { FaInfoCircle } from 'react-icons/fa';
 
 // Define the props for StatisticCard
 interface StatisticCardProps {
@@ -26,7 +29,7 @@ const StatisticCard: React.FC<StatisticCardProps> = ({
   return (
     <div
       className={`flex items-center justify-between px-4 border border-gray-200 rounded-lg shadow flex-row ${
-        isHighlighted ? "col-span-1 md:col-span-3" : ""
+        isHighlighted ? 'col-span-1 md:col-span-3' : ''
       } @apply shadow-[0px_4px_4px_0px_#00000040]`}
     >
       <div className="flex flex-col justify-between p-1 leading-normal">
@@ -35,7 +38,7 @@ const StatisticCard: React.FC<StatisticCardProps> = ({
         </p>
         <p
           className={`text-${
-            isHighlighted ? "md" : "lg"
+            isHighlighted ? 'md' : 'lg'
           } font-bold text-[#EC1B23] dark:text-gray-400`}
         >
           {value}
@@ -56,12 +59,12 @@ const StatisticCard: React.FC<StatisticCardProps> = ({
 
 const parseAndFilterPoiInfo = (poiInfo: string): string => {
   // Split the string by commas to get individual key-value pairs
-  const poiEntries = poiInfo.split(", ");
+  const poiEntries = poiInfo.split(', ');
 
   // Convert the key-value pairs into an object
   const poiObject = poiEntries.reduce(
     (acc: Record<string, number | string>, entry) => {
-      const [key, value] = entry.split(": ");
+      const [key, value] = entry.split(': ');
       if (key && value) {
         acc[key] = isNaN(Number(value)) ? value : Number(value);
       }
@@ -71,7 +74,7 @@ const parseAndFilterPoiInfo = (poiInfo: string): string => {
   );
   // Filter the object to keep only values greater than 0 (excluding non-numeric values like 'region', 'division')
   const filteredPoiObject = Object.entries(poiObject)
-    .filter(([key, value]) => typeof value === "number" && value > 0)
+    .filter(([key, value]) => typeof value === 'number' && value > 0)
     .reduce((acc: Record<string, number>, [key, value]) => {
       acc[key] = value as number;
       return acc;
@@ -79,13 +82,13 @@ const parseAndFilterPoiInfo = (poiInfo: string): string => {
 
   // If no values are greater than 0, return a default message
   if (Object.keys(filteredPoiObject).length === 0) {
-    return "No data greater than 0";
+    return 'No data greater than 0';
   }
 
   // Convert the filtered object back to a string
   return Object.entries(filteredPoiObject)
     .map(([key, value]) => `${key}: ${value}`)
-    .join(", ");
+    .join(', ');
 };
 
 // Define the Statistics component
@@ -94,8 +97,12 @@ const Statistics: React.FC = () => {
   const statisticsBuilding = useAppSelector(
     (state) => state.buildingstatistics.buildingStatistics
   );
+  const clickedZoneMarkers = useAppSelector(
+    (state) => state.mapdata.clickedCoordinates
+  );
+  console.log('🚀 ~ clickedZoneMarkers:', clickedZoneMarkers.length);
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
-
+  const region = useAppSelector((state) => state.leftPanel.selectedRegion);
   const calculateTotalFromDetails = (details: string): number => {
     // Match numbers that are not preceded by 'rank:'
     const numbers = details.match(/(?<!rank:\s*)\b\d+\b/g);
@@ -110,7 +117,7 @@ const Statistics: React.FC = () => {
       <div className="w-full h-full flex justify-center items-center">
         <div className="gap-4 my-4">
           <div className="grid grid-cols-1 pt-12 md:grid-cols-3 gap-4 px-2 md:px-6">
-            {selection === "Zone" ? (
+            {selection === 'Zone' ? (
               <>
                 <StatisticCard
                   title="Total Polar Outlet (Zone)"
@@ -131,7 +138,7 @@ const Statistics: React.FC = () => {
                   title={`Key Highlight (Based on Zone)`}
                   value={
                     statistics?.poi_info ||
-                    "Click a specific block of a region to see data"
+                    'Click a specific block of a region to see data'
                   }
                   icon={highlight}
                   isHighlighted
@@ -147,7 +154,7 @@ const Statistics: React.FC = () => {
                 <StatisticCard
                   title="Number of POI (Building)"
                   value={calculateTotalFromDetails(
-                    statisticsBuilding?.poi_info || "0"
+                    statisticsBuilding?.poi_info || '0'
                   )}
                   icon={poi}
                 />
@@ -159,15 +166,30 @@ const Statistics: React.FC = () => {
                 <StatisticCard
                   title={`Key Highlight (Based on Building)`}
                   value={
-                    parseAndFilterPoiInfo(statisticsBuilding?.poi_info || "") ||
-                    "Click a specific building to see data"
+                    parseAndFilterPoiInfo(statisticsBuilding?.poi_info || '') ||
+                    'Click a specific building to see data'
                   }
                   icon={highlight}
                   isHighlighted
                 />
               </>
             )}
-            <Export />
+
+            {clickedZoneMarkers.length > 0 && <Export />}
+            {clickedZoneMarkers.length === 0 && region?.value && (
+              <Tooltip
+                placement="rightBottom"
+                title="You need to click on a zone in the Map to enable the export button. Without selecting a zone, the export option will not appear."
+              >
+                <Button
+                  type="link"
+                  className="p-0"
+                  style={{ color: '#EC1B23', padding: 0, margin: 0 }}
+                >
+                  Information for export <FaInfoCircle />
+                </Button>
+              </Tooltip>
+            )}
           </div>
         </div>
       </div>

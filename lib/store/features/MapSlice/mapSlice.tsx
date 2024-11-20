@@ -3,17 +3,21 @@ import { createSlice } from '@reduxjs/toolkit';
 export interface MapSlice {
   selectedButton: string;
   filteredGeohash: object;
-  clickedCoordinates: Array<{ coordinates: [number, number]; rank: number }>; // Store both coordinates and rank
+  clickedCoordinates: Array<{ coordinates: [number, number]; rank: number }>;
+  highlight: boolean;
+  selectedRankFromSlider: Number;
 }
 
 const initialState: MapSlice = {
   selectedButton: 'Zone',
   filteredGeohash: [],
-  clickedCoordinates: [], // Stores objects with coordinates and rank
+  clickedCoordinates: [],
+  highlight: false,
+  selectedRankFromSlider: 6,
 };
 
 export const mapSlice = createSlice({
-  name: 'leftPanel',
+  name: 'mapdata',
   initialState,
   reducers: {
     setSelectedButton: (state, action) => {
@@ -21,6 +25,9 @@ export const mapSlice = createSlice({
     },
     setFilteredGeohash: (state, action) => {
       state.filteredGeohash = action.payload;
+    },
+    setSelectedRankFromSlider: (state, action) => {
+      state.selectedRankFromSlider = action.payload;
     },
     addClickedCoordinate: (state, action) => {
       const data = new Map(
@@ -42,6 +49,9 @@ export const mapSlice = createSlice({
     clearClickedCoordinates: (state) => {
       state.clickedCoordinates = []; // Clear all clicked coordinates
     },
+    setHighlight: (state, action) => {
+      state.highlight = action.payload;
+    },
   },
 });
 
@@ -51,6 +61,8 @@ export const {
   setFilteredGeohash,
   addClickedCoordinate,
   clearClickedCoordinates,
+  setHighlight,
+  setSelectedRankFromSlider,
 } = mapSlice.actions;
 
 export default mapSlice.reducer;

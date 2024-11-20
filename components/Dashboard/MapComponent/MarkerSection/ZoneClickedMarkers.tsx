@@ -8,10 +8,6 @@ const ZoneClickedMarkers = () => {
   const clickedZoneMarkers = useAppSelector(
     (state) => state.mapdata.clickedCoordinates
   );
-  console.log(
-    '🚀 ~ ZoneClickedMarkers ~ clickedZoneMarkers:',
-    clickedZoneMarkers
-  );
 
   return (
     <div>

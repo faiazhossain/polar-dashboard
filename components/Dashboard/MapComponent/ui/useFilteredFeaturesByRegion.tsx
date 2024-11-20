@@ -1,9 +1,9 @@
 //@ts-nocheck
-"use client";
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { useMap } from "react-map-gl";
-import { addClickedCoordinate } from "@/lib/store/features/MapSlice/mapSlice";
+'use client';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
+import { useMap } from 'react-map-gl';
+import { addClickedCoordinate } from '@/lib/store/features/MapSlice/mapSlice';
 
 type State = {
   leftPanel: {
@@ -22,7 +22,9 @@ const useFilteredFeaturesByRegion = () => {
 
   const [filteredFeatures, setFilteredFeatures] = useState([]);
   const [hoveredFeatureId, setHoveredFeatureId] = useState(null);
-
+  const selectedRank = useAppSelector(
+    (state: any) => state?.mapdata?.selectedRankFromSlider
+  );
   useEffect(() => {
     const map = myMapA?.getMap();
     if (!map || !region?.value) return;
@@ -33,7 +35,7 @@ const useFilteredFeaturesByRegion = () => {
 
       const regionFeatures = allFeatures.filter((feature) => {
         return (
-          feature?.layer?.id === "polar-zone" &&
+          feature?.layer?.id === 'polar-zone' &&
           feature?.properties?.area === region.value &&
           feature?.properties?.geohash
         );
@@ -44,44 +46,46 @@ const useFilteredFeaturesByRegion = () => {
 
     // Fetch filtered features after the map style is loaded
     fetchFilteredFeatures();
-    map.on("moveend", fetchFilteredFeatures);
+    map.on('moveend', fetchFilteredFeatures);
 
-    map.on("click", "polar-zone", (e) => {
+    const handleClick = (e) => {
       const clickedFeature = e.features[0];
       if (!clickedFeature || !clickedFeature.properties.geohash) return;
 
       const clickedGeoHash = clickedFeature.properties.geohash;
 
-      // Query all features and find those with matching geohash === b_hash and rank > 6
+      // Query all features and find those with matching geohash === b_hash and rank > selectedRank
       const allFeatures = map.queryRenderedFeatures();
+      const selectedRankNumber = Number(selectedRank); // Use the updated value from `useAppSelector`
+
+      console.log('🚀 ~ handleClick ~ selectedRankNumber:', selectedRankNumber);
       const matchingFeatures = allFeatures.filter(
         (feature) =>
-          feature?.layer?.id === "polar-zone" &&
+          feature?.layer?.id === 'polar-zone' &&
           feature?.properties?.b_hash === clickedGeoHash &&
-          feature?.properties?.rank > 6
+          feature?.properties?.rank != null &&
+          Number(feature?.properties?.rank) > selectedRankNumber
       );
 
-      // Create GeoJSON for the markers, placing one marker at each feature's center
       const markerGeoJSON = {
-        type: "FeatureCollection",
+        type: 'FeatureCollection',
         features: matchingFeatures.map((feature) => ({
-          type: "Feature",
+          type: 'Feature',
           geometry: {
-            type: "Point",
+            type: 'Point',
             coordinates:
-              feature.geometry.type === "Point"
+              feature.geometry.type === 'Point'
                 ? feature.geometry.coordinates
-                : getFeatureCenter(feature.geometry), // Use center for polygons
+                : getFeatureCenter(feature.geometry),
           },
           properties: {
-            rank: feature.properties.rank, // Add the rank to the properties
+            rank: feature.properties.rank,
           },
         })),
       };
 
       if (markerGeoJSON.features) {
         markerGeoJSON.features.map((marker) => {
-          // Dispatch the coordinates and rank
           dispatch(
             addClickedCoordinate({
               coordinates: marker.geometry.coordinates,
@@ -91,27 +95,28 @@ const useFilteredFeaturesByRegion = () => {
         });
       }
 
-      // Recenter the map to the clicked feature's center point
       const center =
-        clickedFeature.geometry.type === "Point"
+        clickedFeature.geometry.type === 'Point'
           ? clickedFeature.geometry.coordinates
           : getFeatureCenter(clickedFeature.geometry);
 
       if (center) {
         map.flyTo({ center, zoom: 12 });
       }
-    });
+    };
+
+    map.on('click', 'polar-zone', handleClick);
 
     return () => {
-      map.off("moveend", fetchFilteredFeatures);
-      map.off("click", "polar-zone");
+      map.off('moveend', fetchFilteredFeatures);
+      map.off('click', 'polar-zone', handleClick);
 
-      if (map.getLayer("matched-features-markers")) {
-        map.removeLayer("matched-features-markers");
-        map.removeSource("matched-features-markers");
+      if (map.getLayer('matched-features-markers')) {
+        map.removeLayer('matched-features-markers');
+        map.removeSource('matched-features-markers');
       }
     };
-  }, [myMapA, region, hoveredFeatureId]);
+  }, [myMapA, region, selectedRank, hoveredFeatureId, dispatch]);
 
   return filteredFeatures;
 };
@@ -120,7 +125,7 @@ export default useFilteredFeaturesByRegion;
 
 // Helper function to calculate the center of a non-point feature
 const getFeatureCenter = (geometry) => {
-  if (!geometry || geometry.type !== "Polygon") return null;
+  if (!geometry || geometry.type !== 'Polygon') return null;
 
   const coordinates = geometry.coordinates[0]; // Outer ring
   const [sumX, sumY] = coordinates.reduce(

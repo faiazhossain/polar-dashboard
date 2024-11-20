@@ -1,9 +1,9 @@
-import * as React from "react";
-import Map, { MapRef } from "react-map-gl/maplibre";
-import "maplibre-gl/dist/maplibre-gl.css";
-import { Switch } from "@/components/ui/switch";
-import BarikoiLogo from "@/app/image/barikoi-logo-black.svg";
-import { throttle } from "lodash";
+import * as React from 'react';
+import Map, { MapRef } from 'react-map-gl/maplibre';
+import 'maplibre-gl/dist/maplibre-gl.css';
+import { Switch } from '@/components/ui/switch';
+import BarikoiLogo from '@/app/image/barikoi-logo-black.svg';
+import { throttle } from 'lodash';
 
 import {
   AttributionControl,
@@ -11,28 +11,28 @@ import {
   GeolocateControl,
   Marker,
   NavigationControl,
-} from "react-map-gl";
+} from 'react-map-gl';
 
-import { useAppSelector } from "@/lib/store/hooks";
-import useFilterLayers from "./ui/FilterLayers";
-import StatisticsOnHover from "./ui/StatisticsOnClick";
-import PopUpOnClick from "./ui/PopUpOnClick";
-import ToggleButton from "./ui/ToggleButton";
-import BuildingStatisticsOnClick from "./ui/BuildingStatisticsOnClick";
-import Image from "next/image";
-import Link from "next/link";
+import { useAppSelector } from '@/lib/store/hooks';
+import useFilterLayers from './ui/FilterLayers';
+import StatisticsOnHover from './ui/StatisticsOnClick';
+import PopUpOnClick from './ui/PopUpOnClick';
+import ToggleButton from './ui/ToggleButton';
+import BuildingStatisticsOnClick from './ui/BuildingStatisticsOnClick';
+import Image from 'next/image';
+import Link from 'next/link';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Button } from "antd";
-import { FaInfoCircle } from "react-icons/fa";
-import { Padding } from "maplibre-gl";
-import AreaPopupOnClick from "./ui/AreaPopupOnClick";
-import useFilteredFeaturesByRegion from "./ui/useFilteredFeaturesByRegion";
-import ZoneClickedMarkers from "./MarkerSection/ZoneClickedMarkers";
+} from '@/components/ui/tooltip';
+import { Button } from 'antd';
+import { FaInfoCircle } from 'react-icons/fa';
+import { Padding } from 'maplibre-gl';
+import AreaPopupOnClick from './ui/AreaPopupOnClick';
+import useFilteredFeaturesByRegion from './ui/useFilteredFeaturesByRegion';
+import ZoneClickedMarkers from './MarkerSection/ZoneClickedMarkers';
 
 function MapComponent() {
   const mapRef = React.useRef<MapRef>(null);
@@ -44,16 +44,7 @@ function MapComponent() {
   );
   const bbox = useAppSelector((state: any) => state.leftPanel.boundingBox);
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
-  const region = useAppSelector((state: any) => state.leftPanel.selectedRegion);
-  const ageGroup = useAppSelector(
-    (state: any) => state.leftPanel.selectedAgeGroup
-  );
-  const genderGroup = useAppSelector(
-    (state: any) => state.leftPanel.selectedGender
-  );
-  const affluenceGroup = useAppSelector(
-    (state: any) => state.leftPanel.selectedAffluence
-  );
+  const highlight = useAppSelector((state: any) => state?.mapdata?.highlight);
   useFilterLayers();
   useFilteredFeaturesByRegion();
 
@@ -69,7 +60,7 @@ function MapComponent() {
   );
 
   React.useEffect(() => {
-    if (statistics.lng != 0 && selection === "Zone" && mapRef.current) {
+    if (statistics.lng != 0 && selection === 'Zone' && mapRef.current) {
       mapRef.current.flyTo({
         center: [statistics.lng, statistics.lat],
         essential: true,
@@ -80,7 +71,7 @@ function MapComponent() {
   React.useEffect(() => {
     if (
       statisticsBuilding.poi_info &&
-      selection === "Building" &&
+      selection === 'Building' &&
       mapRef.current
     ) {
       mapRef.current.flyTo({
@@ -111,13 +102,13 @@ function MapComponent() {
           {/* Current Zoom Level */}
           <div className="flex justify-between items-center space-x-2">
             <span className="ml-4 mr-2 text-base sm:text-xs md:text-lg lg:text-lg">
-              Current zoom level:{" "}
+              Current zoom level:{' '}
             </span>
             <div
               className={`${
                 parseFloat(zoomLevel.toFixed(2)) >= 14
-                  ? "text-green-600"
-                  : "text-red-400"
+                  ? 'text-green-600'
+                  : 'text-red-400'
               } font-bold text-base sm:text-xs md:text-md lg:text-lg`}
             >
               {zoomLevel.toFixed(2)}
@@ -163,11 +154,12 @@ function MapComponent() {
         }}
         onZoomEnd={handleZoom} // Listen for zoom changes
         style={{
-          width: "100%",
-          height: "100%",
-          minHeight: "68vh",
+          width: '100%',
+          height: '100%',
+          minHeight: '68vh',
           borderRadius: 20,
-          position: "relative",
+          position: 'relative',
+          border: `${highlight ? '2px solid #FF9B50' : ''}`,
         }}
         mapStyle="https://tiles.barikoimaps.dev/styles/barkoi_green_test/style.json"
         attributionControl={false}
@@ -195,14 +187,14 @@ function MapComponent() {
         <StatisticsOnHover mode={TimeFrame} />
         <BuildingStatisticsOnClick mode={TimeFrame} />
         <ZoneClickedMarkers />
-        {statistics && selection === "Zone" && (
+        {statistics && selection === 'Zone' && (
           <Marker
             longitude={statistics?.lng}
             color="red"
             latitude={statistics?.lat}
           />
         )}
-        {statisticsBuilding.poi_info && selection === "Building" && (
+        {statisticsBuilding.poi_info && selection === 'Building' && (
           <Marker
             longitude={statisticsBuilding?.lng}
             color="blue"

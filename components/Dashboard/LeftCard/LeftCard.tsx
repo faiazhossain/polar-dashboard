@@ -1,6 +1,6 @@
 //@ts-nocheck
-import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import React, { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import {
   timeFrame,
   setSelectedRegion,
@@ -10,20 +10,28 @@ import {
   setHighestAffluence,
   setHighestAgeGroup,
   setHighestGender,
-} from "@/lib/store/features/leftPanelSlice/leftPanelDataSlice";
-import { FaInfoCircle } from "react-icons/fa";
+} from '@/lib/store/features/leftPanelSlice/leftPanelDataSlice';
+import { FaInfoCircle } from 'react-icons/fa';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Button, Select } from "antd";
-import RegionSelect from "./RegionSelect";
-import { setStatistics } from "@/lib/store/features/statistics/zoneStatisticsSlice";
-import { clearClickedEntity } from "@/lib/store/features/statistics/clickedEntitySlice";
-import { setBuildingStatistics } from "@/lib/store/features/statistics/buildingStatisticsSlice";
-import { useMap } from "react-map-gl";
+} from '@/components/ui/tooltip';
+import { Button, Select } from 'antd';
+import RegionSelect from './RegionSelect';
+import { setStatistics } from '@/lib/store/features/statistics/zoneStatisticsSlice';
+import { clearClickedEntity } from '@/lib/store/features/statistics/clickedEntitySlice';
+import {
+  setBuildingStatistics,
+  setGeohash,
+} from '@/lib/store/features/statistics/buildingStatisticsSlice';
+import { useMap } from 'react-map-gl';
+import {
+  addClickedCoordinate,
+  clearClickedCoordinates,
+  setSelectedRankFromSlider,
+} from '@/lib/store/features/MapSlice/mapSlice';
 
 const LeftCard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -47,75 +55,78 @@ const LeftCard: React.FC = () => {
 
   const dropdownData = [
     {
-      label: "Time Based Filtration",
-      options: ["6AM-12PM", "12PM-6PM", "6PM-12AM", "12AM-6AM"],
+      label: 'Time Based Filtration',
+      options: ['6AM-12PM', '12PM-6PM', '6PM-12AM', '12AM-6AM'],
       value: timeState,
-      onSelect: handleDropdownChange(timeFrame, "Time Based Filtration"),
+      onSelect: handleDropdownChange(timeFrame, 'Time Based Filtration'),
     },
     {
-      label: "Region",
-      placeHolder: "Select Region",
+      label: 'Region',
+      placeHolder: 'Select Region',
       value: selectedRegion,
       component: <RegionSelect />,
       disabled: !timeState,
     },
     {
-      label: "Affluence",
-      placeHolder: "Select Affluence",
-      options: ["Ultra High", "High", "Medium", "Low"],
+      label: 'Affluence',
+      placeHolder: 'Select Affluence',
+      options: ['Ultra High', 'High', 'Medium', 'Low'],
       value: selectedAffluence,
-      onSelect: handleDropdownChange(setSelectedAffluence, "Affluence"),
+      onSelect: handleDropdownChange(setSelectedAffluence, 'Affluence'),
       disabled: !selectedRegion?.value, // Enable only if region is selected
     },
     {
-      label: "Select Gender",
-      placeHolder: "Select Gender",
-      options: ["Male", "Female"],
+      label: 'Select Gender',
+      placeHolder: 'Select Gender',
+      options: ['Male', 'Female'],
       value: selectedGender,
-      onSelect: handleDropdownChange(setSelectedGender, "Select Gender"),
+      onSelect: handleDropdownChange(setSelectedGender, 'Select Gender'),
       disabled: !selectedRegion?.value, // Enable only if region is selected
     },
     {
-      label: "Age Group",
-      placeHolder: "Select Age Group",
-      options: ["18-24", "25-34", "35-49", "50"],
+      label: 'Age Group',
+      placeHolder: 'Select Age Group',
+      options: ['18-24', '25-34', '35-49', '50'],
       value: selectedAgeGroup,
-      onSelect: handleDropdownChange(setSelectedAgeGroup, "Age Group"),
+      onSelect: handleDropdownChange(setSelectedAgeGroup, 'Age Group'),
       disabled: !selectedRegion?.value, // Enable only if region is selected
     },
   ];
 
   // Reset all dropdowns
   const resetAllValues = () => {
-    dispatch(setSelectedRegion(""));
-    dispatch(setSelectedAffluence(""));
-    dispatch(setSelectedAgeGroup(""));
-    dispatch(setSelectedGender(""));
+    dispatch(setSelectedRegion(''));
+    dispatch(setSelectedAffluence(''));
+    dispatch(setSelectedAgeGroup(''));
+    dispatch(setSelectedGender(''));
     dispatch(setHighestAffluence([]));
     dispatch(setHighestAgeGroup([]));
     dispatch(setHighestGender([]));
+    dispatch(setGeohash(''));
+    dispatch(clearClickedCoordinates());
+    dispatch(setSelectedRankFromSlider(6));
 
     // Array of layer IDs to remove
     const layerIds = [
-      "highlight-highest-age",
-      "highlight-highest-gender",
-      "highlight-highest-affluence",
-      "highlight-highest-age-stroke",
-      "highlight-highest-gender-stroke",
-      "highlight-highest-affluence-stroke",
+      'highlight-highest-age',
+      'highlight-highest-gender',
+      'highlight-highest-affluence',
+      'highlight-highest-age-stroke',
+      'highlight-highest-gender-stroke',
+      'highlight-highest-affluence-stroke',
     ];
     const layerSources = [
-      "highest-age-feature",
-      "highest-gender-feature",
-      "highest-affluence-feature",
+      'highest-age-feature',
+      'highest-gender-feature',
+      'highest-affluence-feature',
     ];
 
     dispatch(
       setStatistics({
-        "18-24": 0,
-        "25-34": 0,
-        "35-49": 0,
-        "50": 0,
+        '18-24': 0,
+        '25-34': 0,
+        '35-49': 0,
+        '50': 0,
         DayCount: 0,
         NightCount: 0,
         F: 0,
@@ -123,22 +134,22 @@ const LeftCard: React.FC = () => {
         M: 0,
         Mid: 0,
         Ultra_High: 0,
-        details: "",
-        geohash: "",
+        details: '',
+        geohash: '',
         lat: 0,
         lng: 0,
         low: 0,
         poi_count: 0,
-        region: "",
+        region: '',
       })
     );
     dispatch(
       setBuildingStatistics({
-        details: "",
+        details: '',
         lat: 0,
         lng: 0,
         poi_count: 0,
-        region: "",
+        region: '',
         rank: 0,
       })
     );
@@ -149,22 +160,22 @@ const LeftCard: React.FC = () => {
 
   const colorMap = {
     green: {
-      gradientFrom: "from-green-300",
-      gradientTo: "to-green-100",
-      textColor: "text-green-900",
-      badgeBg: "bg-green-600",
+      gradientFrom: 'from-green-300',
+      gradientTo: 'to-green-100',
+      textColor: 'text-green-900',
+      badgeBg: 'bg-green-600',
     },
     blue: {
-      gradientFrom: "from-blue-300",
-      gradientTo: "to-blue-100",
-      textColor: "text-blue-900",
-      badgeBg: "bg-blue-600",
+      gradientFrom: 'from-blue-300',
+      gradientTo: 'to-blue-100',
+      textColor: 'text-blue-900',
+      badgeBg: 'bg-blue-600',
     },
     red: {
-      gradientFrom: "from-red-300",
-      gradientTo: "to-red-100",
-      textColor: "text-red-900",
-      badgeBg: "bg-red-600",
+      gradientFrom: 'from-red-300',
+      gradientTo: 'to-red-100',
+      textColor: 'text-red-900',
+      badgeBg: 'bg-red-600',
     },
   };
 
@@ -194,14 +205,14 @@ const LeftCard: React.FC = () => {
 
   // Maps for affluence and gender labels
   const affluenceMap = {
-    Ultra_High: "Ultra High",
-    Mid: "Medium",
-    Low: "Low",
+    Ultra_High: 'Ultra High',
+    Mid: 'Medium',
+    Low: 'Low',
   };
 
   const genderMap = {
-    F: "Female",
-    M: "Male",
+    F: 'Female',
+    M: 'Male',
   };
 
   return (
@@ -210,7 +221,7 @@ const LeftCard: React.FC = () => {
         <div key={index} className="mb-4">
           <label className="text-sm mb-1 font-extralight flex items-center">
             <div>{dropdown.label}</div>
-            {dropdown.label === "Time Based Filtration" && (
+            {dropdown.label === 'Time Based Filtration' && (
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -226,13 +237,13 @@ const LeftCard: React.FC = () => {
               </TooltipProvider>
             )}
           </label>
-          {dropdown.label === "Region" ? (
+          {dropdown.label === 'Region' ? (
             dropdown.component
           ) : (
             <Select
-              value={dropdown?.value !== "" ? dropdown.value : null}
+              value={dropdown?.value !== '' ? dropdown.value : null}
               onSelect={dropdown.onSelect}
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
               disabled={dropdown.disabled}
               placeholder={dropdown.placeHolder}
             >
@@ -256,20 +267,20 @@ const LeftCard: React.FC = () => {
       <div className="mt-4">
         {renderStatistic(
           highestAffluence,
-          "green",
-          "% of Affluence in the Location",
+          'green',
+          '% of Affluence in the Location',
           affluenceMap
         )}
         {renderStatistic(
           highestGender,
-          "blue",
-          "% of Gender in the Location",
+          'blue',
+          '% of Gender in the Location',
           genderMap
         )}
         {renderStatistic(
           highestAgeGroup,
-          "red",
-          "% of Age Band in the Location",
+          'red',
+          '% of Age Band in the Location',
           null
         )}
       </div>

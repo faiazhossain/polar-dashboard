@@ -1,15 +1,23 @@
 //@ts-nocheck
-import React, { useState, useEffect } from "react";
-import { Select, Spin, Alert } from "antd";
-import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { setSelectedRegion } from "@/lib/store/features/leftPanelSlice/leftPanelDataSlice";
-import { useMap } from "react-map-gl";
-import { setStatistics } from "@/lib/store/features/statistics/zoneStatisticsSlice";
+import React, { useState, useEffect } from 'react';
+import { Select, Spin, Alert, Tooltip, Button } from 'antd';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
+import { setSelectedRegion } from '@/lib/store/features/leftPanelSlice/leftPanelDataSlice';
+import { useMap } from 'react-map-gl';
+import { setStatistics } from '@/lib/store/features/statistics/zoneStatisticsSlice';
+import { InfoCircleOutlined } from '@ant-design/icons';
 import {
   setBuildingStatistics,
   setGeohash,
-} from "@/lib/store/features/statistics/buildingStatisticsSlice";
-
+} from '@/lib/store/features/statistics/buildingStatisticsSlice';
+import {
+  setHighlight,
+  setSelectedRankFromSlider,
+} from '@/lib/store/features/MapSlice/mapSlice';
+import { message } from 'antd'; // Import Ant Design's message component
+import { Slider } from 'antd';
+import ToggleButton from './ToggleButton';
+import { FaInfoCircle } from 'react-icons/fa';
 const { Option } = Select;
 
 const transformData = (data) => {
@@ -45,12 +53,14 @@ const transformData = (data) => {
 
 const RegionSelect = () => {
   const [data, setData] = useState({});
-  const [selectedDivision, setSelectedDivision] = useState("");
-  const [selectedPid, setSelectedPid] = useState("");
-  const [selectedValue, setSelectedValue] = useState("");
-  const [selectedGeohash, setSelectedGeohash] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDivision, setSelectedDivision] = useState('');
+  const [selectedPid, setSelectedPid] = useState('');
+  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedGeohash, setSelectedGeohash] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [toggleValue, setToggleValue] = useState(false);
+  console.log('🚀 ~ RegionSelect ~ toggleValue:', toggleValue);
   const [error, setError] = useState(null);
   const dispatch = useAppDispatch();
   const { myMapA } = useMap();
@@ -58,12 +68,14 @@ const RegionSelect = () => {
   const filteredGeohashData = useAppSelector(
     (state) => state?.mapdata?.filteredGeohash
   );
-
+  const selectedRank = useAppSelector(
+    (state: any) => state?.mapdata?.selectedRankFromSlider
+  );
   useEffect(() => {
-    fetch("/data.json")
+    fetch('/data.json')
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error('Network response was not ok');
         }
         return response.json();
       })
@@ -72,8 +84,8 @@ const RegionSelect = () => {
         setData(transformedData);
       })
       .catch((error) => {
-        console.error("Error fetching JSON data:", error);
-        setError("Failed to load data. Please try again later.");
+        console.error('Error fetching JSON data:', error);
+        setError('Failed to load data. Please try again later.');
       })
       .finally(() => {
         setLoading(false);
@@ -82,15 +94,15 @@ const RegionSelect = () => {
 
   const handleDivisionChange = (value) => {
     setSelectedDivision(value);
-    setSelectedPid("");
-    setSelectedValue("");
-    setSelectedGeohash("");
+    setSelectedPid('');
+    setSelectedValue('');
+    setSelectedGeohash('');
   };
 
   const handlePidChange = (value) => {
     setSelectedPid(value);
-    setSelectedValue("");
-    setSelectedGeohash("");
+    setSelectedValue('');
+    setSelectedGeohash('');
   };
   const handleGeohashChange = (value) => {
     setSelectedGeohash(value);
@@ -99,7 +111,7 @@ const RegionSelect = () => {
 
   const handleValueChange = (value) => {
     setSelectedValue(value);
-    setSelectedGeohash("");
+    setSelectedGeohash('');
 
     const selectedItem = data[selectedDivision].children[
       selectedPid
@@ -116,10 +128,10 @@ const RegionSelect = () => {
     }
     dispatch(
       setStatistics({
-        "18-24": 0,
-        "25-34": 0,
-        "35-49": 0,
-        "50": 0,
+        '18-24': 0,
+        '25-34': 0,
+        '35-49': 0,
+        '50': 0,
         DayCount: 0,
         NightCount: 0,
         F: 0,
@@ -127,22 +139,22 @@ const RegionSelect = () => {
         M: 0,
         Mid: 0,
         Ultra_High: 0,
-        details: "",
-        geohash: "",
+        details: '',
+        geohash: '',
         lat: 0,
         lng: 0,
         low: 0,
         poi_count: 0,
-        region: "",
+        region: '',
       })
     );
     dispatch(
       setBuildingStatistics({
-        details: "",
+        details: '',
         lat: 0,
         lng: 0,
         poi_count: 0,
-        region: "",
+        region: '',
         rank: 0,
       })
     );
@@ -168,12 +180,21 @@ const RegionSelect = () => {
       : [];
 
   useEffect(() => {
-    if (selectedRegion === "") {
-      setSelectedDivision("");
-      setSelectedPid("");
-      setSelectedValue("");
+    if (selectedRegion === '') {
+      setSelectedDivision('');
+      setSelectedPid('');
+      setSelectedValue('');
     }
   }, [selectedRegion]);
+
+  const [rank, setRank] = useState(6); // Default value set to 6 (or any number)
+
+  const handleRankChange = (value) => {
+    dispatch(setSelectedRankFromSlider(value));
+  };
+  const handleToggleChange = (checked: boolean) => {
+    setToggleValue(checked); // Update the parent state with the toggle value
+  };
 
   return (
     <div className="p-4">
@@ -244,27 +265,49 @@ const RegionSelect = () => {
               </Select>
             </div>
           )}
-          {selectedValue && (
-            <div>
-              <label className="block text-gray-700 mb-2 text-sm">
-                Select Zone
-              </label>
-              <Select
-                showSearch
-                value={selectedGeohash}
-                onChange={handleGeohashChange}
-                placeholder="Select Value"
-                className="w-full"
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().includes(input.toLowerCase())
+
+          {selectedValue && selectedRank && (
+            <div className="mt-4 flex items-center gap-4">
+              <ToggleButton onToggleChange={handleToggleChange} />
+              <Tooltip
+                placement="rightBottom"
+                title={
+                  toggleValue
+                    ? `The Export Feature is currently enabled, and you are viewing the ${selectedValue} area on the map. Click on your desired zone within this area to export the data. The export will include building information. After selecting the zone, click the export button below to download the data.`
+                    : 'The Export Feature is currently disabled, which means you cannot export any data. However, you can view building or zone data by clicking on a building or zone.'
                 }
               >
-                {filteredGeohashData.map((item) => (
-                  <Option key={item} value={item}>
-                    {item}
-                  </Option>
-                ))}
-              </Select>
+                <div className="flex items-center h-full">
+                  <FaInfoCircle className="text-lg" />
+                </div>
+              </Tooltip>
+            </div>
+          )}
+
+          {toggleValue && (
+            <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+              <div className="flex items-center mb-2">
+                <h3 className="text-md font-semibold">
+                  Select Rank (Greater Than {selectedRank})
+                </h3>
+                <Tooltip
+                  title={`Select a value to export all addresses in your selected zone that are greater than this value (e.g., as you have selected ${selectedRank} will export all addresses where Rank is greater than ${selectedRank} in the zone).`}
+                >
+                  <Button
+                    type="link"
+                    icon={<FaInfoCircle className="text-lg text-black" />}
+                    className="ml-2 text-black"
+                  />
+                </Tooltip>
+              </div>
+              <Slider
+                min={0} // Minimum value set to 6
+                max={100} // Maximum value can be adjusted as needed
+                step={1} // Increment by 1 (or adjust as needed)
+                defaultValue={selectedRank}
+                onChange={handleRankChange}
+                tooltip={{ formatter: (value) => `Rank ${value}` }}
+              />
             </div>
           )}
         </div>
