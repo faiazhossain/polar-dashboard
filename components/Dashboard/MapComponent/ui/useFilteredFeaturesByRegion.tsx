@@ -25,6 +25,10 @@ const useFilteredFeaturesByRegion = () => {
   const selectedRank = useAppSelector(
     (state: any) => state?.mapdata?.selectedRankFromSlider
   );
+  const toggleInfo = useAppSelector(
+    (state: any) => state?.leftPanel?.toggleInfo
+  );
+
   useEffect(() => {
     const map = myMapA?.getMap();
     if (!map || !region?.value) return;
@@ -49,6 +53,7 @@ const useFilteredFeaturesByRegion = () => {
     map.on('moveend', fetchFilteredFeatures);
 
     const handleClick = (e) => {
+      if (!toggleInfo) return;
       const clickedFeature = e.features[0];
       if (!clickedFeature || !clickedFeature.properties.geohash) return;
 
@@ -58,7 +63,6 @@ const useFilteredFeaturesByRegion = () => {
       const allFeatures = map.queryRenderedFeatures();
       const selectedRankNumber = Number(selectedRank); // Use the updated value from `useAppSelector`
 
-      console.log('🚀 ~ handleClick ~ selectedRankNumber:', selectedRankNumber);
       const matchingFeatures = allFeatures.filter(
         (feature) =>
           feature?.layer?.id === 'polar-zone' &&
@@ -116,7 +120,7 @@ const useFilteredFeaturesByRegion = () => {
         map.removeSource('matched-features-markers');
       }
     };
-  }, [myMapA, region, selectedRank, hoveredFeatureId, dispatch]);
+  }, [myMapA, region, selectedRank, hoveredFeatureId, toggleInfo, dispatch]);
 
   return filteredFeatures;
 };

@@ -246,6 +246,7 @@ const LeftCard: React.FC = () => {
               style={{ width: '100%' }}
               disabled={dropdown.disabled}
               placeholder={dropdown.placeHolder}
+              id="section-two-element"
             >
               {dropdown.options?.map((option) => (
                 <Select.Option key={option} value={option}>

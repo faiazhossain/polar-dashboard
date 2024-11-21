@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 interface Region {
   pId: string | undefined;
@@ -22,19 +22,21 @@ export interface LeftPanelState {
   highestAffluence: object;
   highestGender: object;
   highestAgeGroup: object;
+  toggleInfo: boolean;
 }
 
 const initialState: LeftPanelState = {
-  timeState: "6AM-12PM",
-  zoneState: "",
+  timeState: '6AM-12PM',
+  zoneState: '',
   selectedRegion: { pId: undefined, title: undefined },
-  selectedAffluence: "",
-  selectedAgeGroup: "",
-  selectedGender: "",
-  selectedPriceRange: "",
+  selectedAffluence: '',
+  selectedAgeGroup: '',
+  selectedGender: '',
+  selectedPriceRange: '',
   highestAffluence: [],
   highestGender: [],
   highestAgeGroup: [],
+  toggleInfo: false,
   boundingBox: {
     minLng: undefined,
     minLat: undefined,
@@ -44,7 +46,7 @@ const initialState: LeftPanelState = {
 };
 
 export const leftPanelSlice = createSlice({
-  name: "leftPanel",
+  name: 'leftPanel',
   initialState,
   reducers: {
     timeFrame: (state, action) => {
@@ -80,6 +82,9 @@ export const leftPanelSlice = createSlice({
     setHighestAgeGroup: (state, action) => {
       state.highestAgeGroup = action.payload;
     },
+    setToggleInfo: (state, action) => {
+      state.toggleInfo = action.payload;
+    },
   },
 });
 
@@ -96,5 +101,6 @@ export const {
   setHighestAffluence,
   setHighestGender,
   setHighestAgeGroup,
+  setToggleInfo,
 } = leftPanelSlice.actions;
 export default leftPanelSlice.reducer;

@@ -41,7 +41,6 @@ export const mapSlice = createSlice({
       if (!data.has(key)) {
         data.set(key, action.payload); // Add new unique coordinate
       }
-
       // Convert Map back to array
       state.clickedCoordinates = Array.from(data.values());
     },

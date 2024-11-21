@@ -72,6 +72,9 @@ const Export = () => {
       Latitude: item.latitude, // Use latitude from the updated response
       Longitude: item.longitude, // Use longitude from the updated response
       Address: item.place.address, // Use the address from the response
+      Area: item.place.area,
+      District: item.place.district,
+      Division: item.place.division,
       Rank: item.rank, // Include the rank in the export data
     }));
 

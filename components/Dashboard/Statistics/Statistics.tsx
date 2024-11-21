@@ -100,8 +100,12 @@ const Statistics: React.FC = () => {
   const clickedZoneMarkers = useAppSelector(
     (state) => state.mapdata.clickedCoordinates
   );
-  console.log('🚀 ~ clickedZoneMarkers:', clickedZoneMarkers.length);
+
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
+  const toggleInfo = useAppSelector(
+    (state: any) => state?.leftPanel?.toggleInfo
+  );
+
   const region = useAppSelector((state) => state.leftPanel.selectedRegion);
   const calculateTotalFromDetails = (details: string): number => {
     // Match numbers that are not preceded by 'rank:'
@@ -176,10 +180,15 @@ const Statistics: React.FC = () => {
             )}
 
             {clickedZoneMarkers.length > 0 && <Export />}
+
             {clickedZoneMarkers.length === 0 && region?.value && (
               <Tooltip
                 placement="rightBottom"
-                title="You need to click on a zone in the Map to enable the export button. Without selecting a zone, the export option will not appear."
+                title={` ${
+                  !toggleInfo
+                    ? 'Currently your Data Extract Mode is off, Please turn it on and then click on a Zone. '
+                    : 'You need to click on a zone in the Map to enable the export button. Without selecting a zone, the export option will not appear.'
+                }`}
               >
                 <Button
                   type="link"

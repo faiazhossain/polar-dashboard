@@ -2,7 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { Select, Spin, Alert, Tooltip, Button } from 'antd';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
-import { setSelectedRegion } from '@/lib/store/features/leftPanelSlice/leftPanelDataSlice';
+import {
+  setSelectedRegion,
+  setToggleInfo,
+} from '@/lib/store/features/leftPanelSlice/leftPanelDataSlice';
 import { useMap } from 'react-map-gl';
 import { setStatistics } from '@/lib/store/features/statistics/zoneStatisticsSlice';
 import { InfoCircleOutlined } from '@ant-design/icons';
@@ -11,6 +14,8 @@ import {
   setGeohash,
 } from '@/lib/store/features/statistics/buildingStatisticsSlice';
 import {
+  addClickedCoordinate,
+  clearClickedCoordinates,
   setHighlight,
   setSelectedRankFromSlider,
 } from '@/lib/store/features/MapSlice/mapSlice';
@@ -59,18 +64,23 @@ const RegionSelect = () => {
   const [selectedGeohash, setSelectedGeohash] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
-  const [toggleValue, setToggleValue] = useState(false);
-  console.log('🚀 ~ RegionSelect ~ toggleValue:', toggleValue);
   const [error, setError] = useState(null);
   const dispatch = useAppDispatch();
   const { myMapA } = useMap();
   const { selectedRegion } = useAppSelector((state) => state.leftPanel);
+
   const filteredGeohashData = useAppSelector(
     (state) => state?.mapdata?.filteredGeohash
   );
+
   const selectedRank = useAppSelector(
     (state: any) => state?.mapdata?.selectedRankFromSlider
   );
+
+  const toggleInfo = useAppSelector(
+    (state: any) => state?.leftPanel?.toggleInfo
+  );
+
   useEffect(() => {
     fetch('/data.json')
       .then((response) => {
@@ -193,7 +203,10 @@ const RegionSelect = () => {
     dispatch(setSelectedRankFromSlider(value));
   };
   const handleToggleChange = (checked: boolean) => {
-    setToggleValue(checked); // Update the parent state with the toggle value
+    dispatch(setToggleInfo(checked)); // Update the parent state with the toggle value
+    if (!checked) {
+      dispatch(clearClickedCoordinates());
+    }
   };
 
   return (
@@ -272,7 +285,7 @@ const RegionSelect = () => {
               <Tooltip
                 placement="rightBottom"
                 title={
-                  toggleValue
+                  toggleInfo
                     ? `The Export Feature is currently enabled, and you are viewing the ${selectedValue} area on the map. Click on your desired zone within this area to export the data. The export will include building information. After selecting the zone, click the export button below to download the data.`
                     : 'The Export Feature is currently disabled, which means you cannot export any data. However, you can view building or zone data by clicking on a building or zone.'
                 }
@@ -284,7 +297,7 @@ const RegionSelect = () => {
             </div>
           )}
 
-          {toggleValue && (
+          {toggleInfo && (
             <div className="p-4 bg-gray-100 rounded-lg shadow-md">
               <div className="flex items-center mb-2">
                 <h3 className="text-md font-semibold">
