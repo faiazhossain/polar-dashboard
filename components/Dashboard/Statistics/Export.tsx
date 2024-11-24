@@ -15,7 +15,7 @@ type GeocodedData = {
     address: string;
     [key: string]: any;
   };
-  rank: number; // Add rank to the type
+  rank: number;
 };
 
 type State = {
@@ -35,14 +35,45 @@ const Export = () => {
 
   const handleExport = async () => {
     if (clickedZoneMarkers.length === 0) {
-      message.error('No addresses to export!'); // Use Ant Design message.error for error notification
+      message.error('No addresses to export!'); // Display error if no coordinates
       return;
     }
 
+    // Display loading message
+    const loadingMessage = message.open({
+      type: 'loading',
+      content: 'Data Export ongoing...',
+      duration: 0,
+    });
+
     try {
+      const response = await fetch('/api/total-count', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: 6372,
+          api_count: clickedZoneMarkers.length,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        console.error('API Error:', data.error);
+        throw new Error(data.error);
+      }
+
+      console.log('Update successful:', data);
+    } catch (error) {
+      console.error('Failed to update user:', error);
+    }
+
+    try {
+      // Process coordinates and fetch geocoded data
       const results = await Promise.all(
         clickedZoneMarkers.map(async (coord) => {
-          const [longitude, latitude] = coord.coordinates; // Assuming `coordinates` contains [longitude, latitude, rank]
+          const [longitude, latitude] = coord.coordinates;
           const rank = coord.rank;
           const response = await fetch(
             `/api/reverse-geocode?latitude=${latitude}&longitude=${longitude}`
@@ -51,17 +82,23 @@ const Export = () => {
 
           const data = await response.json();
 
-          // Return the full object including latitude, longitude, rank, and geocoded data
+          // Return the full object with latitude, longitude, rank, and geocoded data
           return { ...data, latitude, longitude, rank };
         })
       );
 
+      // Update state and export to Excel
       setGeocodedData(results);
       exportToExcel(results);
-      message.success('Export completed successfully!'); // Use Ant Design message.success for success notification
+      // Remove the loading message and show success message
+      message.destroy();
+      message.success('Export completed successfully!');
     } catch (error) {
       console.error('Error during export:', error);
-      message.error('Failed to export coordinates!'); // Use Ant Design message.error for error notification
+
+      // Remove the loading message and show error message
+      message.destroy();
+      message.error('Failed to export coordinates!');
     }
   };
 

@@ -105,7 +105,7 @@ const useFilteredFeaturesByRegion = () => {
           : getFeatureCenter(clickedFeature.geometry);
 
       if (center) {
-        map.flyTo({ center, zoom: 12 });
+        map.flyTo({ center, zoom: 15 });
       }
     };
 

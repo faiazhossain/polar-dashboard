@@ -98,10 +98,10 @@ function MapComponent() {
   return (
     <div className="rounded-[20px] relative h-full md:min-h-[68vh] w-full mr-1 @apply shadow-[0px_4px_4px_0px_#00000040]">
       <nav className="bg-white @apply shadow-[0px_2px_2px_0px_#00000066] z-40 absolute top-0 left-0 right-0 rounded-t-[20px]">
-        <div className="flex flex-row justify-between p-2 space-y-2 sm:space-y-0 sm:space-x-4">
+        <div className="flex flex-row justify-between p-2 px-4 space-y-2 sm:space-y-0 sm:space-x-4">
           {/* Current Zoom Level */}
           <div className="flex justify-between items-center space-x-2">
-            <span className="ml-4 mr-2 text-base sm:text-xs md:text-lg lg:text-lg">
+            <span className="text-base sm:text-xs md:text-sm lg:text-md">
               Current zoom level:{' '}
             </span>
             <div
@@ -109,15 +109,15 @@ function MapComponent() {
                 parseFloat(zoomLevel.toFixed(2)) >= 14
                   ? 'text-green-600'
                   : 'text-red-400'
-              } font-bold text-base sm:text-xs md:text-md lg:text-lg`}
+              } font-bold text-base sm:text-xs md:text-sm lg:text-md`}
             >
               {zoomLevel.toFixed(2)}
             </div>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button className="ml-1" type="text">
-                    <FaInfoCircle className="text-base sm:text-xs md:text-md lg:text-lg" />
+                  <Button type="text">
+                    <FaInfoCircle className="text-base sm:text-xs md:text-sm lg:text-md" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -131,14 +131,14 @@ function MapComponent() {
           </div>
 
           {/* Latest Update */}
-          <div className="text-base sm:text-xs md:text-md lg:text-lg font-semibold text-gray-700 rounded-md p-2">
+          <div className="text-base sm:text-xs md:text-sm lg:text-md font-semibold text-gray-700 p-2">
             Latest Update: October 10
           </div>
 
           {/* Switch Polar Outlet */}
           <div className="flex justify-center items-center space-x-2">
             <Switch />
-            <span className="ml-2 text-base sm:text-xs md:text-md lg:text-lg">
+            <span className="ml-2 text-base sm:text-xs md:text-sm lg:text-md">
               Switch Polar Outlet
             </span>
           </div>

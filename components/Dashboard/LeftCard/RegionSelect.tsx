@@ -107,12 +107,14 @@ const RegionSelect = () => {
     setSelectedPid('');
     setSelectedValue('');
     setSelectedGeohash('');
+    dispatch(clearClickedCoordinates());
   };
 
   const handlePidChange = (value) => {
     setSelectedPid(value);
     setSelectedValue('');
     setSelectedGeohash('');
+    dispatch(clearClickedCoordinates());
   };
   const handleGeohashChange = (value) => {
     setSelectedGeohash(value);
@@ -122,7 +124,7 @@ const RegionSelect = () => {
   const handleValueChange = (value) => {
     setSelectedValue(value);
     setSelectedGeohash('');
-
+    dispatch(clearClickedCoordinates());
     const selectedItem = data[selectedDivision].children[
       selectedPid
     ].values.find((item) => item.value === value);
