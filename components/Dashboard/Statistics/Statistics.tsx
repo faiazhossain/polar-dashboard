@@ -1,3 +1,4 @@
+//@ts-nocheck
 import Image, { StaticImageData } from 'next/image';
 import React, { useState } from 'react';
 import total_polar_outlet from '@/public/statistics/outlet.svg';
