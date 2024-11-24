@@ -9,8 +9,8 @@ const NavbarGuide = () => {
       and serves as a primary navigation tool. Its main feature is the profile
       section, which includes a user icon on the top-right corner. Clicking on
       the profile icon opens a dropdown menu with options (currently, only a
-      "Logout" feature is available). This section is designed for quick access
-      to user-related actions.
+      &quot;Logout&quot; feature is available). This section is designed for
+      quick access to user-related actions.
       <div className="mt-2">
         <Image
           src={navbarGuide}
