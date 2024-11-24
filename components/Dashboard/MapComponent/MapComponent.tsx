@@ -45,6 +45,7 @@ function MapComponent() {
   const bbox = useAppSelector((state: any) => state.leftPanel.boundingBox);
   const selection = useAppSelector((state) => state?.mapdata?.selectedButton);
   const highlight = useAppSelector((state: any) => state?.mapdata?.highlight);
+
   useFilterLayers();
   useFilteredFeaturesByRegion();
 
@@ -183,7 +184,9 @@ function MapComponent() {
         <GeolocateControl position="bottom-right" />
         <FullscreenControl position="bottom-right" />
         <PopUpOnClick mode={TimeFrame} />
-        {statisticsBuilding.poi_info && <AreaPopupOnClick />}
+        {statisticsBuilding?.poi_info && selection === 'Building' && (
+          <AreaPopupOnClick />
+        )}
         <StatisticsOnHover mode={TimeFrame} />
         <BuildingStatisticsOnClick mode={TimeFrame} />
         <ZoneClickedMarkers />
