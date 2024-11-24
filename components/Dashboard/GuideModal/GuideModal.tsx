@@ -50,7 +50,7 @@ const GuideModal: React.FC<GuideModalProps> = ({ isOpen, onClose }) => {
       >
         <h2 className="text-xl font-semibold mb-4">Dashboard Guide</h2>
         <p className="mb-4">
-          Welcome to the Dashboard! Here&quot;s an overview of the features:
+          Welcome to the Dashboard! Here’s an overview of the features:
         </p>
 
         <Collapse>

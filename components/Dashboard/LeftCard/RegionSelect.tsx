@@ -19,7 +19,7 @@ import {
   setHighlight,
   setSelectedRankFromSlider,
 } from '@/lib/store/features/MapSlice/mapSlice';
-import { message } from 'antd'; // Import Ant Design's message component
+import { message } from 'antd';
 import { Slider } from 'antd';
 import ToggleButton from './ToggleButton';
 import { FaInfoCircle } from 'react-icons/fa';
@@ -203,6 +203,7 @@ const RegionSelect = () => {
 
   const handleRankChange = (value) => {
     dispatch(setSelectedRankFromSlider(value));
+    dispatch(clearClickedCoordinates());
   };
   const handleToggleChange = (checked: boolean) => {
     dispatch(setToggleInfo(checked)); // Update the parent state with the toggle value
@@ -316,7 +317,7 @@ const RegionSelect = () => {
                 </Tooltip>
               </div>
               <Slider
-                min={0} // Minimum value set to 6
+                min={2} // Minimum value set to 6
                 max={100} // Maximum value can be adjusted as needed
                 step={1} // Increment by 1 (or adjust as needed)
                 defaultValue={selectedRank}

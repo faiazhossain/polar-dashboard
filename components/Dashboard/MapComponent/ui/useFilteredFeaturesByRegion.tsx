@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { useMap } from 'react-map-gl';
 import { addClickedCoordinate } from '@/lib/store/features/MapSlice/mapSlice';
+import { message } from 'antd';
 
 type State = {
   leftPanel: {
@@ -71,6 +72,10 @@ const useFilteredFeaturesByRegion = () => {
           Number(feature?.properties?.rank) > selectedRankNumber
       );
 
+      if (matchingFeatures.length <= selectedRankNumber) {
+        const messageText = `No buildings in this zone have a rank higher than ${selectedRankNumber}. Lower your rank to access the data.`;
+        message.error(messageText, 5); // Display message for 5 seconds
+      }
       const markerGeoJSON = {
         type: 'FeatureCollection',
         features: matchingFeatures.map((feature) => ({
