@@ -72,7 +72,7 @@ const useFilteredFeaturesByRegion = () => {
           Number(feature?.properties?.rank) > selectedRankNumber
       );
 
-      if (matchingFeatures.length <= selectedRankNumber) {
+      if (matchingFeatures.length <= 0) {
         const messageText = `No buildings in this zone have a rank higher than ${selectedRankNumber}. Lower your rank to access the data.`;
         message.error(messageText, 5); // Display message for 5 seconds
       }
